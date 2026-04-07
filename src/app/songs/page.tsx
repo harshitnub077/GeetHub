@@ -41,11 +41,11 @@ export default function SongsPage() {
   return (
     <div className="min-h-screen pb-20 pt-32">
       {/* Background Glow */}
-      <div className="fixed top-0 left-0 w-full h-[500px] z-[-1] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background"></div>
+      <div className="fixed top-0 left-0 w-full h-[600px] z-[-1] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/15 via-indigo-500/5 to-background"></div>
 
       <main className="container mx-auto px-4 lg:max-w-5xl">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-400 to-violet-300 leading-normal pb-1">
             All Songs Library
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
@@ -55,13 +55,13 @@ export default function SongsPage() {
 
         {/* Search Bar */}
         <div className="w-full max-w-md mx-auto mb-12 relative group">
-          <div className="absolute inset-0 bg-primary/20 blur-xl rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-          <div className={`relative flex items-center bg-card/80 backdrop-blur-sm border rounded-2xl p-2 shadow-2xl transition-colors ${searchFocused ? 'border-primary/60 shadow-primary/10' : 'border-white/10'}`}>
-            <Search className="h-5 w-5 text-muted-foreground ml-3 shrink-0" />
+          <div className="absolute inset-0 bg-primary/15 blur-2xl rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+          <div className={`relative flex items-center bg-card/40 backdrop-blur-md border rounded-2xl px-4 py-2 shadow-2xl transition-all duration-300 ${searchFocused ? 'border-primary/40 shadow-primary/5 ring-4 ring-primary/5' : 'border-white/[0.04]'}`}>
+            <Search className="h-5 w-5 text-muted-foreground shrink-0" />
             <input
               type="text"
               placeholder="Search in songbook..."
-              className="w-full bg-transparent border-none outline-none px-3 py-2.5 text-lg placeholder:text-muted-foreground/40"
+              className="w-full bg-transparent border-none outline-none px-3 py-2.5 text-lg placeholder:text-muted-foreground/30 text-foreground"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setSearchFocused(true)}
@@ -88,7 +88,7 @@ export default function SongsPage() {
                 <Link
                   key={song.id}
                   href={`/song/${song.id}`}
-                  className="group flex items-center justify-between p-5 rounded-2xl border border-white/5 bg-card hover:bg-white/[0.03] hover:border-primary/30 transition-all cursor-pointer"
+                  className="group flex items-center justify-between p-5 rounded-2xl border border-white/[0.03] bg-card/60 backdrop-blur-sm hover:bg-white/[0.02] hover:border-white/[0.08] hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 cursor-pointer"
                 >
                   <div className="flex flex-col gap-1.5 min-w-0">
                     <div className="flex items-center gap-2">
