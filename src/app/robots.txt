@@ -1,0 +1,6 @@
+# Industrial Geethub Robots.txt (Commit 19)
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+Sitemap: https://geethub.musicians/sitemap.xml
