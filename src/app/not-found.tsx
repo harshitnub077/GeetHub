@@ -1,3 +1,4 @@
+// Geethub 404 — lightweight page, no heavy client components loaded
 import Link from "next/link";
 
 export default function NotFound() {
