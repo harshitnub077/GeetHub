@@ -4,7 +4,8 @@ import { useState, useEffect, Suspense, useRef, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, SlidersHorizontal, Loader2, Music, ChevronRight, X } from "lucide-react";
+import { Search, SlidersHorizontal, Loader2, Music, ChevronRight, X, Users } from "lucide-react";
+import { ArtistsSection } from "@/components/ArtistsSection";
 
 const FILTERS = [
   { label:"All",          key:"all" },
@@ -173,6 +174,13 @@ function ExploreContent() {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="container">
+        <ArtistsSection 
+          selectedArtist={genre} 
+          onArtistClick={(a) => setGenre(a)} 
+        />
       </div>
 
       {/* Results */}

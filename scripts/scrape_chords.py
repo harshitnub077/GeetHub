@@ -136,7 +136,7 @@ def main():
     existing_ids = {s["id"] for s in existing_songs}
     print(f"Loaded {len(existing_songs)} existing songs.")
 
-    new_urls = [u for u in song_urls if u.split('/')[-1] not in existing_ids]
+    new_urls = [u for u in song_urls if u.split('/')[-1] not in existing_ids][:150]
     print(f"Planning to scrape {len(new_urls)} new URLs...")
 
     scraped_songs = []

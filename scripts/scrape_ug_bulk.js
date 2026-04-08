@@ -2,9 +2,9 @@ const { searchSong, fetchChords } = require('ultimate-guitar');
 const fs = require('fs');
 const path = require('path');
 
-const OUTPUT_FILE = path.join(__dirname, '../data/ug_songs_batch.json');
-const SEARCH_QUERIES = ['Hindi', 'Bollywood', 'Arijit Singh', 'Atif Aslam', 'Kishore Kumar', 'Pritam'];
-const MAX_SONGS = 500; // Let's start with a solid batch
+const OUTPUT_FILE = path.join(__dirname, '../data/curated_intl_batch.json');
+const SEARCH_QUERIES = ['Ed Sheeran', 'Coldplay', 'Green Day', 'Taylor Swift', 'Radiohead'];
+const MAX_SONGS = 50; // Focused, high-quality batch 
 
 async function scrapeUG() {
   console.log('Starting Ultimate Guitar bulk scrape...');

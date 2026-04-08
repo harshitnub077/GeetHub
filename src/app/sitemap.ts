@@ -9,11 +9,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const db = new DatabaseSync(DB_PATH);
-    const songs = db.prepare('SELECT id, updated_at FROM songs LIMIT 45000').all() as any[];
+    const songs = db.prepare('SELECT id, created_at FROM songs LIMIT 45000').all() as any[];
 
     const songUrls = songs.map((song) => ({
       url: `${baseUrl}/song/${song.id}`,
-      lastModified: song.updated_at ? new Date(song.updated_at) : new Date(),
+      lastModified: song.created_at ? new Date(song.created_at) : new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     }));

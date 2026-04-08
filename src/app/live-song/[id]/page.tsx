@@ -24,7 +24,7 @@ export default function LiveSongPage({ params }: { params: Promise<{ id: string 
     setLoading(true);
     try {
       const { id } = await params;
-      const res = await fetch(`/api/song/${id}`);
+      const res = await fetch(`/api/songs/${id}`);
       if (!res.ok) throw new Error("Song not found");
       const data: LiveTrack = await res.json();
       setSong(data);

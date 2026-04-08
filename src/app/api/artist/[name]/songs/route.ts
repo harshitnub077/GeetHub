@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { DatabaseSync } from 'node:sqlite';
-import path from 'path';
-
-const DB_PATH = path.join(process.cwd(), 'geethub_master.db');
+import { getDb } from '@/lib/dbSync';
 
 export async function GET(
   request: NextRequest,
@@ -11,7 +8,7 @@ export async function GET(
   try {
     const { name } = await params;
     const decodedName = decodeURIComponent(name);
-    const db = new DatabaseSync(DB_PATH);
+    const db = getDb();
     
     // Get up to 5 other songs by the same artist
     const songs = db.prepare(`

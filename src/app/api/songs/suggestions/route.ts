@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { DatabaseSync } from 'node:sqlite';
-import path from 'path';
-
-const DB_PATH = path.join(process.cwd(), 'geethub_master.db');
+import { getDb } from '@/lib/dbSync';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -13,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const db = new DatabaseSync(DB_PATH);
+    const db = getDb();
     
     // Quick prefix search for suggestions focusing on Title and Artist
     // Using simple LIKE with prefix for suggestion speed
