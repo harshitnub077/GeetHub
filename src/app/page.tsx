@@ -247,6 +247,7 @@ export default function HomePage() {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSug, setShowSug] = useState(false);
 
+  // Keyboard shortcut: ⌘K focuses the search input
   useEffect(() => {
     if (!query.trim() || query.length < 2) { setSuggestions([]); setShowSug(false); return; }
     const t = setTimeout(async () => {
