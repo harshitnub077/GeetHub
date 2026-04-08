@@ -95,10 +95,10 @@ export default function Nav() {
 
           {/* ── Right ── */}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Link href="/explore" className="btn btn-ghost btn-sm hide-mobile" style={{ gap: 6 }}>
+            <Link href="/explore" className="btn btn-ghost btn-sm hide-mobile" aria-label="Search songs" style={{ gap: 6 }}>
               <Search size={14} /> Search
             </Link>
-            <Link href="/commit" className="btn btn-primary btn-sm hide-mobile" style={{ gap: 6 }}>
+            <Link href="/commit" className="btn btn-primary btn-sm hide-mobile" aria-label="Contribute chords" style={{ gap: 6 }}>
               <Zap size={14} /> Contribute
             </Link>
 
