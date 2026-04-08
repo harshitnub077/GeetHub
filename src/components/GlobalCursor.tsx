@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * GlobalCursor — Custom GSAP-powered cursor overlay.
+ *
+ * Renders a dot + trailing ring that follows the mouse.
+ * Disabled on touch/mobile devices (hover: none media query).
+ * Plays subtle audio plucks on interactive element hover for tactile feedback.
+ *
+ * @module GlobalCursor
+ */
+
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
