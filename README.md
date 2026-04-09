@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+![Status](https://img.shields.io/badge/status-live-brightgreen) ![Songs](https://img.shields.io/badge/songs-50000%2B-orange) ![License](https://img.shields.io/badge/license-MIT-blue)
+
 ## Getting Started
 
 First, run the development server:
