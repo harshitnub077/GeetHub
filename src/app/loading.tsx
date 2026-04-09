@@ -1,3 +1,4 @@
+// Geethub global loading skeleton — rendered while async page segments resolve
 export default function Loading() {
   return (
     <div style={{ minHeight: "100vh", background: "var(--obsidian)", paddingTop: 80 }}>
