@@ -1,3 +1,7 @@
+/**
+ * setup_fts.js — Bootstraps the FTS5 virtual table for BM25 full-text search.
+ * Run once after db init: node scripts/setup_fts.js
+ */
 const { DatabaseSync } = require('node:sqlite');
 const path = require('path');
 
