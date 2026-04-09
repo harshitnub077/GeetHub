@@ -1,3 +1,7 @@
+/**
+ * scrape_ug_bulk.js — Bulk chord scraper with rate-limiting and exponential backoff.
+ * Usage: node scripts/scrape_ug_bulk.js | node scripts/massive_ingest.js
+ */
 const { searchSong, fetchChords } = require('ultimate-guitar');
 const fs = require('fs');
 const path = require('path');
