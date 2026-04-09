@@ -1,3 +1,5 @@
+// POST /api/songs/save
+// Persists a user-contributed chord sheet to the SQLite database.
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
