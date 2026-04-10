@@ -1,3 +1,4 @@
+// TypeScript strict mode: ensures type safety across all Next.js Server and Client Components
 {
   "compilerOptions": {
     "target": "ES2017",
