@@ -1,3 +1,8 @@
+/**
+ * sync_fts_engine.js — Rebuilds the FTS5 index after bulk ingestion.
+ * Run after any batch song import to keep BM25 search results current.
+ * Usage: node scripts/sync_fts_engine.js
+ */
 const { DatabaseSync } = require('node:sqlite');
 const path = require('path');
 
