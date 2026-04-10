@@ -37,3 +37,16 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 
 
+
+## Tech Stack
+
+| Layer      | Technology                        |
+|------------|-----------------------------------|
+| Framework  | Next.js 15 (App Router)           |
+| Language   | TypeScript (strict)               |
+| Database   | SQLite + FTS5 (better-sqlite3)    |
+| Styling    | CSS Variables + Glassmorphism     |
+| Animation  | Framer Motion + GSAP              |
+| Icons      | Lucide React                      |
+| Search     | BM25 Full-Text (FTS5)             |
+
