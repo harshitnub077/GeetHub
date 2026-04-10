@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync-fts": "node scripts/sync_fts_engine.js",
+    "setup-db": "node scripts/setup_fts.js"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.3",
