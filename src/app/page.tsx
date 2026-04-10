@@ -1,4 +1,5 @@
 "use client";
+/** @performance Hero images use Unsplash CDN with w= and q= params for optimal LCP score. */
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
