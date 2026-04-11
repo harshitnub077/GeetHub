@@ -1,117 +1,118 @@
 "use client";
 
-/**
- * GlobalCursor — Custom GSAP-powered cursor overlay.
- *
- * Renders a dot + trailing ring that follows the mouse.
- * Disabled on touch/mobile devices (hover: none media query).
- * Plays subtle audio plucks on interactive element hover for tactile feedback.
- *
- * @module GlobalCursor
- */
-
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 export default function GlobalCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
+  const dotRef  = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Only display on non-touch
     if (window.matchMedia("(hover: none)").matches) return;
 
-    const cursor = cursorRef.current;
+    const dot  = dotRef.current;
     const ring = ringRef.current;
-    if (!cursor || !ring) return;
+    if (!dot || !ring) return;
 
-    // Default GSAP settings
-    gsap.set(cursor, { xPercent: -50, yPercent: -50 });
-    gsap.set(ring, { xPercent: -50, yPercent: -50 });
+    // Hide native cursor globally
+    document.documentElement.style.cursor = "none";
 
-    const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const mouse = { x: pos.x, y: pos.y };
-    const speed = 0.15;
+    gsap.set(dot,  { xPercent: -50, yPercent: -50, opacity: 0 });
+    gsap.set(ring, { xPercent: -50, yPercent: -50, opacity: 0 });
 
-    const xTo = gsap.quickTo(ring, "x", { duration: 0.8, ease: "power3" });
-    const yTo = gsap.quickTo(ring, "y", { duration: 0.8, ease: "power3" });
+    const xDot  = gsap.quickTo(dot,  "x", { duration: 0.05, ease: "none" });
+    const yDot  = gsap.quickTo(dot,  "y", { duration: 0.05, ease: "none" });
+    const xRing = gsap.quickTo(ring, "x", { duration: 0.55, ease: "power3" });
+    const yRing = gsap.quickTo(ring, "y", { duration: 0.55, ease: "power3" });
 
     const onMove = (e: MouseEvent) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      
-      // Move dot instantly
-      gsap.to(cursor, { x: mouse.x, y: mouse.y, duration: 0, ease: "none" });
-      // Queue quickTo for the ring
-      xTo(mouse.x);
-      yTo(mouse.y);
+      xDot(e.clientX);
+      yDot(e.clientY);
+      xRing(e.clientX);
+      yRing(e.clientY);
+      if (!visible) {
+        gsap.to([dot, ring], { opacity: 1, duration: 0.3 });
+        setVisible(true);
+      }
     };
+
+    const onLeave = () => gsap.to([dot, ring], { opacity: 0, duration: 0.3 });
+    const onEnter = () => gsap.to([dot, ring], { opacity: 1, duration: 0.3 });
 
     window.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseleave", onLeave);
+    document.addEventListener("mouseenter", onEnter);
 
-    // Audio Context Setup
-    let audioCtx: AudioContext | null = null;
-    const playPluck = (freq: number) => {
-      try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-        osc.start(audioCtx.currentTime);
-        osc.stop(audioCtx.currentTime + 0.15);
-      } catch(e) {}
+    // ── Hover states for interactive elements ──
+    const onElEnter = () => {
+      gsap.to(ring, { scale: 2.2, borderColor: "rgba(245,166,35,0.7)", borderWidth: "1px", duration: 0.3, ease: "power2.out" });
+      gsap.to(dot,  { scale: 0,   duration: 0.2 });
+    };
+    const onElLeave = () => {
+      gsap.to(ring, { scale: 1, borderColor: "rgba(255,255,255,0.25)", borderWidth: "1px", duration: 0.3, ease: "power2.out" });
+      gsap.to(dot,  { scale: 1, duration: 0.2 });
+    };
+    const onElDown = () => {
+      gsap.to(ring, { scale: 1.5, duration: 0.1 });
+      gsap.to(dot,  { scale: 3, opacity: 0.3, duration: 0.15 });
+    };
+    const onElUp   = () => {
+      gsap.to(ring, { scale: 2.2, duration: 0.15 });
+      gsap.to(dot,  { scale: 0,   opacity: 1,  duration: 0.15 });
     };
 
-    // Interactive magnetism
-    const links = document.querySelectorAll("a, button, .interactive");
-    links.forEach(link => {
-      link.addEventListener("mouseenter", () => {
-        gsap.to(ring, { scale: 2.5, backgroundColor: "rgba(245, 166, 35, 0.1)", borderColor: "rgba(245, 166, 35, 0.6)", duration: 0.3 });
-        gsap.to(cursor, { scale: 0, duration: 0.2 });
-        playPluck(440); // A4
+    const attach = () => {
+      document.querySelectorAll("a, button, [role=button], .interactive, input, textarea, select, label").forEach(el => {
+        el.addEventListener("mouseenter", onElEnter);
+        el.addEventListener("mouseleave", onElLeave);
+        el.addEventListener("mousedown",  onElDown);
+        el.addEventListener("mouseup",    onElUp);
       });
-      link.addEventListener("mouseleave", () => {
-        gsap.to(ring, { scale: 1, backgroundColor: "transparent", borderColor: "rgba(255, 255, 255, 0.1)", duration: 0.3 });
-        gsap.to(cursor, { scale: 1, duration: 0.2 });
-      });
-      link.addEventListener("mousedown", () => {
-        gsap.to(ring, { scale: 1.8, duration: 0.1 });
-        playPluck(659.25); // E5
-      });
-      link.addEventListener("mouseup", () => {
-        gsap.to(ring, { scale: 2.5, duration: 0.2 });
-      });
-    });
+    };
+    attach();
+
+    // Re-attach after any DOM mutation (SPA navigation)
+    const obs = new MutationObserver(attach);
+    obs.observe(document.body, { childList: true, subtree: true });
 
     return () => {
+      document.documentElement.style.cursor = "";
       window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("mouseenter", onEnter);
+      obs.disconnect();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
+      {/* Trailing ring */}
       <div
         ref={ringRef}
         style={{
-          position: "fixed", top: 0, left: 0, width: 36, height: 36,
-          borderRadius: "50%", border: "1px solid rgba(255, 255, 255, 0.1)",
-          pointerEvents: "none", zIndex: 9999, transition: "background-color 0.2s, border-color 0.2s"
+          position: "fixed", top: 0, left: 0,
+          width: 38, height: 38,
+          borderRadius: "50%",
+          border: "1px solid rgba(255,255,255,0.25)",
+          pointerEvents: "none",
+          zIndex: 99999,
+          mixBlendMode: "difference",
+          willChange: "transform",
         }}
       />
+      {/* Sharp dot */}
       <div
-        ref={cursorRef}
+        ref={dotRef}
         style={{
-          position: "fixed", top: 0, left: 0, width: 6, height: 6,
-          borderRadius: "50%", background: "var(--amber)",
-          pointerEvents: "none", zIndex: 10000,
-          boxShadow: "0 0 10px rgba(245, 166, 35, 0.8)"
+          position: "fixed", top: 0, left: 0,
+          width: 7, height: 7,
+          borderRadius: "50%",
+          background: "#fff",
+          pointerEvents: "none",
+          zIndex: 100000,
+          willChange: "transform",
         }}
       />
     </>
