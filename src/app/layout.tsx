@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | Geethub",
   },
   description:
-    "50,000+ guitar chord sheets with real-time Play Along, AI simplification, and stage mode. The open-source musician's platform — free forever.",
+    "6,500+ authentic guitar chord sheets with real-time Play Along, AI simplification, and stage mode. The open-source musician's platform — free forever.",
   keywords: [
     "guitar chords", "chord tabs", "play along", "geethub",
     "free guitar tabs", "bollywood chords", "chord sheets", "musician tools",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://geethub.dev"),
   openGraph: {
     title: "Geethub — Every Song, Every Chord",
-    description: "50,000+ guitar chord sheets with real-time Play Along.",
+    description: "6,500+ authentic guitar chord sheets with real-time Play Along.",
     url: "https://geethub.dev",
     siteName: "Geethub",
     type: "website",

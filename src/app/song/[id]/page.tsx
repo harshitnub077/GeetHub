@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
       description: `Learn ${song.title} by ${song.artist} on guitar. Chord tabs with Play Along mode, auto-scroll, transpose and AI Simplifier. Free at Geethub.`,
       openGraph: {
         title: `${song.title} – ${song.artist} | Guitar Chords`,
-        description: `Play along to ${song.title} by ${song.artist}. 50,000+ free chord tabs on Geethub.`,
+        description: `Play along to ${song.title} by ${song.artist}. 6,500+ free chord tabs on Geethub.`,
         type: "article",
       },
     };
