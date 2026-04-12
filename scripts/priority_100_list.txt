@@ -1,0 +1,100 @@
+1,Khat,Khat,Navjot Ahuja
+2,Dhurandhar - Gehra Hua,Dhurandhar - Gehra Hua,Misc Soundtrack
+3,Dhurandhar The Revenge - Phir Se,Dhurandhar The Revenge - Phir Se,Misc Soundtrack
+4,Perfect,Perfect,Ed Sheeran
+5,Aashiqui 2 - Chahun Main Ya Naa,Aashiqui 2 - Chahun Main Ya Naa,Misc Soundtrack
+6,Kalyug - Aadat,Kalyug - Aadat,Misc Soundtrack
+7,Cant Help Falling In Love,Cant Help Falling In Love,Elvis Presley
+8,Husn,Husn,Anuv Jain
+9,Aashiqui 2 - Tum Hi Ho,Aashiqui 2 - Tum Hi Ho,Misc Soundtrack
+10,Dooron Dooron,Dooron Dooron,Paresh Pahuja
+11,Saiyaara Title Song,Saiyaara Title Song,Misc Soundtrack
+12,Babydoll,Babydoll,Dominic Fike
+13,Hotel California,Hotel California,Eagles
+14,Sailor Song,Sailor Song,Gigi Perez
+15,Bairan,Bairan,Banjaare
+16,Jo Tum Mere Ho,Jo Tum Mere Ho,Anuv Jain
+17,Khamoshiyan Title Song,Khamoshiyan Title Song,Misc Soundtrack
+18,Ikkis - Sitaare,Ikkis - Sitaare,Misc Soundtrack
+19,Kabir Singh - Kaise Hua,Kabir Singh - Kaise Hua,Misc Soundtrack
+20,Bhool Bhulaiyaa - Labon Ko,Bhool Bhulaiyaa - Labon Ko,Misc Soundtrack
+21,Darkhaast,Darkhaast,Arijit Singh
+22,Gulabi Aankhen,Gulabi Aankhen,Atif Aslam
+23,Jab We Met - Tum Se Hi,Jab We Met - Tum Se Hi,Misc Soundtrack
+24,Deewana Mai Yeshu Ka,Deewana Mai Yeshu Ka,Joseph Raj Allam
+25,Arz Kiya Hai,Arz Kiya Hai,Anuv Jain
+26,Alag Aasmaan,Alag Aasmaan,Anuv Jain
+27,Agent Vinod - Raabta,Agent Vinod - Raabta,Misc Soundtrack
+28,Iris,Iris,Goo Goo Dolls
+29,Dhurandhar The Revenge - Phir Se,Dhurandhar The Revenge - Phir Se,Misc Soundtrack
+30,Dhurandhar The Revenge - Jaan Se Guzarte Hain,Dhurandhar The Revenge - Jaan Se Guzarte Hain,Misc Soundtrack
+31,Saiyaara - Barbaad,Saiyaara - Barbaad,Misc Soundtrack
+32,I Think They Call This Love,I Think They Call This Love,Elliot James Reay
+33,3 Idiots - Give Me Some Sunshine,3 Idiots - Give Me Some Sunshine,Misc Soundtrack
+34,Choo Lo,Choo Lo,The Local Train
+35,Kabir Singh - Bekhayali,Kabir Singh - Bekhayali,Misc Soundtrack
+36,Rehnaa Hai Tere Dil Mein - Zara Zara,Rehnaa Hai Tere Dil Mein - Zara Zara,Misc Soundtrack
+37,Goodness Of God,Goodness Of God,Bethel Music
+38,Until I Found You,Until I Found You,Stephen Sanchez
+39,500 Miles,500 Miles,Peter, Paul and Mary
+40,Yellow,Yellow,Coldplay
+41,Creep,Creep,Radiohead
+42,Dhurandhar The Revenge - Jaiye Sajana,Dhurandhar The Revenge - Jaiye Sajana,Misc Soundtrack
+43,Photograph,Photograph,Ed Sheeran
+44,The Man Who Cant Be Moved,The Man Who Cant Be Moved,The Script
+45,Vicky Donor - Pani Da Rang,Vicky Donor - Pani Da Rang,Misc Soundtrack
+46,Woh Lamhe - Kya Mujhe Pyaar Hai,Woh Lamhe - Kya Mujhe Pyaar Hai,Misc Soundtrack
+47,Let Her Go,Let Her Go,Passenger
+48,Murder 2 - Phir Mohabbat,Murder 2 - Phir Mohabbat,Misc Soundtrack
+49,Dil Ek Mandir - Hum Tere Pyar Mein,Dil Ek Mandir - Hum Tere Pyar Mein,Misc Soundtrack
+50,Tere Ishk Mein - Deewana Deewana,Tere Ishk Mein - Deewana Deewana,Misc Soundtrack
+51,Take Me Home Country Roads,Take Me Home Country Roads,John Denver
+52,Un Ka Andaz-E-Karam,Un Ka Andaz-E-Karam,Nusrat Fateh Ali Khan
+53,Saiyaara - Dhun,Saiyaara - Dhun,Misc Soundtrack
+54,Have You Ever Seen The Rain,Have You Ever Seen The Rain,Creedence Clearwater Revival
+55,10000 Reasons Bless The Lord,10000 Reasons Bless The Lord,Matt Redman
+56,Zeher - Woh Lamhe Woh Baatein,Zeher - Woh Lamhe Woh Baatein,Misc Soundtrack
+57,Woh Kaun Thi - Lag Ja Gale,Woh Kaun Thi - Lag Ja Gale,Misc Soundtrack
+58,Holy Forever,Holy Forever,Chris Tomlin
+59,Humpty Sharma Ki Dulhania - Samjhawan,Humpty Sharma Ki Dulhania - Samjhawan,Misc Soundtrack
+60,Kabhi Alvida Na Kehna - Mitwa,Kabhi Alvida Na Kehna - Mitwa,Misc Soundtrack
+61,Fitoor - Yeh Fitoor Mera,Fitoor - Yeh Fitoor Mera,Misc Soundtrack
+62,The Night We Met,The Night We Met,Lord Huron
+63,Line Without A Hook,Line Without A Hook,Ricky Montgomery
+64,Dum Maaro Dum - Jiyein Kyun,Dum Maaro Dum - Jiyein Kyun,Misc Soundtrack
+65,Prince - Tere Liye,Prince - Tere Liye,Misc Soundtrack
+66,Blue,Blue,yung kai
+67,Laal Singh Chaddha - Tere Hawaale,Laal Singh Chaddha - Tere Hawaale,Misc Soundtrack
+68,Sanson Ki Mala,Sanson Ki Mala,Nusrat Fateh Ali Khan
+69,Fukrey - Ambarsariya,Fukrey - Ambarsariya,Misc Soundtrack
+70,Animal - Pehle Bhi Main,Animal - Pehle Bhi Main,Misc Soundtrack
+71,Gabbar Is Back - Teri Meri Kahaani,Gabbar Is Back - Teri Meri Kahaani,Misc Soundtrack
+72,Khat,Khat,Navjot Ahuja
+73,Meri Banogi Kya,Meri Banogi Kya,Rito Riba
+74,Ae Dil Hai Mushkil Title Track,Ae Dil Hai Mushkil Title Track,Misc Soundtrack
+75,Teri Deewani,Teri Deewani,Kailash Kher
+76,Gangster - Tu Hi Meri Shabh Hai,Gangster - Tu Hi Meri Shabh Hai,Misc Soundtrack
+77,Once Upon A Time In Mumbaai - Pee Loon,Once Upon A Time In Mumbaai - Pee Loon,Misc Soundtrack
+78,Once Upon Ay Time In Mumbai Dobaara - Yeh Tune Kya Kiya,Once Upon Ay Time In Mumbai Dobaara - Yeh Tune Kya Kiya,Misc Soundtrack
+79,Dilwale - Janam Janam,Dilwale - Janam Janam,Misc Soundtrack
+80,Dekha Hi Nahi,Dekha Hi Nahi,Osho Jain
+81,Boss - Har Kisi Ko Nahi Milta Yahan Pyaar Zindagi Mein,Boss - Har Kisi Ko Nahi Milta Yahan Pyaar Zindagi Mein,Misc Soundtrack
+82,Bachna Ae Haseeno - Khuda Jaane,Bachna Ae Haseeno - Khuda Jaane,Misc Soundtrack
+83,Badlapur - Jeena Jeena,Badlapur - Jeena Jeena,Misc Soundtrack
+84,1921 - Tere Bina,1921 - Tere Bina,Misc Soundtrack
+85,Arz Kiya Hai,Arz Kiya Hai,Anuv Jain
+86,Dhurandhar The Revenge - Aakhri Ishq,Dhurandhar The Revenge - Aakhri Ishq,Misc Soundtrack
+87,Aashiqui 2 - Sunn Raha Hai,Aashiqui 2 - Sunn Raha Hai,Misc Soundtrack
+88,Rockstar - Tum Ho,Rockstar - Tum Ho,Misc Soundtrack
+89,Sign Of The Times,Sign Of The Times,Harry Styles
+90,Dooron Dooron,Dooron Dooron,Paresh Pahuja
+91,Blackmail - Pal Pal Dil Ke Paas,Blackmail - Pal Pal Dil Ke Paas,Misc Soundtrack
+92,A Thousand Years,A Thousand Years,Christina Perri
+93,Dhanyawad Ke Saath Stuti Gaoonga,Dhanyawad Ke Saath Stuti Gaoonga,Shirin George
+94,Jo Jeeta Wohi Sikandar - Pehla Nasha,Jo Jeeta Wohi Sikandar - Pehla Nasha,Misc Soundtrack
+95,O Sanam,O Sanam,Lucky Ali
+96,Hona Tha Pyar,Hona Tha Pyar,Atif Aslam
+97,Ajab Prem Ki Ghazab Kahani - Tu Jaane Na,Ajab Prem Ki Ghazab Kahani - Tu Jaane Na,Misc Soundtrack
+98,Ae Dil Hai Mushkil - Channa Mereya,Ae Dil Hai Mushkil - Channa Mereya,Misc Soundtrack
+99,Yeh Jawaani Hai Deewani - Kabira,Yeh Jawaani Hai Deewani - Kabira,Misc Soundtrack
+100,Chattan,Chattan,Bridge Music
