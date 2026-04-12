@@ -459,7 +459,7 @@ export default function HomePage() {
             style={{ marginBottom: 30 }}
           >
             <span className="section-label">
-              <Music2 size={10} /> 50,000+ Songs · Open Source · Free Forever
+              <Music2 size={10} /> 6,500+ Authentic Songs · Open Source · Free Forever
             </span>
           </motion.div>
 
@@ -511,7 +511,7 @@ export default function HomePage() {
               fontWeight: 400,
             }}
           >
-            50,000+ songs. Real-time chord detection. Built for every guitarist — from bedroom to stage.
+            6,500+ authentic songs. Real-time chord detection. Built for every guitarist — from bedroom to stage.
           </motion.p>
 
           {/* Integrated Search Bar */}
@@ -531,7 +531,7 @@ export default function HomePage() {
             }}
           >
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--amber)", marginBottom: 16, opacity: 0.8 }}>
-              Search 50,000+ songs instantly
+              Search 6,500+ verified songs instantly
             </p>
             <div
               style={{
@@ -674,7 +674,7 @@ export default function HomePage() {
             style={{ display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}
           >
             {[
-              { icon: Headphones, label: "50K+ Songs" },
+              { icon: Headphones, label: "6.5K+ Songs" },
               { icon: Users, label: "2M+ Users" },
               { icon: Star, label: "4.9 Rating" },
             ].map((b, i) => (
@@ -736,7 +736,7 @@ export default function HomePage() {
             flexWrap: "nowrap" 
           }}>
             {[
-              { to: 50000,   suffix: "+", label: "Songs indexed", desc: "Every genre, era.", icon: Music2, color: "var(--amber)" },
+              { to: 6500,   suffix: "+", label: "Songs indexed", desc: "Every genre, era.", icon: Music2, color: "var(--amber)" },
               { to: 2400000, suffix: "+", label: "Musicians", desc: "Practicing daily.", icon: Users, color: "var(--purple)" },
               { to: 99,      suffix: "%", label: "Accuracy Rate", desc: "Studio-verified.", icon: AudioLines, color: "var(--teal)" },
             ].map((s, i) => (

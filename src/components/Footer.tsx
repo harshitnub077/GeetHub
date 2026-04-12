@@ -149,7 +149,7 @@ export default function Footer() {
               </Link>
 
               <p style={{ fontSize: 14, color: "var(--t2)", lineHeight: 1.78, maxWidth: 270, marginBottom: 28 }}>
-                The open-source home for guitar, ukulele & piano chords. 50,000+ songs. Play Along. Transpose. Perform.
+                The open-source home for guitar, ukulele & piano chords. 6,500+ songs. Play Along. Transpose. Perform.
               </p>
 
               {/* Newsletter */}
