@@ -16,7 +16,7 @@ interface Song { id:string; title:string; artist:string; genre:string; contribut
 export function SongViewer({ song }:{ song:Song }) {
   const [transpose, setTranspose] = useState(0);
   const [simplify,  setSimplify]  = useState(false);
-  const [fontSize,  setFontSize]  = useState(17);
+  const [fontSize,  setFontSize]  = useState(18);
   const [bpm,       setBpm]       = useState(song.bpm || 90);
   const [scrolling, setScrolling] = useState(false);
   const [liked,     setLiked]     = useState(false);
@@ -67,7 +67,7 @@ export function SongViewer({ song }:{ song:Song }) {
           <div style={{ flex:"1 1 0", minWidth:0, width:"100%" }}>
             {/* Header */}
             {!stageMode && (
-              <div style={{ marginBottom:24, paddingBottom:24, borderBottom:"1px solid var(--border)" }}>
+              <div style={{ marginBottom:16, paddingBottom:16, borderBottom:"1px solid var(--border)" }}>
                 <h1 style={{ fontFamily:"var(--f-display)", fontWeight:900, fontSize:"clamp(28px,5vw,48px)", letterSpacing:"-0.03em", lineHeight:1.06, marginBottom:8 }}>
                   {song.title}
                 </h1>
@@ -117,84 +117,12 @@ export function SongViewer({ song }:{ song:Song }) {
               </div>
             )}
 
-            {/* Chord summary header */}
-            {chords.length > 0 && !stageMode && (
-              <div ref={summaryRef} style={{ position:"relative", marginBottom:32, padding:20, background:"rgba(255,255,255,0.02)", border:"1px solid var(--border)", borderRadius:16 }}>
-                <AnimatePresence>
-                  {popover && (
-                    <>
-                      <div style={{ position:"fixed", inset:0, zIndex:100 }} onClick={()=>setPopover(null)}/>
-                      <motion.div
-                        initial={{ opacity:0, scale:0.9, y:10 }} animate={{ opacity:1, scale:1, y:0 }} exit={{ opacity:0, scale:0.9 }}
-                        style={{ 
-                          position:"absolute", left:popover.x-90, top:popover.y-250, 
-                          width:180, zIndex:110, background:"var(--elevated)", 
-                          border:"1px solid var(--border-amber)", borderRadius:14, 
-                          boxShadow:"0 20px 50px rgba(0,0,0,0.8)" 
-                        }}
-                      >
-                        <ChordDiagram chord={popover.chord}/>
-                      </motion.div>
-                    </>
-                  )}
-                </AnimatePresence>
-
-                <p style={{ fontSize:10, fontWeight:800, color:"var(--t3)", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:14 }}>
-                  Song Harmonic Profile · {chords.length} unique chords
-                </p>
-                <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
-                  {chords.map(c => (
-                    <motion.div key={c}
-                      whileHover={{ y:-3, scale:1.02 }}
-                      whileTap={{ scale:0.97 }}
-                      onClick={(e) => {
-                        const r = e.currentTarget.getBoundingClientRect();
-                        const pr = summaryRef.current?.getBoundingClientRect();
-                        if(!pr) return;
-                        setPopover({ chord:c, x: r.left-pr.left+r.width/2, y: r.top-pr.top });
-                      }}
-                      style={{ 
-                        fontFamily:"var(--f-mono)", fontSize:14, fontWeight:800, 
-                        color:"var(--amber)", background:"var(--amber-dim)", 
-                        padding:"8px 16px", borderRadius:10, border:"1px solid rgba(245,166,35,0.15)",
-                        cursor:"help", transition:"border-color 0.2s"
-                      }}
-                      onMouseEnter={e => e.currentTarget.style.borderColor = "var(--amber)"}
-                      onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(245,166,35,0.15)"}
-                    >
-                      {c}
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Strumming Pattern */}
-                <div style={{ marginTop:24, paddingTop:18, borderTop:"1px solid rgba(255,255,255,0.05)" }}>
-                  <p style={{ fontSize:10, fontWeight:800, color:"var(--t3)", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:12 }}>
-                    Standard Strumming · 4/4 Time
-                  </p>
-                  <div style={{ display:"flex", gap:4 }}>
-                    {["D","-","D","-","U","-","U","-","D","-","U"].map((s,i)=>(
-                      <div key={i} style={{ 
-                        width:28, height:36, borderRadius:6, 
-                        background: s==="-" ? "transparent" : "rgba(255,255,255,0.03)", 
-                        border: s==="-" ? "none" : "1px solid var(--border)",
-                        display:"flex", alignItems:"center", justifyContent:"center",
-                        fontSize:13, fontWeight:900, color: s==="D" ? "var(--amber)" : s==="U" ? "var(--purple)" : "var(--t3)"
-                      }}>
-                        {s==='-' ? '·' : s}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Sticky toolbar */}
             <div className="sticky-toolbar" style={{ 
               position:"sticky", top:60, zIndex:30, display:"flex", alignItems:"center", flexWrap:"wrap", gap:8, 
               padding:"8px 12px", background:"rgba(9,9,14,0.96)", backdropFilter:"blur(20px)", 
               border:"1px solid var(--border)", borderTop: stageMode ? "none" : "2px solid var(--amber)", 
-              borderRadius:12, marginBottom:24 
+              borderRadius:12, marginBottom:16 
             }}>
               {/* Auto-scroll */}
               <button onClick={()=>setScrolling(s=>!s)}
@@ -242,6 +170,81 @@ export function SongViewer({ song }:{ song:Song }) {
           {/* ─── RIGHT COLUMN ─── */}
           <div style={{ width:"clamp(240px,30%,320px)", flexShrink:0 }} className="panel-sticky hide-mobile">
             <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+
+              {/* Performance Profile */}
+              <div ref={summaryRef} className="glass" style={{ padding:22, position:"relative", border:"1px solid var(--border-amber)", background:"rgba(245,166,35,0.03)" }}>
+                <AnimatePresence>
+                  {popover && (
+                    <>
+                      <div style={{ position:"fixed", inset:0, zIndex:100 }} onClick={()=>setPopover(null)}/>
+                      <motion.div
+                        initial={{ opacity:0, scale:0.9, y:10 }} animate={{ opacity:1, scale:1, y:0 }} exit={{ opacity:0, scale:0.9 }}
+                        style={{ 
+                          position:"absolute", left:-200, top:0, 
+                          width:180, zIndex:110, background:"var(--elevated)", 
+                          border:"1px solid var(--border-amber)", borderRadius:14, 
+                          boxShadow:"0 20px 50px rgba(0,0,0,0.8)" 
+                        }}
+                      >
+                        <ChordDiagram chord={popover.chord}/>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+
+                <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:16 }}>
+                  <div style={{ width:24, height:24, borderRadius:6, background:"rgba(245,166,35,0.15)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    <Music size={14} style={{ color:"var(--amber)" }}/>
+                  </div>
+                  <span style={{ fontFamily:"var(--f-display)", fontWeight:800, fontSize:14, textTransform:"uppercase", letterSpacing:"0.05em" }}>Performance Guide</span>
+                </div>
+
+                <p style={{ fontSize:10, fontWeight:800, color:"var(--t3)", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:12 }}>
+                  Harmonic Profile · {chords.length} Chords
+                </p>
+                <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginBottom:24 }}>
+                  {chords.map(c => (
+                    <motion.div key={c}
+                      whileHover={{ y:-2, scale:1.05, background:"var(--amber)" }}
+                      onClick={(e) => {
+                        const r = e.currentTarget.getBoundingClientRect();
+                        const pr = summaryRef.current?.getBoundingClientRect();
+                        if(!pr) return;
+                        setPopover({ chord:c, x: r.left-pr.left+r.width/2, y: r.top-pr.top });
+                      }}
+                      style={{ 
+                        fontFamily:"var(--f-mono)", fontSize:12, fontWeight:800, 
+                        color:"var(--amber)", background:"rgba(245,166,35,0.08)", 
+                        padding:"6px 10px", borderRadius:6, border:"1px solid rgba(245,166,35,0.15)",
+                        cursor:"help", transition:"all 0.2s"
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.color="var(--obsidian)"; }}
+                      onMouseLeave={e => { e.currentTarget.style.color="var(--amber)"; }}
+                    >
+                      {c}
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div style={{ paddingTop:18, borderTop:"1px solid rgba(255,255,255,0.08)" }}>
+                  <p style={{ fontSize:10, fontWeight:800, color:"var(--t3)", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:12 }}>
+                    Standard Strumming · 4/4
+                  </p>
+                  <div style={{ display:"flex", gap:3 }}>
+                    {["D","-","D","-","U","-","U","-","D","-","U"].map((s,i)=>(
+                      <div key={i} style={{ 
+                        flex:1, height:32, borderRadius:4, 
+                        background: s==="-" ? "transparent" : "rgba(255,255,255,0.03)", 
+                        border: s==="-" ? "none" : "1px solid var(--border)",
+                        display:"flex", alignItems:"center", justifyContent:"center",
+                        fontSize:11, fontWeight:900, color: s==="D" ? "var(--amber)" : s==="U" ? "var(--purple)" : "rgba(255,255,255,0.1)"
+                      }}>
+                        {s==='-' ? '·' : s}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
               {/* Play Along */}
               <div className="glass-purple" style={{ padding:22, textAlign:"center", position:"relative", overflow:"hidden" }}>
