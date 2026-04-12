@@ -379,3 +379,4 @@ export function SongViewer({ song }:{ song:Song }) {
     </div>
   );
 }
+// Added Performance Sidebar for better visibility
