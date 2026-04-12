@@ -159,7 +159,14 @@ export function ChordRenderer({ content, transposeBy, simplify, fontSize }:Props
       </AnimatePresence>
 
       {/* Sheet */}
-      <div style={{ fontFamily:"var(--f-body)", fontSize:`${fontSize}px`, lineHeight:2.5, paddingBottom:60, overflowX:"auto" }}>
+      <div style={{ 
+        fontFamily:"var(--f-body)", 
+        fontSize:`${fontSize}px`, 
+        lineHeight: 1.5, 
+        letterSpacing: "-0.01em",
+        paddingBottom:60, 
+        overflowX:"auto" 
+      }}>
         {lines.map((line,li)=>{
           const trimmed=line.trim();
 
@@ -169,8 +176,8 @@ export function ChordRenderer({ content, transposeBy, simplify, fontSize }:Props
           if(isSectionHeader) {
             const label = (sectionMatch![1]||"").trim();
             return (
-              <div key={li} style={{ marginTop:28, marginBottom:12 }}>
-                <span className="badge badge-amber" style={{ borderRadius:6, fontSize:10, fontWeight:900, letterSpacing:"0.07em" }}>{label}</span>
+              <div key={li} style={{ marginTop:8, marginBottom:4 }}>
+                <span className="badge badge-amber" style={{ borderRadius:4, fontSize:9, fontWeight:900, letterSpacing:"0.07em" }}>{label}</span>
               </div>
             );
           }
@@ -185,7 +192,7 @@ export function ChordRenderer({ content, transposeBy, simplify, fontSize }:Props
           });
           if(cur) segs.push({ chord:cur, text:"  " }); // ensure trailing chords have space
 
-          if(!segs.length && !trimmed) return <div key={li} style={{ height:"1.2em" }}/>;
+          if(!segs.length && !trimmed) return <div key={li} style={{ height:"0.6em" }}/>;
 
           const hasChords = segs.some(s=>s.chord && /^[A-G]/.test(s.chord));
           const lineClass = hasChords ? "chord-line" : "lyric-line";
@@ -194,7 +201,12 @@ export function ChordRenderer({ content, transposeBy, simplify, fontSize }:Props
             <motion.div key={li} className={lineClass}
               initial={{ opacity:0 }} animate={{ opacity:1 }}
               transition={{ duration:0.2, delay:Math.min(li*0.005, 0.4) }}
-              style={{ minHeight: hasChords ? "3.2em" : "1.5em", display:"flex", flexWrap:"nowrap" }}
+              style={{ 
+                minHeight: hasChords ? "2.2em" : "1.1em", 
+                display:"flex", 
+                flexWrap:"nowrap",
+                opacity: 0.95
+              }}
             >
               {segs.map((seg,si)=>{
                 const isValidChord = seg.chord && /^[A-G]/.test(seg.chord);
@@ -214,7 +226,7 @@ export function ChordRenderer({ content, transposeBy, simplify, fontSize }:Props
                         {processed}
                       </motion.span>
                     )}
-                    <span className="lyric-text">{textVal}</span>
+                    <span className="lyric-text" style={{ fontWeight: 500 }}>{textVal}</span>
                   </div>
                 );
               })}
