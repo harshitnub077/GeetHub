@@ -237,3 +237,4 @@ export function ChordRenderer({ content, transposeBy, simplify, fontSize }:Props
     </div>
   );
 }
+// Updated lyrics visibility for live performance
