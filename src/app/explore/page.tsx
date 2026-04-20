@@ -227,7 +227,12 @@ function ExploreContent() {
       if (append) setSongs((prev) => [...prev, ...(d.songs || [])]);
       else setSongs(d.songs || []);
       setPagination(d.pagination);
-    } catch { if (!append) setSongs([]); }
+    } catch { 
+      if (!append) {
+        setSongs([]);
+        setPagination(null);
+      }
+    }
     finally { setLoading(false); setLoadingMore(false); }
   };
 
@@ -309,7 +314,7 @@ function ExploreContent() {
                 : <>Explore <span className="text-gradient">all songs</span></>
               }
             </h1>
-            {pagination?.total && (
+            {pagination && (
               <p style={{ fontSize: 13, color: "var(--t3)", marginTop: 5 }}>
                 {pagination.total.toLocaleString()} songs found
               </p>

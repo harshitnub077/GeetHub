@@ -41,7 +41,7 @@ export function SongViewer({ song }:{ song:Song }) {
 
   /* Unique chords */
   const chords = Array.from(new Set(
-    (song.chord_data.match(/\[([A-G][^\]]*)\]/g)||[]).map(m=>m.slice(1,-1))
+    (song.chord_data.match(/[\[\(]([A-G][^\]\)]*)[\]\)]/g)||[]).map(m=>m.slice(1,-1).trim())
   )).slice(0,14);
 
   return (

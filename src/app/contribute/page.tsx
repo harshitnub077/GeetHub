@@ -22,7 +22,7 @@ Feels the way I [G]do about you [D]now
 
 const GENRES = ["Rock", "Pop", "Bollywood", "Classical", "Jazz", "Blues", "Country", "Metal", "Indie", "Hip-Hop", "Folk", "EDM", "Other"];
 
-export default function CommitPage() {
+export default function ContributePage() {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [genre, setGenre] = useState("Pop");

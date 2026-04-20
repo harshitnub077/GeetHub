@@ -12,7 +12,7 @@ const LINKS = [
   { href: "/",           label: "Home" },
   { href: "/explore",    label: "Explore" },
   { href: "/play-along", label: "Play Along" },
-  { href: "/commit",     label: "Contribute" },
+  { href: "/contribute", label: "Contribute" },
 ];
 
 export default function Nav() {
@@ -231,7 +231,7 @@ export default function Nav() {
             </div>
 
             <Link
-              href="/commit"
+              href="/contribute"
               className="hide-mobile"
               style={{
                 display: "flex", alignItems: "center", gap: 6,
@@ -316,7 +316,7 @@ export default function Nav() {
               <Link href="/explore" style={{ padding: "18px", background: "rgba(255,255,255,0.05)", borderRadius: 16, display: "flex", justifyContent: "center", gap: 8, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 16 }}>
                 <Search size={18} /> Search Songs
               </Link>
-              <Link href="/commit" style={{ padding: "18px", background: "var(--amber)", borderRadius: 16, display: "flex", justifyContent: "center", gap: 8, color: "#000", textDecoration: "none", fontWeight: 800, fontSize: 16 }}>
+              <Link href="/contribute" style={{ padding: "18px", background: "var(--amber)", borderRadius: 16, display: "flex", justifyContent: "center", gap: 8, color: "#000", textDecoration: "none", fontWeight: 800, fontSize: 16 }}>
                 <Zap size={18} /> Add Chords
               </Link>
             </div>

@@ -27,7 +27,7 @@ export default function Footer() {
     {
       title: "Community",
       links: [
-        { href: "/commit",                           label: "Contribute Chords" },
+        { href: "/contribute",                       label: "Contribute Chords" },
         { href: "https://github.com/harshitnub077", label: "GitHub", external: true },
       ],
     },
