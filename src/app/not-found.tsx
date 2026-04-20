@@ -136,7 +136,7 @@ export default function NotFound() {
             This page went off-key.
           </p>
           <p style={{ fontSize: 16, color: "var(--t2)", maxWidth: 380, margin: "0 auto 44px", lineHeight: 1.75 }}>
-            Looks like this page doesn&apos;t exist. Try searching for a song instead — we&apos;ve got 6,500+ waiting.
+            Looks like this page doesn&apos;t exist. Try searching for a song instead — we&apos;ve got 19,500+ waiting.
           </p>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>

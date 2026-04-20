@@ -20,6 +20,8 @@ export default function SongsPage() {
   const [searchFocused, setSearchFocused] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
+  const [visibleCount, setVisibleCount] = useState(50);
+
   useEffect(() => {
     const filtered = songsData.filter((song) =>
       song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -27,6 +29,7 @@ export default function SongsPage() {
       song.genre.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredSongs(filtered);
+    setVisibleCount(50); // Reset visible count on search
   }, [searchQuery]);
 
   useEffect(() => {
@@ -36,7 +39,9 @@ export default function SongsPage() {
         { y: 0, opacity: 1, duration: 0.4, stagger: 0.04, ease: "power2.out" }
       );
     }
-  }, [filteredSongs]);
+  }, [filteredSongs, visibleCount]);
+
+  const displayedSongs = filteredSongs.slice(0, visibleCount);
 
   return (
     <div className="min-h-screen pb-20 pt-32">
@@ -83,8 +88,8 @@ export default function SongsPage() {
           </div>
 
           <div ref={listRef} className="grid gap-3">
-            {filteredSongs.length > 0 ? (
-              filteredSongs.map((song) => (
+            {displayedSongs.length > 0 ? (
+              displayedSongs.map((song) => (
                 <Link
                   key={song.id}
                   href={`/song/${song.id}`}
@@ -122,6 +127,17 @@ export default function SongsPage() {
               </div>
             )}
           </div>
+
+          {visibleCount < filteredSongs.length && (
+            <div className="mt-8 text-center">
+              <button 
+                onClick={() => setVisibleCount(v => v + 50)}
+                className="px-6 py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors font-medium text-sm"
+              >
+                Load More
+              </button>
+            </div>
+          )}
         </div>
       </main>
     </div>

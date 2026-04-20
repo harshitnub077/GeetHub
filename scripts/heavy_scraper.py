@@ -91,7 +91,7 @@ async def main():
                 songs = json.load(f)
         except: pass
         
-    print(f"Resuming scrape. Current count: {len(songs)}. Concurrency: {CONCURRENCY_LIMIT}")
+    print(f"Continuing ... Found {len(songs)} songs so far.")
     
     semaphore = asyncio.Semaphore(CONCURRENCY_LIMIT)
     async with aiohttp.ClientSession() as session:
@@ -104,7 +104,7 @@ async def main():
                 if res and len(res['chord_data']) > 200:
                     songs.append(res)
             
-            print(f"Progress: {i + BATCH_SIZE}/{len(urls)}. Found {len(songs)} songs.")
+            print(f"Checking ... {len(songs)} total.")
             with open(OUTPUT_FILE, 'w') as f:
                 json.dump(songs, f, indent=2)
             
@@ -114,7 +114,7 @@ async def main():
                 
             await asyncio.sleep(0.2)
 
-    print(f"Scrape complete! Total: {len(songs)}")
+    print(f"Done. {len(songs)} songs in total.")
 
 if __name__ == "__main__":
     asyncio.run(main())

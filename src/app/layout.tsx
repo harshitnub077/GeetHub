@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | Geethub",
   },
   description:
-    "6,500+ authentic guitar chord sheets with real-time Play Along, AI simplification, and stage mode. The open-source musician's platform — free forever.",
+    "Authentic guitar chord sheets with real-time Play Along, chord simplification, and stage mode. Open-source musician's platform.",
   keywords: [
     "guitar chords", "chord tabs", "play along", "geethub",
     "free guitar tabs", "bollywood chords", "chord sheets", "musician tools",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://geethub.dev"),
   openGraph: {
     title: "Geethub — Every Song, Every Chord",
-    description: "6,500+ authentic guitar chord sheets with real-time Play Along.",
+    description: "Authentic guitar chord sheets with real-time Play Along.",
     url: "https://geethub.dev",
     siteName: "Geethub",
     type: "website",
@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Plus Jakarta Sans — clean, modern, premium feel */}
+        {/* Plus Jakarta Sans */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

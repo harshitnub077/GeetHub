@@ -16,7 +16,7 @@ def main():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    print(f"Ingesting {len(songs)} songs into {DB_PATH}...")
+    print(f"Adding {len(songs)} songs to the database...")
     
     added_count = 0
     skipped_count = 0
@@ -50,9 +50,9 @@ def main():
     conn.commit()
     conn.close()
     
-    print(f"✅ Ingestion complete.")
-    print(f"➕ Added: {added_count}")
-    print(f"⏭️ Skipped (already exists): {skipped_count}")
+    print(f"Done.")
+    print(f"Added: {added_count}")
+    print(f"Skipped: {skipped_count}")
 
 if __name__ == "__main__":
     main()

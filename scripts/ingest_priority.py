@@ -91,7 +91,7 @@ async def main():
                     break
             
             if match_url:
-                print(f"Scraping priority: {title} from {match_url}...")
+                print(f"Checking priority: {title}...")
                 song = await fetch_and_parse(session, match_url, title, artist)
                 if song:
                     try:
@@ -99,7 +99,7 @@ async def main():
                             INSERT INTO songs (id, title, artist, chord_data, genre, source, created_at)
                             VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
                         """, (song['id'], song['title'], song['artist'], song['chord_data'], song['genre'], song['source']))
-                        print(f"✅ Ingested: {title}")
+                        print(f"Added: {title}")
                     except:
                         pass
         

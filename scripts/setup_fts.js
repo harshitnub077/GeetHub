@@ -8,7 +8,7 @@ const path = require('path');
 const DB_PATH = path.join(process.cwd(), 'geethub_master.db');
 const db = new DatabaseSync(DB_PATH);
 
-console.log('Enabling FTS5 Full-Text Search...');
+console.log('Setting up search index...');
 
 try {
   // Create FTS5 table

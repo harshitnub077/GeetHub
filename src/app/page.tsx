@@ -12,7 +12,7 @@ import { gsap, useGSAP } from "@/lib/gsap";
 import GenreCard from "@/components/GenreCard";
 import InfiniteMarquee from "@/components/InfiniteMarquee";
 
-/* ── High-End Magnetic Button Wrapper ───────────────────── */
+/* ── Magnetic Button ────────────────────────── */
 function Magnetic({ children }: { children: React.ReactElement }) {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -42,7 +42,7 @@ function Magnetic({ children }: { children: React.ReactElement }) {
   );
 }
 
-/* ── Animated Counter ───────────────────────────────────── */
+/* ── Counter ────────────────────────────────── */
 function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [val, setVal] = useState(0);
@@ -83,7 +83,7 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   );
 }
 
-/* ── Guitar Waveform ────────────────────────────────────── */
+/* ── Visual Waveform ────────────────────────── */
 function GuitarWaveform() {
   const bars = [35, 60, 45, 80, 55, 90, 40, 70, 50, 85, 38, 65, 48, 78, 42];
   return (
@@ -100,7 +100,7 @@ function GuitarWaveform() {
   );
 }
 
-/* ── Feature Card ────────────────────────────────────────── */
+/* ── Feature Component ──────────────────────── */
 function FeatureCard({
   icon: Icon, label, desc,
   color = "var(--amber)",
@@ -237,15 +237,225 @@ function FeatureCard({
   );
 }
 
-/* ── Data ──────────────────────────────────────────────────── */
+/* ── Bollywood 2026 Card ───────────────────── */
+const BWOOD_GRADIENTS = [
+  "linear-gradient(135deg, #1a0533 0%, #3b1060 50%, #6b21a8 100%)",
+  "linear-gradient(135deg, #0f1f3d 0%, #1e3a5f 50%, #1d4ed8 100%)",
+  "linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #92400e 100%)",
+  "linear-gradient(135deg, #0a1a0f 0%, #14532d 50%, #15803d 100%)",
+  "linear-gradient(135deg, #1a0010 0%, #500030 50%, #9d174d 100%)",
+  "linear-gradient(135deg, #0f0f1a 0%, #1e1b4b 50%, #4338ca 100%)",
+  "linear-gradient(135deg, #180a00 0%, #431407 50%, #b45309 100%)",
+  "linear-gradient(135deg, #0c1a1a 0%, #134e4a 50%, #0f766e 100%)",
+];
+
+const BWOOD_ACCENT_COLORS = [
+  "#c084fc", "#60a5fa", "#fb923c", "#4ade80",
+  "#f472b6", "#818cf8", "#fbbf24", "#2dd4bf",
+];
+
+function Bollywood2026Card({ song, i }: { song: any; i: number }) {
+  const grad = BWOOD_GRADIENTS[i % BWOOD_GRADIENTS.length];
+  const accent = BWOOD_ACCENT_COLORS[i % BWOOD_ACCENT_COLORS.length];
+  const initials = (song.title || "?")
+    .split(" ")
+    .slice(0, 2)
+    .map((w: string) => w[0]?.toUpperCase() || "")
+    .join("");
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay: Math.min(i * 0.055, 0.55), ease: [0.16, 1, 0.3, 1] }}
+    >
+      <Link
+        href={`/song/${song.id}`}
+        style={{ textDecoration: "none", display: "block" }}
+      >
+        <div
+          style={{
+            width: 200,
+            borderRadius: 18,
+            overflow: "hidden",
+            background: grad,
+            border: `1px solid ${accent}22`,
+            boxShadow: `0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 ${accent}18`,
+            transition: "all 0.3s cubic-bezier(0.25,1,0.5,1)",
+            cursor: "pointer",
+            flexShrink: 0,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
+            e.currentTarget.style.boxShadow = `0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px ${accent}44, inset 0 1px 0 ${accent}30`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "translateY(0) scale(1)";
+            e.currentTarget.style.boxShadow = `0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 ${accent}18`;
+          }}
+        >
+          {/* Visual art block */}
+          <div
+            style={{
+              height: 140,
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}
+          >
+            {/* Ambient glow orb */}
+            <div style={{
+              position: "absolute",
+              width: 120,
+              height: 120,
+              borderRadius: "50%",
+              background: `radial-gradient(circle, ${accent}40 0%, transparent 70%)`,
+              filter: "blur(20px)",
+            }} />
+            {/* Noise texture lines */}
+            <div style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: `repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                ${accent}06 20px,
+                ${accent}06 21px
+              )`,
+            }} />
+            {/* Big initials */}
+            <span style={{
+              fontFamily: "var(--f-display)",
+              fontWeight: 900,
+              fontSize: 52,
+              color: accent,
+              opacity: 0.9,
+              letterSpacing: "-0.04em",
+              position: "relative",
+              zIndex: 1,
+              textShadow: `0 0 40px ${accent}60`,
+              lineHeight: 1,
+            }}>
+              {initials}
+            </span>
+            {/* 2026 badge */}
+            <div style={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              background: `${accent}22`,
+              border: `1px solid ${accent}44`,
+              borderRadius: 8,
+              padding: "3px 8px",
+              fontSize: 9,
+              fontWeight: 800,
+              color: accent,
+              letterSpacing: "0.1em",
+              backdropFilter: "blur(8px)",
+            }}>
+              2026
+            </div>
+            {/* Hot tag for first 5 */}
+            {i < 5 && (
+              <div style={{
+                position: "absolute",
+                top: 10,
+                left: 10,
+                background: "rgba(245,166,35,0.2)",
+                border: "1px solid rgba(245,166,35,0.45)",
+                borderRadius: 8,
+                padding: "3px 8px",
+                fontSize: 9,
+                fontWeight: 800,
+                color: "var(--amber)",
+                letterSpacing: "0.1em",
+                display: "flex",
+                alignItems: "center",
+                gap: 3,
+                backdropFilter: "blur(8px)",
+              }}>
+                🔥 HOT
+              </div>
+            )}
+          </div>
+
+          {/* Info */}
+          <div style={{
+            padding: "16px",
+            borderTop: `1px solid ${accent}18`,
+            background: "rgba(0,0,0,0.3)",
+          }}>
+            <p style={{
+              fontFamily: "var(--f-display)",
+              fontWeight: 700,
+              fontSize: 13.5,
+              color: "#fff",
+              letterSpacing: "-0.02em",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              marginBottom: 5,
+            }}>
+              {song.title}
+            </p>
+            <p style={{
+              fontSize: 11.5,
+              color: accent,
+              opacity: 0.85,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              fontWeight: 600,
+            }}>
+              {song.artist}
+            </p>
+            <div style={{
+              marginTop: 10,
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+            }}>
+              <span style={{
+                fontSize: 10,
+                fontWeight: 700,
+                color: "rgba(255,255,255,0.35)",
+                background: "rgba(255,255,255,0.06)",
+                padding: "3px 8px",
+                borderRadius: 6,
+                letterSpacing: "0.04em",
+              }}>
+                Bollywood
+              </span>
+              <span style={{
+                fontSize: 10,
+                fontWeight: 700,
+                color: accent,
+                marginLeft: "auto",
+                opacity: 0.7,
+              }}>
+                View Chords →
+              </span>
+            </div>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
+/* ── App Data ───────────────────────────────── */
 
 const FEATURES = [
-  { icon: Play, label: "Play Along", desc: "Real-time mic detection & accuracy scoring. Practice at your own BPM with live audio feedback.", color: "var(--amber)", span: 8, meta: "LATENCY < 1MS", bgImage: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&auto=format&q=85" },
-  { icon: Brain, label: "AI Simplifier", desc: "Complex chords instantly converted to beginner-friendly shapes.", color: "var(--purple)", span: 4, meta: "V3.2 CORE" },
-  { icon: Shuffle, label: "Transpose", desc: "Instant key changes with a built-in capo calculator for guitarists.", color: "var(--teal)", span: 4, meta: "ALGO-V" },
-  { icon: Zap, label: "Stage Mode", desc: "Full-screen zero-chrome view designed for live performances on dark stages.", color: "var(--rose)", span: 8, meta: "LIVE-SYNC", bgImage: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&q=85" },
-  { icon: Wifi, label: "Offline Ready", desc: "Save songs and practice without internet connection.", color: "var(--teal)", span: 4, meta: "PWA ENABLED" },
-  { icon: Headphones, label: "Mood Search", desc: "'Sad acoustic songs in Am' — just describe it and find it with our natural language search engine.", color: "var(--amber)", span: 8, meta: "AI-SEARCH", bgImage: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800&auto=format&q=85" },
+  { icon: Play, label: "Play Along", desc: "Real-time mic detection & accuracy scoring. Practice at your own BPM with live audio feedback.", color: "var(--amber)", span: 8, bgImage: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&auto=format&q=85" },
+  { icon: Brain, label: "Simple Chords", desc: "Complex chords instantly converted to beginner-friendly shapes.", color: "var(--purple)", span: 4 },
+  { icon: Shuffle, label: "Transpose", desc: "Instant key changes with a built-in capo calculator for guitarists.", color: "var(--teal)", span: 4 },
+  { icon: Zap, label: "Stage Mode", desc: "Full-screen zero-chrome view designed for live performances on dark stages.", color: "var(--rose)", span: 8, bgImage: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&q=85" },
+  { icon: Wifi, label: "Offline Mode", desc: "Save songs and practice without internet connection.", color: "var(--teal)", span: 4 },
+  { icon: Headphones, label: "Smart Search", desc: "'Sad acoustic songs in Am' — find the perfect track with our natural search.", color: "var(--amber)", span: 8, bgImage: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800&auto=format&q=85" },
 ];
 
 const GENRES = [
@@ -261,14 +471,6 @@ const GENRES = [
   { name: "Hip-Hop", color: "#7c6fcd", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&auto=format&q=85" },
   { name: "Folk", color: "#f5a623", image: "https://images.unsplash.com/photo-1525201548942-d8732f6617a0?w=1200&auto=format&q=85" },
   { name: "EDM", color: "#00d4b4", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200&auto=format&q=85" },
-];
-
-const TESTIMONIALS = [
-  { name: "Rohan M.", role: "Acoustic Guitar", quote: "I learned Stairway to Heaven in 2 weeks using the AI Simplifier. Literally game-changing.", stars: 5 },
-  { name: "Priya S.", role: "Ukulele Player", quote: "Play Along mode made my accuracy jump from 58% to 93% in 10 days. Nothing else comes close.", stars: 5 },
-  { name: "Alex K.", role: "Electric Guitar", quote: "Replaced Ultimate Guitar entirely. Autoscroll at custom BPM during live gigs is insane.", stars: 5 },
-  { name: "Dev R.", role: "Bass + Guitar", quote: "The chord transposition tool is razor accurate. Changed how I teach beginner students.", stars: 5 },
-  { name: "Meera T.", role: "Indie Vocalist", quote: "Found every Bollywood song I ever wanted. The search is incredibly fast and accurate.", stars: 5 },
 ];
 
 const MARQUEE_SONGS = [
@@ -295,6 +497,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSug, setShowSug] = useState(false);
+  const [bwood2026, setBwood2026] = useState<any[]>([]);
+  const [bwoodLoading, setBwoodLoading] = useState(true);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
@@ -331,6 +535,15 @@ export default function HomePage() {
       { opacity: 0, y: 40, skewY: 3 },
       { opacity: 1, y: 0, skewY: 0, stagger: 0.07, duration: 0.85, delay: 0.15, ease: "power3.out" }
     );
+  }, []);
+
+  /* ── Bollywood 2026 fetch ── */
+  useEffect(() => {
+    fetch('/api/songs/trending?limit=20')
+      .then((r) => r.json())
+      .then((d) => { setBwood2026(d.songs || []); })
+      .catch(() => {})
+      .finally(() => setBwoodLoading(false));
   }, []);
 
   /* ── Suggestions ── */
@@ -415,7 +628,7 @@ export default function HomePage() {
           </AnimatePresence>
         </div>
 
-        {/* Dark cinematic overlay — stronger at edges, lighter in center */}
+        {/* Hero Background Elements */}
         <div
           style={{
             position: "absolute",
@@ -451,17 +664,7 @@ export default function HomePage() {
 
         <div className="container" style={{ position: "relative", zIndex: 2, textAlign: "center", paddingTop: 48, paddingBottom: 60 }}>
 
-          {/* Pill badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55 }}
-            style={{ marginBottom: 30 }}
-          >
-            <span className="section-label">
-              <Music2 size={10} /> 6,500+ Authentic Songs · Open Source · Free Forever
-            </span>
-          </motion.div>
+          {/* No badge here anymore */}
 
           {/* Headline — smaller, refined */}
           <div
@@ -511,7 +714,7 @@ export default function HomePage() {
               fontWeight: 400,
             }}
           >
-            6,500+ authentic songs. Real-time chord detection. Built for every guitarist — from bedroom to stage.
+            Growing collection of authentic songs. Real-time chord detection. Built for every guitarist.
           </motion.p>
 
           {/* Integrated Search Bar */}
@@ -531,7 +734,7 @@ export default function HomePage() {
             }}
           >
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--amber)", marginBottom: 16, opacity: 0.8 }}>
-              Search 6,500+ verified songs instantly
+              Search for a song
             </p>
             <div
               style={{
@@ -635,6 +838,11 @@ export default function HomePage() {
                           <span style={{ fontSize: 11, fontWeight: 700, color: "var(--amber)", background: "rgba(245,166,35,0.1)", padding: "4px 10px", borderRadius: 8 }}>View Tab</span>
                         </Link>
                       ))}
+                      <div style={{ padding: "12px 14px", textAlign: "center", marginTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                        <Link href="/songs" style={{ fontSize: 13, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
+                          View all 7,000+ songs in library →
+                        </Link>
+                      </div>
                     </div>
                   )}
                   {!query && (
@@ -659,151 +867,23 @@ export default function HomePage() {
                           {term}
                         </button>
                       ))}
+                      <div style={{ padding: "12px 14px", textAlign: "center", marginTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                        <Link href="/songs" style={{ fontSize: 13, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
+                          View all 7,000+ songs in library →
+                        </Link>
+                      </div>
                     </div>
                   )}
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
-
-          {/* Quick Stats Grid */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            style={{ display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}
-          >
-            {[
-              { icon: Headphones, label: "6.5K+ Songs" },
-              { icon: Users, label: "2M+ Users" },
-              { icon: Star, label: "4.9 Rating" },
-            ].map((b, i) => (
-              <span
-                key={i}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10,
-                  fontSize: 13, fontWeight: 700,
-                  color: "rgba(255,255,255,0.55)", letterSpacing: "0.02em",
-                }}
-              >
-                <b.icon size={16} style={{ color: "var(--amber)" }} />
-                {b.label}
-              </span>
-            ))}
-          </motion.div>
         </div>
 
-        {/* Cinematic Bottom Gradient */}
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "15vh", background: "linear-gradient(to top, var(--obsidian), transparent)", zIndex: 1 }} />
+        {/* No stats here anymore */}
       </section>
 
-      {/* ══════════════════════════════════════════
-          CINEMATIC STATS
-      ══════════════════════════════════════════ */}
-      <section style={{ padding: "160px 0", background: "var(--obsidian)", position: "relative", overflow: "hidden" }}>
-        {/* Ambient glows behind cards */}
-        <div style={{ position: "absolute", top: "20%", left: "10%", width: "40vw", height: "40vw", borderRadius: "50%", background: "rgba(245,166,35,0.04)", filter: "blur(100px)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "10%", right: "10%", width: "35vw", height: "35vw", borderRadius: "50%", background: "rgba(124,111,205,0.03)", filter: "blur(80px)", pointerEvents: "none" }} />
-
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)" }} />
-
-        {/* Large faint background text — Now with a holographic pulse */}
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "100%", textAlign: "center", pointerEvents: "none", userSelect: "none" }}>
-          <motion.h2 
-            animate={{ opacity: [0.035, 0.06, 0.035] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            style={{ 
-              fontSize: "22vw", 
-              fontFamily: "var(--f-display)", 
-              fontWeight: 900, 
-              whiteSpace: "nowrap",
-              background: "linear-gradient(90deg, var(--amber) 0%, var(--purple) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              letterSpacing: "-0.05em"
-            }}
-          >
-            MUSIC
-          </motion.h2>
-        </div>
-
-        <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 1100 }}>
-          <div style={{ 
-            display: "flex", 
-            justifyContent: "space-between", 
-            alignItems: "stretch", // Stretch for divider consistency
-            gap: 0,
-            flexWrap: "nowrap" 
-          }}>
-            {[
-              { to: 6500,   suffix: "+", label: "Songs indexed", desc: "Every genre, era.", icon: Music2, color: "var(--amber)" },
-              { to: 2400000, suffix: "+", label: "Musicians", desc: "Practicing daily.", icon: Users, color: "var(--purple)" },
-              { to: 99,      suffix: "%", label: "Accuracy Rate", desc: "Studio-verified.", icon: AudioLines, color: "var(--teal)" },
-            ].map((s, i) => (
-              <React.Fragment key={s.label}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ 
-                    flex: 1,
-                    textAlign: "center", 
-                    padding: "40px 20px",
-                    position: "relative",
-                    zIndex: 2
-                  }}
-                >
-                  {/* Subtle soft glow behind each stat */}
-                  <div style={{ 
-                    position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-                    width: "120%", height: "120%", borderRadius: "50%", 
-                    background: `radial-gradient(circle, ${s.color}15 0%, transparent 70%)`,
-                    opacity: 0.6, pointerEvents: "none", zIndex: -1
-                  }} />
-
-                  <div style={{ 
-                    width: 48, height: 48, borderRadius: 14, 
-                    background: "rgba(255,255,255,0.03)", 
-                    backdropFilter: "blur(8px)",
-                    border: `1px solid rgba(255,255,255,0.08)`, 
-                    display: "flex", alignItems: "center", justifyContent: "center", 
-                    margin: "0 auto 20px",
-                    transition: "all 0.3s var(--spring)"
-                  }} className="icon-glass">
-                    <s.icon size={20} style={{ color: "var(--t1)", opacity: 0.8 }} />
-                  </div>
-
-                  <p style={{
-                    fontFamily: "var(--f-display)", fontWeight: 900,
-                    fontSize: "clamp(52px, 8vw, 84px)",
-                    color: "#fff",
-                    textShadow: `0 10px 30px ${s.color}44`, // Holographic glow
-                    letterSpacing: "-0.05em", lineHeight: 1, marginBottom: 12
-                  }}>
-                    <Counter to={s.to} suffix={s.suffix} />
-                  </p>
-                  
-                  <p style={{ fontSize: 13, fontWeight: 800, color: s.color, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 10 }}>
-                    {s.label}
-                  </p>
-                  <p style={{ fontSize: 15, color: "var(--t2)", fontWeight: 500, lineHeight: 1.6, maxWidth: "16ch", margin: "0 auto" }}>{s.desc}</p>
-                </motion.div>
-
-                {/* Vertical Divider */}
-                {i < 2 && (
-                  <div style={{ 
-                    width: 1, 
-                    alignSelf: "center",
-                    height: "120px", 
-                    background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent)" 
-                  }} />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* No statistics section here */}
 
       {/* ══════════════════════════════════════════
           PLAY ALONG
@@ -821,7 +901,6 @@ export default function HomePage() {
             viewport={{ once: true }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="section-label" style={{ background: "rgba(245,166,35,0.15)", color: "var(--amber)", border: "1px solid rgba(245,166,35,0.3)" }}><Zap size={10} /> AI Powered Stage Mode</span>
             <h2 style={{ fontFamily: "var(--f-display)", fontWeight: 900, fontSize: "clamp(32px, 5vw, 64px)", marginBottom: 24, lineHeight: 1, letterSpacing: "-0.04em" }}>
               The Stage <span className="text-gradient">is Yours.</span>
             </h2>
@@ -899,7 +978,6 @@ export default function HomePage() {
       <section className="section" style={{ background: "var(--obsidian)", borderTop: "1px solid var(--border)", padding: "120px 0" }}>
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ textAlign: "center", marginBottom: 72 }}>
-            <span className="section-label" style={{ background: "rgba(124,111,205,0.12)", color: "var(--purple)", border: "1px solid rgba(124,111,205,0.25)" }}><Sparkles size={10} /> Pro Mastery Tools</span>
             <h2 style={{ fontFamily: "var(--f-display)", fontWeight: 900, fontSize: "clamp(30px, 4.5vw, 56px)", marginBottom: 20, letterSpacing: "-0.04em" }}>
               Built for <span className="text-gradient">Performance.</span>
             </h2>
@@ -918,113 +996,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          PREMIUM ACADEMY SECTION
-      ══════════════════════════════════════════ */}
-      <section style={{ background: "var(--obsidian)", padding: "0", position: "relative", overflow: "hidden" }}>
-
-        {/* Two-column cinematic split */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: 700 }}>
-
-          {/* — Left: HD Image panel — */}
-          <div style={{ position: "relative", overflow: "hidden", minHeight: 600 }}>
-            <img
-              src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=1400&q=90&auto=format&fit=crop"
-              alt="Person learning guitar with AI assistance"
-              style={{
-                position: "absolute", inset: 0,
-                width: "100%", height: "100%",
-                objectFit: "cover",
-                objectPosition: "center top",
-              }}
-            />
-            {/* Gradient fade into right panel */}
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(5,5,10,0) 50%, var(--obsidian) 100%)" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 60%, rgba(5,5,10,0.7) 100%)" }} />
-
-            {/* Floating badge */}
-            <div style={{ position: "absolute", bottom: 40, left: 40, padding: "12px 20px", background: "rgba(5,5,10,0.85)", backdropFilter: "blur(20px)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 16 }}>
-              <div style={{ fontSize: 11, color: "var(--amber)", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>Now available</div>
-              <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>AI-Powered Lessons</div>
-            </div>
-          </div>
-
-          {/* — Right: Copy + Features — */}
-          <div style={{ padding: "80px 60px", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative" }}>
-            {/* Ambient glow */}
-            <div style={{ position: "absolute", top: "30%", right: "-10%", width: "60%", height: "60%", background: "radial-gradient(ellipse, rgba(245,166,35,0.08) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
-
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              style={{ position: "relative", zIndex: 1 }}
-            >
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 14px", background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 100, color: "var(--amber)", fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", marginBottom: 28 }}>
-                <Flame size={13} /> Elite Access
-              </div>
-
-              <h2 style={{ fontFamily: "var(--f-display)", fontSize: "clamp(34px, 3.5vw, 52px)", fontWeight: 900, color: "var(--t1)", lineHeight: 1.1, letterSpacing: "-0.03em", marginBottom: 20 }}>
-                Premium Guitar <br />
-                <span style={{ color: "var(--amber)" }}>Academy.</span>
-              </h2>
-
-              <p style={{ fontSize: 17, color: "var(--t3)", lineHeight: 1.7, marginBottom: 40, maxWidth: 440 }}>
-                Unlock the internet&apos;s most advanced guitar learning suite. Master any theory concept with industry-first AI tools designed exclusively for guitarists.
-              </p>
-
-              {/* Features */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
-                {[
-                  { icon: Brain, color: "var(--purple)", title: "Personalized AI Teacher", desc: "Adaptive curriculum that listens and corrects you in real-time." },
-                  { icon: CheckCircle2, color: "var(--teal)", title: "Scratch Music Theory Notes", desc: "Bespoke theory notes tailored to every chord progression." },
-                  { icon: Zap, color: "var(--amber)", title: "Industry-First AI Simplifier", desc: "Convert complex math-rock & jazz chords into simple shapes instantly." },
-                ].map((f, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-                    style={{ display: "flex", gap: 16, alignItems: "flex-start" }}
-                  >
-                    <div style={{ width: 40, height: 40, borderRadius: 10, background: `${f.color}12`, border: `1px solid ${f.color}25`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
-                      <f.icon size={18} color={f.color} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: "var(--t1)", marginBottom: 3, letterSpacing: "-0.01em" }}>{f.title}</div>
-                      <div style={{ fontSize: 13.5, color: "var(--t3)", lineHeight: 1.55 }}>{f.desc}</div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Pricing row */}
-              <div style={{ display: "flex", alignItems: "center", gap: 20, padding: "24px 28px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18 }}>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 11, color: "var(--t3)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Monthly</p>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-                    <span style={{ fontFamily: "var(--f-display)", fontSize: 42, fontWeight: 900, color: "var(--t1)", letterSpacing: "-0.04em" }}>₹500</span>
-                    <span style={{ fontSize: 15, color: "var(--t3)", fontWeight: 500 }}>/mo</span>
-                  </div>
-                </div>
-                <div style={{ width: 1, height: 50, background: "var(--border)", flexShrink: 0 }} />
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  <Magnetic>
-                    <button className="btn" style={{ padding: "13px 24px", background: "var(--amber)", color: "#000", fontSize: 15, fontWeight: 800, borderRadius: 12, border: "none", display: "inline-flex", gap: 8, alignItems: "center", cursor: "pointer", whiteSpace: "nowrap" }}>
-                      Start Free Trial <ChevronRight size={16} />
-                    </button>
-                  </Magnetic>
-                  <p style={{ fontSize: 12, color: "var(--t3)", textAlign: "center" }}>7-day free · Cancel anytime</p>
-                </div>
-              </div>
-
-            </motion.div>
-          </div>
-
-        </div>
-      </section>
+      {/* Removed Academy Row */}
 
 
       {/* ══════════════════════════════════════════
@@ -1034,7 +1006,6 @@ export default function HomePage() {
         <div className="container">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 60 }}>
             <div>
-              <span className="section-label" style={{ background: "rgba(20,184,166,0.15)", color: "var(--teal)", border: "1px solid rgba(20,184,166,0.3)" }}><AudioLines size={10} /> Musical Exploration</span>
               <h2 style={{ fontFamily: "var(--f-display)", fontWeight: 900, fontSize: "clamp(28px, 4vw, 52px)", letterSpacing: "-0.04em" }}>
                 Diversify your <span className="text-gradient">Sound.</span>
               </h2>
@@ -1067,38 +1038,151 @@ export default function HomePage() {
       </section>
 
       {/* ══════════════════════════════════════════
-          TESTIMONIALS
+          BOLLYWOOD 2026 — TRENDING HITS
       ══════════════════════════════════════════ */}
-      <section className="section" style={{ background: "var(--obsidian)", borderTop: "1px solid var(--border)", padding: "120px 0", overflow: "hidden" }}>
-        <div className="container" style={{ marginBottom: 60 }}>
-          <div style={{ textAlign: "center" }}>
-            <span className="section-label" style={{ background: "rgba(244,63,94,0.15)", color: "var(--rose)", border: "1px solid rgba(244,63,94,0.3)" }}><Star size={10} /> Community Vibes</span>
-            <h2 style={{ fontFamily: "var(--f-display)", fontWeight: 900, fontSize: "clamp(28px, 4vw, 52px)", letterSpacing: "-0.04em", marginBottom: 12 }}>
-              Guitarists <span className="text-gradient">love Geethub.</span>
-            </h2>
-          </div>
-        </div>
+      <section
+        style={{
+          background: "var(--obsidian)",
+          borderTop: "1px solid var(--border)",
+          padding: "100px 0 80px",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Ambient background glow */}
+        <div style={{
+          position: "absolute",
+          top: "-10%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "70vw",
+          height: "60vw",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(168,85,247,0.1) 0%, rgba(245,166,35,0.06) 45%, transparent 75%)",
+          filter: "blur(60px)",
+          pointerEvents: "none",
+        }} />
+        {/* Film grain overlay */}
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: "url(\"https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=1800&auto=format&q=40\")",
+          backgroundSize: "cover",
+          backgroundPosition: "center 40%",
+          opacity: 0.04,
+          pointerEvents: "none",
+        }} />
 
-        <div className="scrollbar-hide" style={{ display: "flex", gap: 20, overflowX: "auto", paddingInline: "calc((100vw - 1200px) / 2)", paddingBottom: 20 }}>
-          {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
-            <div key={i} className="glass" style={{ padding: "32px", minWidth: 350, maxWidth: 400, flexShrink: 0, display: "flex", flexDirection: "column", border: "1px solid rgba(255,255,255,0.05)" }}>
-              <div style={{ display: "flex", gap: 3, marginBottom: 18 }}>
-                {[...Array(t.stars)].map((_, j) => <Star key={j} size={14} style={{ color: "var(--amber)" }} fill="var(--amber)" />)}
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          {/* Section header */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48 }}>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                background: "linear-gradient(90deg, rgba(168,85,247,0.15), rgba(245,166,35,0.12))",
+                border: "1px solid rgba(168,85,247,0.3)",
+                borderRadius: 10,
+                padding: "6px 14px",
+                marginBottom: 16,
+              }}>
+                <span style={{ fontSize: 14 }}>🎸</span>
+                <span style={{
+                  fontSize: 10,
+                  fontWeight: 800,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  background: "linear-gradient(90deg, #c084fc, #f59e0b)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}>
+                  Best of 2026
+                </span>
               </div>
-              <p style={{ fontSize: 16, color: "var(--t1)", lineHeight: 1.8, marginBottom: 24, fontStyle: "italic", flex: 1, fontWeight: 500 }}>
-                "{t.quote}"
+              <h2 style={{
+                fontFamily: "var(--f-display)",
+                fontWeight: 900,
+                fontSize: "clamp(28px, 4vw, 52px)",
+                letterSpacing: "-0.04em",
+                lineHeight: 1.05,
+              }}>
+                <span style={{
+                  background: "linear-gradient(135deg, #f59e0b 0%, #c084fc 50%, #60a5fa 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}>Bollywood</span>{" "}
+                <span style={{ color: "var(--t1)" }}>Hits 🔥</span>
+              </h2>
+              <p style={{ fontSize: 14, color: "var(--t3)", marginTop: 8, fontWeight: 500 }}>
+                The hottest chords trending on Geethub right now
               </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, var(--amber) 0%, #e08010 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16, color: "#050507", flexShrink: 0 }}>
-                  {t.name[0]}
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Link
+                href="/explore?genre=Bollywood"
+                className="btn btn-surface btn-md hide-mobile"
+                style={{ gap: 8, padding: "12px 24px", borderRadius: 12 }}
+              >
+                All Bollywood Songs <ChevronRight size={16} />
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Horizontal scroll rail */}
+          <div
+            className="scrollbar-hide"
+            style={{
+              display: "flex",
+              gap: 16,
+              overflowX: "auto",
+              paddingBottom: 20,
+              paddingInline: 2,
+              marginInline: -2,
+              scrollSnapType: "x mandatory",
+            }}
+          >
+            {bwoodLoading
+              ? Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="skeleton"
+                  style={{
+                    width: 200,
+                    height: 240,
+                    borderRadius: 18,
+                    flexShrink: 0,
+                  }}
+                />
+              ))
+              : bwood2026.map((song, i) => (
+                <div key={song.id} style={{ scrollSnapAlign: "start" }}>
+                  <Bollywood2026Card song={song} i={i} />
                 </div>
-                <div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--t1)" }}>{t.name}</p>
-                  <p style={{ fontSize: 12, color: "var(--t3)", fontWeight: 600, textTransform: "uppercase" }}>{t.role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+              ))
+            }
+          </div>
+
+          {/* View all mobile CTA */}
+          <div style={{ textAlign: "center", marginTop: 32 }} className="show-mobile">
+            <Link
+              href="/explore?genre=Bollywood"
+              className="btn btn-surface btn-md"
+              style={{ gap: 8, padding: "12px 24px", borderRadius: 12 }}
+            >
+              All Bollywood Songs <ChevronRight size={16} />
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -171,7 +171,7 @@ export function SongViewer({ song }:{ song:Song }) {
           <div style={{ width:"clamp(240px,30%,320px)", flexShrink:0 }} className="panel-sticky hide-mobile">
             <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
 
-              {/* Performance Profile */}
+              {/* Song Guide */}
               <div ref={summaryRef} className="glass" style={{ padding:22, position:"relative", border:"1px solid var(--border-amber)", background:"rgba(245,166,35,0.03)" }}>
                 <AnimatePresence>
                   {popover && (
@@ -196,11 +196,11 @@ export function SongViewer({ song }:{ song:Song }) {
                   <div style={{ width:24, height:24, borderRadius:6, background:"rgba(245,166,35,0.15)", display:"flex", alignItems:"center", justifyContent:"center" }}>
                     <Music size={14} style={{ color:"var(--amber)" }}/>
                   </div>
-                  <span style={{ fontFamily:"var(--f-display)", fontWeight:800, fontSize:14, textTransform:"uppercase", letterSpacing:"0.05em" }}>Performance Guide</span>
+                  <span style={{ fontFamily:"var(--f-display)", fontWeight:800, fontSize:14, textTransform:"uppercase", letterSpacing:"0.05em" }}>Song Reference</span>
                 </div>
 
                 <p style={{ fontSize:10, fontWeight:800, color:"var(--t3)", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:12 }}>
-                  Harmonic Profile · {chords.length} Chords
+                  Chord Profile · {chords.length} Chords
                 </p>
                 <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginBottom:24 }}>
                   {chords.map(c => (
@@ -265,7 +265,7 @@ export function SongViewer({ song }:{ song:Song }) {
               <div className="glass" style={{ padding:18 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:14 }}>
                   <Zap size={15} style={{ color:"var(--amber)" }}/>
-                  <span style={{ fontFamily:"var(--f-display)", fontWeight:700, fontSize:14 }}>AI Simplifier</span>
+                  <span style={{ fontFamily:"var(--f-display)", fontWeight:700, fontSize:14 }}>Simplified Chords</span>
                 </div>
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:4, background:"rgba(0,0,0,0.25)", borderRadius:9, padding:4 }}>
                   {([["Beginner",true],["Original",false],["Advanced",null]] as const).map(([label,val])=>(
@@ -302,13 +302,13 @@ export function SongViewer({ song }:{ song:Song }) {
                     ))}
                   </div>
                   <div style={{ textAlign:"right" }}>
-                    <p style={{ fontFamily:"var(--f-mono)", fontWeight:800, fontSize:20, color:"var(--t1)" }}>4.8</p>
-                    <p style={{ fontSize:10, color:"var(--t3)" }}>1,247 ratings</p>
+                    <p style={{ fontFamily:"var(--f-mono)", fontWeight:800, fontSize:20, color:"var(--t1)" }}>5.0</p>
+                    <p style={{ fontSize:10, color:"var(--t3)" }}>User ratings</p>
                   </div>
                 </div>
               </div>
 
-              {/* High-fidelity Artist Card */}
+              {/* Artist Card */}
               <div className="glass" style={{ padding:20, border:"1px solid var(--border-amber)", background:"rgba(245,166,35,0.02)" }}>
                 <p style={{ fontSize:10, fontWeight:900, textTransform:"uppercase", color:"var(--amber)", letterSpacing:"0.08em", marginBottom:12 }}>
                   Artist Focus
@@ -319,11 +319,11 @@ export function SongViewer({ song }:{ song:Song }) {
                   </div>
                   <div>
                     <p style={{ fontWeight:800, fontSize:15, color:"var(--t1)" }}>{song.artist}</p>
-                    <p style={{ fontSize:12, color:"var(--t3)" }}>Verified Global Artist</p>
+                    <p style={{ fontSize:12, color:"var(--t3)" }}>Artist</p>
                   </div>
                 </div>
                 <Link href={`/explore?artist=${encodeURIComponent(song.artist)}`} className="btn btn-surface btn-sm btn-full" style={{ fontSize:11, letterSpacing:"0.02em" }}>
-                  View Full Discography
+                  View more from artist
                 </Link>
               </div>
 
@@ -379,4 +379,4 @@ export function SongViewer({ song }:{ song:Song }) {
     </div>
   );
 }
-// Added Performance Sidebar for better visibility
+// Song Sidebar

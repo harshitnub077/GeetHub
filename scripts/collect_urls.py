@@ -17,7 +17,7 @@ HEADERS = {
 }
 
 def get_urls(sitemap_url):
-    print(f"Fetching {sitemap_url}...")
+    print(f"Checking {sitemap_url}...")
     try:
         response = requests.get(sitemap_url, headers=HEADERS, timeout=30)
         if response.status_code != 200:
@@ -54,7 +54,7 @@ def main():
         for url in filtered_urls:
             f.write(url + '\n')
     
-    print(f"Total Unique URLs collected: {len(filtered_urls)}")
+    print(f"Found {len(filtered_urls)} songs in total.")
 
 if __name__ == "__main__":
     main()
