@@ -102,7 +102,7 @@ export default function SongsPage() {
                         <span className="text-muted-foreground/40 mx-2">/</span>
                         {song.title}
                       </h3>
-                      {song.contributor_username.includes('bot') && (
+                      {song.contributor_username?.includes('bot') && (
                         <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
                           Imported
                         </span>
