@@ -113,6 +113,38 @@ export async function GET(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Search API Error:', error);
+    
+    // Fallback for Vercel / Serverless environments where SQLite might fail
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const dataPath = path.join(process.cwd(), 'src/data/songs.json');
+      
+      if (fs.existsSync(dataPath)) {
+        const staticSongs = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+        
+        // Simple search logic for the fallback
+        const filtered = staticSongs.filter((s: any) => 
+          !rawQ || s.title.toLowerCase().includes(rawQ) || s.artist.toLowerCase().includes(rawQ)
+        ).filter((s: any) =>
+          !artist || s.artist.toLowerCase().includes(artist.toLowerCase())
+        );
+
+        return NextResponse.json({
+          songs: filtered.slice(offset, offset + limit),
+          pagination: {
+            total: filtered.length,
+            page,
+            limit,
+            pages: Math.ceil(filtered.length / limit)
+          },
+          is_fallback: true
+        });
+      }
+    } catch (fallbackError) {
+      console.error('Fallback Error:', fallbackError);
+    }
+
     return NextResponse.json({ error: 'Search Engine Error', details: error.message }, { status: 500 });
   }
 }

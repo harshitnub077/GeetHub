@@ -92,6 +92,38 @@ export async function GET(request: NextRequest) {
 
   } catch (err: any) {
     console.error('GET /api/songs error:', err);
+
+    // Fallback for Vercel / Serverless environments
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const dataPath = path.join(process.cwd(), 'src/data/songs.json');
+      
+      if (fs.existsSync(dataPath)) {
+        const staticSongs = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+        
+        // Simple filter logic for fallback
+        const filtered = staticSongs.filter((s: any) => 
+          (!genre || s.genre?.toLowerCase().includes(genre.toLowerCase())) &&
+          (!artist || s.artist?.toLowerCase().includes(artist.toLowerCase())) &&
+          (!q || s.title?.toLowerCase().includes(q) || s.artist?.toLowerCase().includes(q))
+        );
+
+        return NextResponse.json({
+          songs: filtered.slice(offset, offset + limit),
+          pagination: {
+            total: filtered.length,
+            page,
+            limit,
+            pages: Math.ceil(filtered.length / limit)
+          },
+          is_fallback: true
+        });
+      }
+    } catch (fallbackError) {
+      console.error('Fallback Error:', fallbackError);
+    }
+
     return NextResponse.json({ error: 'Database error', details: err.message }, { status: 500 });
   }
 }
