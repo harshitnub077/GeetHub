@@ -5,6 +5,7 @@
     "artist": "Arijit Singh",
     "genre": "Bollywood",
     "album": "Aashiqui 2",
+    "contributor_username": "geethub_bot",
     "chord_data": "[Am]Hum tere bin [F]ab reh nahi sakte\n[C]Tere bina kya [G]wajood mera\n[Am]Tujhse juda [F]gar ho jaayenge\n[C]To khud se hi [G]ho jaayenge juda\n[Am]Tum Hi Ho [F] [C] [G]"
   },
   {
@@ -13,6 +14,7 @@
     "artist": "Sonu Nigam",
     "genre": "Bollywood",
     "album": "Kal Ho Na Ho",
+    "contributor_username": "geethub_bot",
     "chord_data": "[C]Har ghadi [G]badal rahi hai [Am]roop zindagi\n[F]Chhaon hai kabhi kabhi [C]hai dhoop zindagi\n[C]Har pal yahan [G]ji bhar jiyo\n[Am]Jo hai samaa [F]kal ho na ho"
   },
   {
@@ -21,6 +23,7 @@
     "artist": "Arijit Singh",
     "genre": "Bollywood",
     "album": "Ae Dil Hai Mushkil",
+    "contributor_username": "geethub_bot",
     "chord_data": "[Em]Acha chalta hoon\n[G]Duaon mein yaad rakhna\n[D]Mere dil ki dhadkan\n[Am]Mujhe bhi zindagi mein [Em]aazma"
   },
   {
@@ -29,6 +32,7 @@
     "artist": "Passenger",
     "genre": "Pop",
     "album": "All the Little Lights",
+    "contributor_username": "geethub_bot",
     "chord_data": "[C]Well you only need the [G]light when it's burning [Am]low\n[F]Only miss the sun when it [C]starts to snow\n[C]Only know you love her when you [G]let her go\n[Am] [F] [C] [G]"
   },
   {
@@ -37,6 +41,7 @@
     "artist": "Oasis",
     "genre": "Rock",
     "album": "(What's the Story) Morning Glory?",
+    "contributor_username": "geethub_bot",
     "chord_data": "[Em7]Today is gonna be the day that they're gonna [G]throw it back to you\n[Dsus4]By now you should've somehow realized [A7sus4]what you gotta do\n[Em7]I don't believe that anybody [G]feels the way I do [Dsus4]about you now [A7sus4]"
   },
   {
@@ -45,6 +50,7 @@
     "artist": "Eagles",
     "genre": "Rock",
     "album": "Hotel California",
+    "contributor_username": "geethub_bot",
     "chord_data": "[Bm]On a dark desert highway [F#]cool wind in my hair\n[A]Warm smell of colitas [E]rising up through the air\n[G]Up ahead in the distance [D]I saw a shimmering light\n[Em]My head grew heavy and my sight grew dim [F#]I had to stop for the night"
   },
   {
@@ -53,6 +59,7 @@
     "artist": "Bob Dylan",
     "genre": "Folk",
     "album": "Pat Garrett & Billy the Kid",
+    "contributor_username": "geethub_bot",
     "chord_data": "[G]Mama take this badge off of me\n[D]I can't use it anymore\n[G]It's getting dark, [Am]too dark to see\n[D]I feel I'm knockin' on [G]heaven's door\n[G]Knock knock knockin' on [D]heaven's door\n[G]Knock knock knockin' on [Am]heaven's door"
   },
   {
@@ -61,6 +68,7 @@
     "artist": "Ben E. King",
     "genre": "Soul",
     "album": "Don't Play That Song!",
+    "contributor_username": "geethub_bot",
     "chord_data": "[A]When the night has come\n[A]And the land is dark\n[F#m]And the moon is the only [F#m]light we see\n[D]No I won't [E]be afraid\n[D]Oh I won't [E]be afraid\n[A]Just as long as you stand [E]stand by me [A]"
   }
 ]

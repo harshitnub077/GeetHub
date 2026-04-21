@@ -11,7 +11,7 @@ interface Song {
   title: string;
   artist: string;
   genre: string;
-  contributor_username: string;
+  contributor_username?: string;
 }
 
 export default function SongsPage() {

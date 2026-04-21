@@ -11,7 +11,7 @@ import {
 import { ChordRenderer, ChordDiagram } from "./ChordRenderer";
 import { AnimatePresence } from "framer-motion";
 
-interface Song { id:string; title:string; artist:string; genre:string; contributor_username:string; chord_data:string; bpm:number; music_key:string; capo:number; }
+interface Song { id:string; title:string; artist:string; genre:string; contributor_username?:string; chord_data:string; bpm?:number; music_key?:string; capo?:number; }
 
 export function SongViewer({ song }:{ song:Song }) {
   const [transpose, setTranspose] = useState(0);
