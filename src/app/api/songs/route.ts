@@ -1,6 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/dbSync';
+import fs from 'fs';
+import path from 'path';
 
+// ── Shared JSON fallback ────────────────────────────────────────
+function loadStaticSongs(): any[] {
+  try {
+    const dataPath = path.join(process.cwd(), 'src/data/songs.json');
+    return JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+  } catch {
+    return [];
+  }
+}
+
+function jsonResponse(songs: any[], page: number, limit: number, offset: number) {
+  const sliced = songs.slice(offset, offset + limit);
+  return NextResponse.json({
+    songs: sliced,
+    pagination: { total: songs.length, page, limit, pages: Math.ceil(songs.length / limit) },
+    is_fallback: true,
+  });
+}
+
+// ── GET /api/songs ──────────────────────────────────────────────
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const q      = searchParams.get('q')?.toLowerCase().trim() || '';
@@ -10,33 +32,40 @@ export async function GET(request: NextRequest) {
   const limit  = Math.min(100, parseInt(searchParams.get('limit') || '30'));
   const offset = (page - 1) * limit;
 
+  const db = getDb();
+
+  // ── JSON fallback when DB unavailable ──
+  if (!db) {
+    const all = loadStaticSongs().filter((s: any) =>
+      (!q      || s.title?.toLowerCase().includes(q) || s.artist?.toLowerCase().includes(q)) &&
+      (!genre  || s.genre?.toLowerCase().includes(genre.toLowerCase())) &&
+      (!artist || s.artist?.toLowerCase().includes(artist.toLowerCase()))
+    );
+    return jsonResponse(all, page, limit, offset);
+  }
+
+  // ── DB path ──
   try {
-    const db = getDb();
     let songs: any[] = [];
     let totalCount = 0;
 
     if (q) {
-      // Create Advanced FTS5 query: split by words and use prefix matching on each
-      const safeQ = q.replace(/["^=:]/g, ''); // strip fts special chars
+      const safeQ = q.replace(/["^=:]/g, '');
       const words = safeQ.split(/\s+/).filter(w => w.length > 0);
-      
-      // Match all words anywhere in the document with prefix wildcard
-      const matchQuery = words.map(w => `"${w}"*`).join(" AND ");
-
-      const genreClause = genre ? 'AND s.genre LIKE ?' : '';
+      const matchQuery = words.map(w => `"${w}"*`).join(' AND ');
+      const genreClause  = genre  ? 'AND s.genre LIKE ?'  : '';
       const artistClause = artist ? 'AND s.artist LIKE ?' : '';
-
       const args: any[] = [matchQuery];
       if (genre)  args.push(`%${genre}%`);
       if (artist) args.push(`%${artist}%`);
 
-      const queryRow = db.prepare(`
+      const qCount = db.prepare(`
         SELECT count(*) as count FROM (
           SELECT 1 FROM songs_fts f JOIN songs s ON f.id = s.id
           WHERE f.songs_fts MATCH ? ${genreClause} ${artistClause}
         )
       `).get(...args) as { count: number };
-      totalCount = queryRow?.count || 0;
+      totalCount = qCount?.count || 0;
 
       songs = db.prepare(`
         SELECT s.id, s.title, s.artist, s.genre, s.album, s.source
@@ -46,43 +75,35 @@ export async function GET(request: NextRequest) {
         LIMIT ? OFFSET ?
       `).all(...args, limit, offset);
 
-      // Fallback to LIKE if FTS fails to find due to typos
       if (songs.length === 0) {
-        const likeToken = `%${q.split('').join('%')}%`; // very loose fuzzy
-        const fbArgs: any[] = [likeToken, likeToken];
+        const tok = `%${q.split('').join('%')}%`;
+        const fbArgs: any[] = [tok, tok];
         if (genre)  fbArgs.push(`%${genre}%`);
         if (artist) fbArgs.push(`%${artist}%`);
-
-        const fbCountRow = db.prepare(`
+        const fbCount = db.prepare(`
           SELECT count(*) as count FROM (
-            SELECT 1 FROM songs 
-            WHERE (title LIKE ? OR artist LIKE ?) ${genreClause.replace('s.', '')} ${artistClause.replace('s.', '')}
+            SELECT 1 FROM songs WHERE (title LIKE ? OR artist LIKE ?) ${genreClause.replace('s.','')} ${artistClause.replace('s.','')}
           )
         `).get(...fbArgs) as { count: number };
-        totalCount = fbCountRow?.count || 0;
-
+        totalCount = fbCount?.count || 0;
         songs = db.prepare(`
-          SELECT id, title, artist, genre, album, source 
-          FROM songs 
-          WHERE (title LIKE ? OR artist LIKE ?) ${genreClause.replace('s.', '')} ${artistClause.replace('s.', '')}
+          SELECT id, title, artist, genre, album, source FROM songs
+          WHERE (title LIKE ? OR artist LIKE ?) ${genreClause.replace('s.','')} ${artistClause.replace('s.','')}
           LIMIT ? OFFSET ?
         `).all(...fbArgs, limit, offset);
       }
 
     } else if (genre) {
-      const genreArg = `%${genre}%`;
-      const countRow = db.prepare(`SELECT count(*) as count FROM songs WHERE genre LIKE ?`).get(genreArg) as { count: number };
-      totalCount = countRow?.count || 0;
-      songs = db.prepare(`SELECT id,title,artist,genre,album,source FROM songs WHERE genre LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`).all(genreArg, limit, offset);
+      const ga = `%${genre}%`;
+      totalCount = (db.prepare('SELECT count(*) as count FROM songs WHERE genre LIKE ?').get(ga) as any)?.count || 0;
+      songs = db.prepare('SELECT id,title,artist,genre,album,source FROM songs WHERE genre LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(ga, limit, offset);
     } else if (artist) {
-      const artistArg = `%${artist}%`;
-      const countRow = db.prepare(`SELECT count(*) as count FROM songs WHERE artist LIKE ?`).get(artistArg) as { count: number };
-      totalCount = countRow?.count || 0;
-      songs = db.prepare(`SELECT id,title,artist,genre,album,source FROM songs WHERE artist LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`).all(artistArg, limit, offset);
+      const aa = `%${artist}%`;
+      totalCount = (db.prepare('SELECT count(*) as count FROM songs WHERE artist LIKE ?').get(aa) as any)?.count || 0;
+      songs = db.prepare('SELECT id,title,artist,genre,album,source FROM songs WHERE artist LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(aa, limit, offset);
     } else {
-      const countRow = db.prepare(`SELECT count(*) as count FROM songs`).get() as { count: number };
-      totalCount = countRow?.count || 0;
-      songs = db.prepare(`SELECT id,title,artist,genre,album,source FROM songs ORDER BY created_at DESC LIMIT ? OFFSET ?`).all(limit, offset);
+      totalCount = (db.prepare('SELECT count(*) as count FROM songs').get() as any)?.count || 0;
+      songs = db.prepare('SELECT id,title,artist,genre,album,source FROM songs ORDER BY created_at DESC LIMIT ? OFFSET ?').all(limit, offset);
     }
 
     return NextResponse.json({
@@ -92,42 +113,16 @@ export async function GET(request: NextRequest) {
 
   } catch (err: any) {
     console.error('GET /api/songs error:', err);
-
-    // Fallback for Vercel / Serverless environments
-    try {
-      const fs = require('fs');
-      const path = require('path');
-      const dataPath = path.join(process.cwd(), 'src/data/songs.json');
-      
-      if (fs.existsSync(dataPath)) {
-        const staticSongs = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-        
-        // Simple filter logic for fallback
-        const filtered = staticSongs.filter((s: any) => 
-          (!genre || s.genre?.toLowerCase().includes(genre.toLowerCase())) &&
-          (!artist || s.artist?.toLowerCase().includes(artist.toLowerCase())) &&
-          (!q || s.title?.toLowerCase().includes(q) || s.artist?.toLowerCase().includes(q))
-        );
-
-        return NextResponse.json({
-          songs: filtered.slice(offset, offset + limit),
-          pagination: {
-            total: filtered.length,
-            page,
-            limit,
-            pages: Math.ceil(filtered.length / limit)
-          },
-          is_fallback: true
-        });
-      }
-    } catch (fallbackError) {
-      console.error('Fallback Error:', fallbackError);
-    }
-
-    return NextResponse.json({ error: 'Database error', details: err.message }, { status: 500 });
+    const all = loadStaticSongs().filter((s: any) =>
+      (!q      || s.title?.toLowerCase().includes(q) || s.artist?.toLowerCase().includes(q)) &&
+      (!genre  || s.genre?.toLowerCase().includes(genre.toLowerCase())) &&
+      (!artist || s.artist?.toLowerCase().includes(artist.toLowerCase()))
+    );
+    return jsonResponse(all, page, limit, offset);
   }
 }
 
+// ── POST /api/songs ─────────────────────────────────────────────
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -138,21 +133,15 @@ export async function POST(request: NextRequest) {
     }
 
     const db = getDb();
-    const cols = db.prepare(`PRAGMA table_info(songs)`).all() as any[];
-    const colNames = cols.map((c: any) => c.name);
-    const id = `user-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
-
-    if (colNames.includes('source')) {
-      db.prepare(`
-        INSERT INTO songs (id, title, artist, genre, chord_data, source, contributor_username, created_at)
-        VALUES (?, ?, ?, ?, ?, 'community', 'community', datetime('now'))
-      `).run(id, title.trim(), artist.trim(), genre?.trim() || 'Other', chord_data.trim());
-    } else {
-      db.prepare(`
-        INSERT INTO songs (id, title, artist, genre, chord_data, contributor_username)
-        VALUES (?, ?, ?, ?, ?, 'community')
-      `).run(id, title.trim(), artist.trim(), genre?.trim() || 'Other', chord_data.trim());
+    if (!db) {
+      return NextResponse.json({ error: 'Database unavailable in this environment' }, { status: 503 });
     }
+
+    const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    db.prepare(`
+      INSERT INTO songs (id, title, artist, genre, chord_data, source, contributor_username, created_at)
+      VALUES (?, ?, ?, ?, ?, 'community', 'community', datetime('now'))
+    `).run(id, title.trim(), artist.trim(), genre?.trim() || 'Other', chord_data.trim());
 
     return NextResponse.json({ success: true, id }, { status: 201 });
   } catch (err: any) {
