@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing songId or question' }, { status: 400 });
     }
 
-    const song = songsData.find((s: any) => s.id === songId);
+    const song: any = songsData.find((s: any) => String(s.id) === String(songId));
     if (!song) {
       return NextResponse.json({ error: 'Song not found' }, { status: 404 });
     }

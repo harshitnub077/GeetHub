@@ -3,6 +3,8 @@ import { getDb } from '@/lib/dbSync';
 import fs from 'fs';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 function loadStaticSongs(): any[] {
   try {
     return JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/data/songs.json'), 'utf8'));

@@ -3,6 +3,8 @@ import { getDb } from '@/lib/dbSync';
 import fs from 'fs';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 function loadStaticSongs(): any[] {
   try {
     return JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/data/songs.json'), 'utf8'));
@@ -59,13 +61,13 @@ export async function GET(request: NextRequest) {
         const notIn = existingIds.map(() => '?').join(',');
         extras = db.prepare(`
           SELECT id, title, artist, genre FROM songs
-          WHERE (genre LIKE '%Bollywood%') AND id NOT IN (${notIn})
+          WHERE id NOT IN (${notIn})
           ORDER BY ROWID DESC LIMIT ?
         `).all(...existingIds, limit - unique.length) as any[];
       } else {
         extras = db.prepare(`
           SELECT id, title, artist, genre FROM songs
-          WHERE genre LIKE '%Bollywood%' ORDER BY ROWID DESC LIMIT ?
+          ORDER BY ROWID DESC LIMIT ?
         `).all(limit - unique.length) as any[];
       }
       unique.push(...extras);

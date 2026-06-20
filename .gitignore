@@ -43,4 +43,6 @@ next-env.d.ts
 *.db-shm
 *.db-wal
 *.db
+!*.db.gz.part.*
+!rebuild_db.sh
 scripts/scraped_songs_final.json

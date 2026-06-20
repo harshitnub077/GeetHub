@@ -81,9 +81,9 @@ export default function PlayAlongPage() {
   const [playing, setPlaying]   = useState(false);
   const [feedback, setFeedback] = useState<"correct"|"wrong"|null>(null);
 
-  const slots: ChordSlot[] = DEMO_SONG.chords.map((chord,i)=>({
+  const slots: ChordSlot[] = DEMO_SONG.chords.map((chord, i) => ({
     chord,
-    status: i < idx ? (Math.random()>0.2 ? "correct" : "missed") : i===idx ? "active" : "future",
+    status: i < idx ? ((i % 5 !== 0) ? "correct" : "missed") : i === idx ? "active" : "future",
   }));
 
   const handlePlay = () => { setPhase("playing"); setPlaying(true); };
@@ -109,6 +109,7 @@ export default function PlayAlongPage() {
 
   useEffect(()=>{
     const total = correct+missed;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAccuracy(total>0 ? Math.round((correct/total)*100) : 100);
   },[correct,missed]);
 
@@ -273,7 +274,7 @@ export default function PlayAlongPage() {
               const isActive = diff===0;
               const isPast  = diff<0;
               const isFuture= diff>0;
-              const wasCorrect = isPast && Math.random()>0.2;
+              const wasCorrect = isPast && (i % 5 !== 0);
               return (
                 <motion.div key={i}
                   className={`highway-slot${isActive?" active":""}${isPast?" past":""}${isActive||!isPast&&!isFuture?"":" future"}`}

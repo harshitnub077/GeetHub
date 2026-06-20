@@ -34,6 +34,7 @@ export function SongViewer({ song }:{ song:Song }) {
   const stopScroll = useCallback(()=>{ if(intervalRef.current) clearInterval(intervalRef.current); }, []);
 
   useEffect(()=>{
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (song.bpm) setBpm(song.bpm);
   }, [song.bpm]);
 

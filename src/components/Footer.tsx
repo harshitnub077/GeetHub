@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Music2, Github, Youtube, Twitter, Instagram, ArrowUpRight, Mail } from "lucide-react";
+import { Github, ArrowUpRight } from "lucide-react";
 import Logo from "@/components/Logo";
 
 export default function Footer() {
@@ -34,10 +34,7 @@ export default function Footer() {
   ];
 
   const socials = [
-    { href: "https://github.com/harshitnub077", Icon: Github,    label: "GitHub" },
-    { href: "#", Icon: Youtube,   label: "YouTube" },
-    { href: "#", Icon: Twitter,   label: "Twitter" },
-    { href: "#", Icon: Instagram, label: "Instagram" },
+    { href: "https://github.com/harshitnub077", Icon: Github, label: "GitHub" },
   ];
 
   return (
@@ -65,32 +62,6 @@ export default function Footer() {
         @media(max-width:640px){ .footer-grid{ grid-template-columns: 1fr 1fr; } }
         @media(max-width:420px){ .footer-grid{ grid-template-columns: 1fr; } }
 
-        .newsletter-input {
-          flex: 1;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid var(--border);
-          border-radius: 10px 0 0 10px;
-          padding: 10px 16px;
-          color: var(--t1);
-          font-family: var(--f-body);
-          font-size: 13px;
-          outline: none;
-          transition: border-color 0.2s;
-        }
-        .newsletter-input::placeholder { color: var(--t3); }
-        .newsletter-input:focus { border-color: rgba(245,166,35,0.45); }
-        .newsletter-btn {
-          padding: 10px 18px;
-          background: var(--grad-amber);
-          color: #0d0a04;
-          font-weight: 700;
-          font-size: 13px;
-          border: none;
-          border-radius: 0 10px 10px 0;
-          cursor: pointer;
-          font-family: var(--f-body);
-          transition: opacity 0.2s;
-        }
       `}</style>
 
       <footer
@@ -148,19 +119,8 @@ export default function Footer() {
               </Link>
 
               <p style={{ fontSize: 14, color: "var(--t2)", lineHeight: 1.78, maxWidth: 270, marginBottom: 28 }}>
-                The open-source home for guitar, ukulele & piano chords. 19,500+ songs. Play Along. Transpose. Perform.
+                Open-source guitar chord sheets for every song. 400+ songs and growing. Play Along, Transpose, Stage Mode.
               </p>
-
-              {/* Newsletter */}
-              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--t3)", marginBottom: 10 }}>
-                Stay in tune
-              </p>
-              <div style={{ display: "flex", marginBottom: 24, maxWidth: 280 }}>
-                <input className="newsletter-input" placeholder="your@email.com" type="email" />
-                <button className="newsletter-btn">
-                  <Mail size={14} />
-                </button>
-              </div>
 
               {/* Socials */}
               <div style={{ display: "flex", gap: 8 }}>

@@ -126,10 +126,23 @@ function SongRow({ song, i }: { song: any; i: number }) {
           <p style={{ fontWeight: 600, fontSize: 14.5, color: "var(--t1)", letterSpacing: "-0.01em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 2 }}>
             {song.title}
           </p>
-          <p style={{ fontSize: 12.5, color: "var(--t3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-            {song.artist}
-            {song.genre && <span style={{ marginLeft: 8, opacity: 0.65 }}>· {song.genre}</span>}
-          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, color: "var(--t3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <span>{song.artist}</span>
+            {song.genre && <span style={{ opacity: 0.65 }}>· {song.genre}</span>}
+            {song.chord_data && (() => {
+              const chords = (Array.from(new Set(song.chord_data.match(/\[([^\]]+)\]/g)?.map((c: string) => c.slice(1, -1)) || [])) as string[]).slice(0, 4);
+              if (!chords.length) return null;
+              return (
+                <span style={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto" }}>
+                  {chords.map((c: string, idx: number) => (
+                    <span key={idx} style={{ padding: "2px 6px", background: "rgba(255,255,255,0.05)", borderRadius: 4, fontSize: 10, fontWeight: 700, color: "var(--amber)", fontFamily: "var(--f-display)" }}>
+                      {c}
+                    </span>
+                  ))}
+                </span>
+              );
+            })()}
+          </div>
         </div>
 
         {/* Difficulty badge */}
@@ -214,12 +227,13 @@ function ExploreContent() {
   const [focused, setFocused] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
 
-  const doSearch = async (q: string, g: string, p: number, append = false) => {
+  const doSearch = async (q: string, g: string, l: string, p: number, append = false) => {
     if (p === 1) setLoading(true); else setLoadingMore(true);
     try {
       const params = new URLSearchParams();
       if (q) params.set("q", q);
-      if (g) params.set("artist", g);
+      if (g) params.set("genre", g);
+      if (l) params.set("level", l);
       params.set("page", String(p));
       params.set("limit", "25");
       const r = await fetch(`/api/songs/search?${params}`);
@@ -239,10 +253,11 @@ function ExploreContent() {
   useEffect(() => {
     const t = setTimeout(() => {
       setPage(1);
-      doSearch(query, genre, 1);
+      doSearch(query, genre, level, 1);
       const p = new URLSearchParams();
       if (query) p.set("q", query);
       if (genre) p.set("genre", genre);
+      if (level) p.set("level", level);
       router.replace(`/explore${p.toString() ? "?" + p : ""}`);
     }, 280);
     return () => clearTimeout(t);
@@ -252,14 +267,15 @@ function ExploreContent() {
   useEffect(() => {
     setQuery(searchParams.get("q") || "");
     setGenre(searchParams.get("genre") || "");
+    setLevel(searchParams.get("level") || "");
   }, [searchParams]);
 
   const loadMore = useCallback(() => {
     if (loadingMore || !pagination || page >= pagination.pages) return;
     const next = page + 1;
     setPage(next);
-    doSearch(query, genre, next, true);
-  }, [page, pagination, loadingMore, query, genre]);
+    doSearch(query, genre, level, next, true);
+  }, [page, pagination, loadingMore, query, genre, level]);
 
   useEffect(() => {
     const target = observerTarget.current;

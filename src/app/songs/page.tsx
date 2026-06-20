@@ -4,7 +4,6 @@ import { useEffect, useState, useRef } from "react";
 import gsap from "gsap";
 import { Music, ArrowRight, Search, Loader2, Sparkles } from "lucide-react";
 import Link from "next/link";
-import songsData from "@/data/songs.json";
 
 interface Song {
   id: string;
@@ -16,32 +15,61 @@ interface Song {
 
 export default function SongsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredSongs, setFilteredSongs] = useState<Song[]>(songsData);
+  const [songs, setSongs] = useState<Song[]>([]);
   const [searchFocused, setSearchFocused] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const [visibleCount, setVisibleCount] = useState(50);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    const filtered = songsData.filter((song) =>
-      song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      song.artist.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      song.genre.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredSongs(filtered);
-    setVisibleCount(50); // Reset visible count on search
+    setPage(1);
+    setSongs([]);
+    setHasMore(true);
   }, [searchQuery]);
 
   useEffect(() => {
-    if (listRef.current) {
+    const fetchSongs = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/songs?q=${encodeURIComponent(searchQuery)}&page=${page}&limit=50`);
+        const data = await res.json();
+        
+        if (data.songs) {
+          if (page === 1) {
+            setSongs(data.songs);
+          } else {
+            setSongs(prev => [...prev, ...data.songs]);
+          }
+          setTotal(data.pagination.total);
+          setHasMore(data.pagination.page < data.pagination.pages);
+        }
+      } catch (error) {
+        console.error("Failed to fetch songs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const timer = setTimeout(() => {
+      fetchSongs();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, page]);
+
+  useEffect(() => {
+    if (listRef.current && songs.length > 0 && page === 1) {
       gsap.fromTo(listRef.current.children, 
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.4, stagger: 0.04, ease: "power2.out" }
       );
     }
-  }, [filteredSongs, visibleCount]);
+  }, [songs, page]);
 
-  const displayedSongs = filteredSongs.slice(0, visibleCount);
+  const displayedSongs = songs;
 
   return (
     <div className="min-h-screen pb-20 pt-32">
@@ -83,7 +111,7 @@ export default function SongsPage() {
               {searchQuery.trim() ? `Results for "${searchQuery}"` : 'Everything'}
             </h2>
             <span className="text-xs text-muted-foreground">
-              {filteredSongs.length} song{filteredSongs.length !== 1 ? 's' : ''}
+              {total} song{total !== 1 ? 's' : ''}
             </span>
           </div>
 
@@ -128,15 +156,20 @@ export default function SongsPage() {
             )}
           </div>
 
-          {visibleCount < filteredSongs.length && (
+          {hasMore && !loading && (
             <div className="mt-8 text-center">
               <button 
-                onClick={() => setVisibleCount(v => v + 50)}
+                onClick={() => setPage(p => p + 1)}
                 className="px-6 py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors font-medium text-sm"
               >
                 Load More
               </button>
             </div>
+          )}
+          {loading && (
+             <div className="mt-8 text-center text-muted-foreground/50">
+               <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+             </div>
           )}
         </div>
       </main>

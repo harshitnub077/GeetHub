@@ -1,4 +1,9 @@
 import path from 'path';
+import { createRequire } from 'module';
+
+// Use a plain file-path string (NOT import.meta.url) so turbopack
+// doesn't encounter the "Unsupported external type Url" error.
+const _require = createRequire(path.join(process.cwd(), 'package.json'));
 
 const DB_PATH = path.join(process.cwd(), 'geethub_master.db');
 
@@ -11,11 +16,17 @@ function initSchema(db: any): void {
         artist               TEXT NOT NULL,
         genre                TEXT DEFAULT '',
         album                TEXT DEFAULT '',
+        difficulty           TEXT DEFAULT 'Intermediate',
         source               TEXT DEFAULT '',
         chord_data           TEXT DEFAULT '',
         contributor_username TEXT DEFAULT 'community',
         created_at           TEXT DEFAULT (datetime('now'))
       );
+
+      CREATE INDEX IF NOT EXISTS idx_songs_genre ON songs(genre);
+      CREATE INDEX IF NOT EXISTS idx_songs_difficulty ON songs(difficulty);
+      CREATE INDEX IF NOT EXISTS idx_songs_artist ON songs(artist);
+      CREATE INDEX IF NOT EXISTS idx_songs_created_at ON songs(created_at DESC);
     `);
 
     db.exec(`
@@ -47,13 +58,14 @@ function initSchema(db: any): void {
       END;
     `);
 
+    // Back-fill FTS for any existing rows not yet indexed
     db.exec(`
       INSERT OR IGNORE INTO songs_fts(rowid, id, title, artist)
       SELECT rowid, id, title, artist FROM songs
       WHERE rowid NOT IN (SELECT rowid FROM songs_fts);
     `);
   } catch {
-    // Schema already exists or partial — safe to ignore
+    // Schema already exists — safe to ignore
   }
 }
 
@@ -65,18 +77,21 @@ function getDatabase(): any {
   _dbAttempted = true;
 
   try {
-    // Use require() so a missing module doesn't crash at import time.
-    // node:sqlite requires Node.js 22.5+ — not available on Vercel/Netlify (Node 20).
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const sqlite = require('node:sqlite');
+    // node:sqlite is a Node.js 22.5+ built-in; excluded from bundling via
+    // serverExternalPackages in next.config.ts.
+    const sqlite = _require('node:sqlite');
     const db = new sqlite.DatabaseSync(DB_PATH);
     db.exec('PRAGMA journal_mode = WAL;');
+    db.exec('PRAGMA busy_timeout = 5000;');
+    db.exec('PRAGMA synchronous = NORMAL;');
     db.exec('PRAGMA foreign_keys = ON;');
+    db.exec('PRAGMA mmap_size = 3000000000;');
+    db.exec('PRAGMA temp_store = MEMORY;');
     initSchema(db);
     _dbInstance = db;
-  } catch {
-    // SQLite unavailable — API routes will serve data from songs.json fallback.
-    console.warn('[GeetHub] SQLite unavailable — running in JSON-fallback mode.');
+    console.log('[GeetHub] SQLite connected —', DB_PATH);
+  } catch (err: any) {
+    console.warn('[GeetHub] SQLite unavailable — JSON-fallback mode.', err?.message ?? err);
     _dbInstance = null;
   }
 

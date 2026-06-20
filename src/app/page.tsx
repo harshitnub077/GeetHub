@@ -839,8 +839,8 @@ export default function HomePage() {
                         </Link>
                       ))}
                       <div style={{ padding: "12px 14px", textAlign: "center", marginTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                        <Link href="/songs" style={{ fontSize: 13, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
-                          View all 7,000+ songs in library →
+                        <Link href="/explore" style={{ fontSize: 13, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
+                          Browse all songs in library →
                         </Link>
                       </div>
                     </div>
@@ -868,8 +868,8 @@ export default function HomePage() {
                         </button>
                       ))}
                       <div style={{ padding: "12px 14px", textAlign: "center", marginTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                        <Link href="/songs" style={{ fontSize: 13, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
-                          View all 7,000+ songs in library →
+                        <Link href="/explore" style={{ fontSize: 13, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
+                          Browse all songs in library →
                         </Link>
                       </div>
                     </div>
@@ -1212,7 +1212,7 @@ export default function HomePage() {
             <Link href="/explore" className="btn btn-primary btn-lg" style={{ minWidth: 240, padding: "22px 48px", fontSize: 18, borderRadius: 16 }}>
               Get Started for Free
             </Link>
-            <Link href="/commit" className="btn btn-secondary btn-lg" style={{ minWidth: 240, padding: "22px 48px", fontSize: 18, borderRadius: 16 }}>
+            <Link href="/contribute" className="btn btn-secondary btn-lg" style={{ minWidth: 240, padding: "22px 48px", fontSize: 18, borderRadius: 16 }}>
               Contribute Chords
             </Link>
           </motion.div>

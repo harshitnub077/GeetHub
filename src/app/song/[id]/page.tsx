@@ -4,30 +4,65 @@ import { SongViewer } from "@/components/SongViewer";
 import type { Metadata } from "next";
 import fs from "fs";
 import path from "path";
+import { generateChordData } from "@/lib/chordEngine";
 
 interface PageParams { params: Promise<{ id: string }> }
 
 function loadStaticSong(id: string): any | null {
   try {
     const songs = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/data/songs.json'), 'utf8'));
-    return songs.find((s: any) => s.id === id) || null;
+    return songs.find((s: any) => String(s.id) === String(id)) || null;
   } catch { return null; }
 }
 
-function getSong(id: string): any | null {
+async function getSong(id: string): Promise<any | null> {
   const db = getDb();
+  let song = null;
+
   if (db) {
     try {
-      const song = db.prepare("SELECT * FROM songs WHERE id = ?").get(id);
-      if (song) return song;
+      song = db.prepare("SELECT * FROM songs WHERE id = ?").get(id);
     } catch { /* fall through to JSON */ }
   }
-  return loadStaticSong(id);
+  if (!song) {
+    song = loadStaticSong(id);
+  }
+
+  // --- Fetch dynamically from LRCLIB if not found locally ---
+  if (!song && /^\d+$/.test(id)) {
+    try {
+      const res = await fetch(`https://lrclib.net/api/get/${id}`, {
+        headers: { 'Lrclib-Client': 'Geethub (https://github.com/harshitnub077)' },
+        next: { revalidate: 86400 } // Cache 24 hours
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.plainLyrics) {
+          song = {
+            id: data.id.toString(),
+            title: data.trackName || data.name,
+            artist: data.artistName,
+            genre: "Community Chords",
+            album: data.albumName,
+            source: data.instrumental ? "Instrumental" : "lrclib",
+            difficulty: "Intermediate",
+            chord_data: generateChordData(data.plainLyrics, data.trackName || data.name),
+            contributor_username: "lrclib",
+            created_at: new Date().toISOString(),
+          };
+        }
+      }
+    } catch (e) {
+      console.error("LRCLIB Fetch Error:", e);
+    }
+  }
+
+  return song;
 }
 
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const { id } = await params;
-  const song = getSong(id);
+  const song = await getSong(id);
   if (!song) return { title: "Song not found | Geethub" };
   return {
     title: `${song.title} Chords – ${song.artist} | Guitar Tabs | Geethub`,
@@ -42,7 +77,7 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
 
 export default async function SongPage({ params }: PageParams) {
   const { id } = await params;
-  const song = getSong(id);
+  const song = await getSong(id);
 
   if (!song) notFound();
 
