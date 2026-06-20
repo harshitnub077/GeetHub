@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "bash rebuild_db.sh && next build",
     "start": "next start",
     "lint": "eslint",
     "sync-fts": "node scripts/sync_fts_engine.js",
