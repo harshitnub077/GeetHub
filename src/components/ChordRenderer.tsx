@@ -17,6 +17,12 @@ function transposeNote(note:string, steps:number):string {
 
 function transposeChord(chord:string, steps:number):string {
   if(steps===0) return chord;
+  if(chord.includes('/')) {
+    const parts = chord.split('/');
+    const transposedMain = parts[0].replace(/^[A-G](b|#)?/, m=>transposeNote(m, steps));
+    const transposedBass = parts[1] ? parts[1].replace(/^[A-G](b|#)?/, m=>transposeNote(m, steps)) : '';
+    return transposedBass ? `${transposedMain}/${transposedBass}` : transposedMain;
+  }
   return chord.replace(/^[A-G](b|#)?/, m=>transposeNote(m, steps));
 }
 
