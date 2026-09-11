@@ -136,9 +136,11 @@ export function normalizeChordSheet(raw: string): string {
     .replace(/<br\s*\/?>/gi, '\n')
     .replace(/<\/?[^>]+(>|$)/g, '');
 
-  // 2. Normalize Ultimate-Guitar tags
+  // 2. Normalize Ultimate-Guitar tags & bracket anomalies
   text = text.replace(/\[ch\](.*?)\[\/ch\]/gi, '[$1]');
   text = text.replace(/\[\/?tab\]/gi, '');
+  text = text.replace(/\[\[+([A-G][^\]]*)\]\]+/g, '[$1]'); // sanitize double brackets e.g. [[Am]] -> [Am]
+  text = text.replace(/\[\s*\]/g, ''); // strip empty brackets
 
   // 3. Normalize Jammai / ChordPro colons (e.g. [G:maj] -> [G], [A:min] -> [Am], [C:7] -> [C7])
   text = text.replace(
@@ -151,6 +153,9 @@ export function normalizeChordSheet(raw: string): string {
       return `[${note}${q}]`;
     }
   );
+
+  // Normalize any trailing commas/periods stuck inside chord brackets e.g. [Am,] -> [Am],
+  text = text.replace(/\[([A-G][^\]]*?)([,.;])\]/g, '[$1]$2');
 
   const rawLines = text.split('\n');
   const processedLines: string[] = [];
