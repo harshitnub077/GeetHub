@@ -95,21 +95,21 @@ export function ChordDiagram({ chord }:{ chord:string }) {
       <p style={{ fontFamily:"var(--f-mono)", fontSize:22, fontWeight:700, color:"var(--amber)", marginBottom:6 }}>{chord}</p>
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
         {/* Nut */}
-        {minF===1 && <line x1={px} y1={py-3} x2={px+5*sx} y2={py-3} stroke="var(--t1)" strokeWidth="3" strokeLinecap="round"/>}
-        {minF>1 && <text x={px-4} y={py+sy/2} textAnchor="end" fill="var(--t3)" fontSize="11" fontFamily="var(--f-mono)">{minF}fr</text>}
+        {minF===1 && <line x1={px} y1={py-3} x2={px+5*sx} y2={py-3} stroke="rgba(255,255,255,0.85)" strokeWidth="4" strokeLinecap="round"/>}
+        {minF>1 && <text x={px-8} y={py+sy/2+4} textAnchor="end" fill="var(--amber)" fontSize="11" fontWeight="700" fontFamily="var(--f-mono)">{minF}fr</text>}
         {/* Fret lines */}
         {Array.from({length:range+1}).map((_,fi)=>(
-          <line key={fi} x1={px} y1={py+fi*sy} x2={px+5*sx} y2={py+fi*sy} stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
+          <line key={fi} x1={px} y1={py+fi*sy} x2={px+5*sx} y2={py+fi*sy} stroke="rgba(255,255,255,0.14)" strokeWidth="1"/>
         ))}
-        {/* String lines */}
+        {/* String lines with realistic gauge thickness */}
         {[0,1,2,3,4,5].map(si=>(
-          <line key={si} x1={px+si*sx} y1={py} x2={px+si*sx} y2={py+range*sy} stroke="rgba(255,255,255,0.18)" strokeWidth="1"/>
+          <line key={si} x1={px+si*sx} y1={py} x2={px+si*sx} y2={py+range*sy} stroke="rgba(255,255,255,0.22)" strokeWidth={Math.max(1, 1.8 - si * 0.15)}/>
         ))}
         {/* Open / muted indicators */}
         {frets.map((fret,si)=>{
           const x=px+si*sx;
-          if(fret===-1) return <text key={si} x={x} y={py-10} textAnchor="middle" fill="var(--red)" fontSize="14" fontWeight="700">×</text>;
-          if(fret===0)  return <circle key={si} cx={x} cy={py-14} r={5} fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5"/>;
+          if(fret===-1) return <text key={si} x={x} y={py-10} textAnchor="middle" fill="#f43f5e" fontSize="13" fontWeight="800" fontFamily="system-ui, sans-serif">×</text>;
+          if(fret===0)  return <circle key={si} cx={x} cy={py-14} r={4.5} fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.8"/>;
           return null;
         })}
         {/* Finger dots */}
