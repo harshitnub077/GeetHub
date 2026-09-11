@@ -34,18 +34,20 @@ function getRandomProgression(seed: string): string[] {
 export function generateChordData(plainLyrics: string, title: string): string {
   if (!plainLyrics) return '';
   const chords = getRandomProgression(title);
+  const hash = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const lines = plainLyrics.split('\n');
   
   let chordIndex = 0;
-  return lines.map((line) => {
+  return lines.map((line, lineIndex) => {
     if (!line.trim()) return ''; // Keep blank lines for verse separation
     
-    const words = line.split(' ');
+    const words = line.split(/\s+/).filter(Boolean);
     const result: string[] = [];
+    const interval = 3 + ((hash + lineIndex) % 3); // Consistent 3 to 5 words cadence per line
     
     words.forEach((word, wordIndex) => {
-      // Place a chord on roughly every 4th-6th word, or at line start
-      if (wordIndex === 0 || wordIndex % Math.floor(Math.random() * 3 + 3) === 0) {
+      // Place a chord at line start or at deterministic intervals
+      if (wordIndex === 0 || wordIndex % interval === 0) {
         result.push(`[${chords[chordIndex % chords.length]}]${word}`);
         chordIndex++;
       } else {
