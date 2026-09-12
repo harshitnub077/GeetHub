@@ -6,11 +6,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Mic, Play, Star, Music2, Zap, Shuffle, ListMusic, Wifi,
   Users, Brain, ChevronRight, Flame, Headphones,
-  AudioLines, CheckCircle2, Sparkles,
+  AudioLines, CheckCircle2, Sparkles, BookOpen, Layers, Compass, Video, Disc3,
+  Sliders, Music, Check, ArrowRight,
 } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import GenreCard from "@/components/GenreCard";
 import InfiniteMarquee from "@/components/InfiniteMarquee";
+import VirtualGuitar from "@/components/VirtualGuitar";
+import SoundVisualizerCanvas from "@/components/SoundVisualizerCanvas";
+import MoodJammer from "@/components/MoodJammer";
+import InteractiveTabPlayer from "@/components/InteractiveTabPlayer";
 
 /* ── Magnetic Button ────────────────────────── */
 function Magnetic({ children }: { children: React.ReactElement }) {
@@ -499,6 +504,7 @@ export default function HomePage() {
   const [showSug, setShowSug] = useState(false);
   const [bwood2026, setBwood2026] = useState<any[]>([]);
   const [bwoodLoading, setBwoodLoading] = useState(true);
+  const [studioTab, setStudioTab] = useState<"jammer" | "tabs">("jammer");
 
   const heroRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
@@ -664,7 +670,28 @@ export default function HomePage() {
 
         <div className="container" style={{ position: "relative", zIndex: 2, textAlign: "center", paddingTop: 48, paddingBottom: 60 }}>
 
-          {/* No badge here anymore */}
+          {/* Top pill badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "8px 20px",
+              borderRadius: 100,
+              background: "rgba(245,166,35,0.08)",
+              border: "1px solid rgba(245,166,35,0.28)",
+              marginBottom: 24,
+              boxShadow: "0 0 30px rgba(245,166,35,0.12)",
+            }}
+          >
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--amber)", boxShadow: "0 0 10px var(--amber)" }} />
+            <span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--amber)" }}>
+              ⚡ NEXT-GEN GUITAR INTELLIGENCE · 2026 EDITION
+            </span>
+          </motion.div>
 
           {/* Headline — smaller, refined */}
           <div
@@ -878,12 +905,374 @@ export default function HomePage() {
               )}
             </AnimatePresence>
           </motion.div>
+
+          {/* ── HERO INTERACTIVE SHOWCASE ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            style={{
+              maxWidth: 1180,
+              margin: "16px auto 0",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+              gap: 24,
+              alignItems: "stretch",
+              textAlign: "left",
+            }}
+          >
+            {/* Playable Virtual Guitar */}
+            <div style={{
+              background: "rgba(10,10,16,0.85)",
+              backdropFilter: "blur(30px)",
+              WebkitBackdropFilter: "blur(30px)",
+              border: "1px solid rgba(245,166,35,0.22)",
+              borderRadius: 24,
+              padding: "24px",
+              boxShadow: "0 30px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(245,166,35,0.15)",
+              display: "flex",
+              flexDirection: "column",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 10, background: "rgba(245,166,35,0.12)", border: "1px solid rgba(245,166,35,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Music2 size={18} color="var(--amber)" />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--t1)", margin: 0 }}>Playable Virtual Guitar</h3>
+                    <p style={{ fontSize: 12, color: "var(--t3)", margin: 0 }}>Hover or click strings · Keys 1–6 · Real acoustic physics</p>
+                  </div>
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--amber)", background: "rgba(245,166,35,0.1)", padding: "4px 10px", borderRadius: 8, border: "1px solid rgba(245,166,35,0.2)" }}>
+                  Web Audio 2.0
+                </span>
+              </div>
+
+              <VirtualGuitar />
+            </div>
+
+            {/* Creative 3D Artwork Hero Card */}
+            <div style={{
+              background: "rgba(10,10,16,0.85)",
+              backdropFilter: "blur(30px)",
+              WebkitBackdropFilter: "blur(30px)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 24,
+              overflow: "hidden",
+              boxShadow: "0 30px 80px rgba(0,0,0,0.7)",
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+            }}>
+              <div style={{ position: "relative", height: 250, overflow: "hidden" }}>
+                <img
+                  src="/assets/hero_guitar.jpg"
+                  alt="GeetHub Next-Gen Holographic Guitar Artwork"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,10,16,0.95) 0%, rgba(10,10,16,0.25) 60%, transparent 100%)" }} />
+
+                {/* Floating pill badge */}
+                <div style={{
+                  position: "absolute",
+                  top: 16,
+                  left: 16,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  background: "rgba(5,5,8,0.75)",
+                  backdropFilter: "blur(12px)",
+                  padding: "6px 14px",
+                  borderRadius: 20,
+                  border: "1px solid rgba(245,166,35,0.3)",
+                }}>
+                  <Sparkles size={12} color="var(--amber)" />
+                  <span style={{ fontSize: 11, fontWeight: 800, color: "#fff", letterSpacing: "0.05em" }}>Hyper-Acoustic Engine</span>
+                </div>
+
+                <div style={{
+                  position: "absolute",
+                  bottom: 16,
+                  left: 20,
+                  right: 20,
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "space-between",
+                }}>
+                  <div>
+                    <h4 style={{ fontSize: 20, fontWeight: 900, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>Dynamic Resonance</h4>
+                    <p style={{ fontSize: 12.5, color: "rgba(255,255,255,0.75)", margin: "4px 0 0" }}>Harmonic frequency spectrum synced to strumming</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sound visualizer + Quick Actions */}
+              <div style={{ padding: "20px 24px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 16 }}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                    <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--t3)" }}>Spectrum Analyzer</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "var(--teal)" }}>● 44.1 kHz Hi-Fi</span>
+                  </div>
+                  <SoundVisualizerCanvas active={true} barCount={28} />
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: "auto" }}>
+                  <Link
+                    href="/tools/chords"
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 12,
+                      background: "rgba(245,166,35,0.1)",
+                      border: "1px solid rgba(245,166,35,0.25)",
+                      color: "var(--amber)",
+                      textDecoration: "none",
+                      fontSize: 12.5,
+                      fontWeight: 700,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 6,
+                    }}
+                  >
+                    <BookOpen size={13} /> Chord Library →
+                  </Link>
+                  <Link
+                    href="/community"
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 12,
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      color: "var(--t1)",
+                      textDecoration: "none",
+                      fontSize: 12.5,
+                      fontWeight: 700,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 6,
+                    }}
+                  >
+                    <Users size={13} /> Artist Hub →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
         {/* No stats here anymore */}
       </section>
 
-      {/* No statistics section here */}
+      {/* ══════════════════════════════════════════
+          LIVE PLATFORM STATS BAR
+      ══════════════════════════════════════════ */}
+      <section style={{
+        background: "rgba(10,10,15,0.9)",
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
+        padding: "24px 0",
+        position: "relative",
+      }}>
+        <div className="container" style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: 24,
+          alignItems: "center",
+          textAlign: "center",
+        }}>
+          <div>
+            <div style={{ fontFamily: "var(--f-display)", fontSize: 36, fontWeight: 900, color: "var(--amber)", letterSpacing: "-0.03em" }}>
+              <Counter to={6500} suffix="+" />
+            </div>
+            <p style={{ fontSize: 13, color: "var(--t3)", fontWeight: 600, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              Verified Chords & Tabs
+            </p>
+          </div>
+          <div>
+            <div style={{ fontFamily: "var(--f-display)", fontSize: 36, fontWeight: 900, color: "var(--teal)", letterSpacing: "-0.03em" }}>
+              100%
+            </div>
+            <p style={{ fontSize: 13, color: "var(--t3)", fontWeight: 600, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              Interactive Audio Strumming
+            </p>
+          </div>
+          <div>
+            <div style={{ fontFamily: "var(--f-display)", fontSize: 36, fontWeight: 900, color: "var(--purple)", letterSpacing: "-0.03em" }}>
+              8 Pro
+            </div>
+            <p style={{ fontSize: 13, color: "var(--t3)", fontWeight: 600, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              Guitar Theory & Lab Tools
+            </p>
+          </div>
+          <div>
+            <div style={{ fontFamily: "var(--f-display)", fontSize: 36, fontWeight: 900, color: "#f43f5e", letterSpacing: "-0.03em" }}>
+              50K+
+            </div>
+            <p style={{ fontSize: 13, color: "var(--t3)", fontWeight: 600, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              Global Community Guitarists
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          GEETHUB STUDIO & INTERACTIVE THEORY LAB
+      ══════════════════════════════════════════ */}
+      <section className="section" style={{ background: "var(--obsidian)", position: "relative", overflow: "hidden", padding: "100px 0" }}>
+        {/* Glow backdrop */}
+        <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translate(-50%, -50%)", width: "60vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle, rgba(124,111,205,0.08) 0%, rgba(245,166,35,0.05) 50%, transparent 80%)", filter: "blur(100px)", pointerEvents: "none" }} />
+
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          {/* Header */}
+          <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 48px" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 100, background: "rgba(124,111,205,0.1)", border: "1px solid rgba(124,111,205,0.3)", marginBottom: 16 }}>
+              <Sliders size={14} color="var(--purple)" />
+              <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--purple)" }}>
+                Next-Gen Interactive Lab
+              </span>
+            </div>
+            <h2 style={{ fontFamily: "var(--f-display)", fontWeight: 900, fontSize: "clamp(30px, 4.5vw, 54px)", letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 16 }}>
+              The Studio Suite. <span className="text-gradient">Play, Jam & Master.</span>
+            </h2>
+            <p style={{ fontSize: 17, color: "var(--t3)", lineHeight: 1.7 }}>
+              Switch between our AI Mood Progression Jammer and multi-track interactive tablature player. Test chord variations, tempo shifts, and rhythm patterns directly in your browser.
+            </p>
+
+            {/* Tab selector */}
+            <div style={{ display: "inline-flex", gap: 8, padding: 6, background: "rgba(255,255,255,0.04)", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", marginTop: 24 }}>
+              <button
+                onClick={() => setStudioTab("jammer")}
+                style={{
+                  padding: "10px 22px",
+                  borderRadius: 12,
+                  border: "none",
+                  background: studioTab === "jammer" ? "var(--amber)" : "transparent",
+                  color: studioTab === "jammer" ? "#000" : "var(--t2)",
+                  fontWeight: 800,
+                  fontSize: 13.5,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <Sparkles size={15} /> AI Mood Jammer
+              </button>
+              <button
+                onClick={() => setStudioTab("tabs")}
+                style={{
+                  padding: "10px 22px",
+                  borderRadius: 12,
+                  border: "none",
+                  background: studioTab === "tabs" ? "var(--amber)" : "transparent",
+                  color: studioTab === "tabs" ? "#000" : "var(--t2)",
+                  fontWeight: 800,
+                  fontSize: 13.5,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <Music size={15} /> Interactive Tab Player
+              </button>
+            </div>
+          </div>
+
+          {/* Active Tool View */}
+          <div style={{ maxWidth: 1040, margin: "0 auto 60px" }}>
+            <AnimatePresence mode="wait">
+              {studioTab === "jammer" ? (
+                <motion.div
+                  key="jammer"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <MoodJammer />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="tabs"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <InteractiveTabPlayer />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Quick Access to the 8 Professional Tools */}
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 48 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32 }}>
+              <div>
+                <h3 style={{ fontFamily: "var(--f-display)", fontSize: 24, fontWeight: 800, color: "var(--t1)", letterSpacing: "-0.02em" }}>
+                  Professional Guitar Theory Suite
+                </h3>
+                <p style={{ fontSize: 14, color: "var(--t3)", marginTop: 4 }}>
+                  Comprehensive interactive utilities modeled after world-class music theory systems
+                </p>
+              </div>
+              <Link href="/tools" style={{ fontSize: 13.5, fontWeight: 700, color: "var(--amber)", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+                Explore All 8 Tools <ChevronRight size={16} />
+              </Link>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
+              {[
+                { title: "Chord Finder", desc: "Interactive fretboard with 1,000+ chord voicings & audio playback", href: "/tools/chords", icon: BookOpen, color: "var(--amber)" },
+                { title: "Reverse Chord Identifier", desc: "Click fret positions to identify unknown chord names and roots", href: "/tools/reverse-chord", icon: Search, color: "var(--teal)" },
+                { title: "Scale Explorer", desc: "Pentatonic, Blues, Modes, and harmonic heatmaps across 24 frets", href: "/tools/scales", icon: Layers, color: "var(--purple)" },
+                { title: "Circle of Fifths", desc: "Interactive harmonic wheel for key changes and relative minors", href: "/tools/circle-of-fifths", icon: Compass, color: "#f43f5e" },
+              ].map((tool, idx) => (
+                <Link
+                  key={idx}
+                  href={tool.href}
+                  style={{
+                    textDecoration: "none",
+                    background: "rgba(14,14,20,0.75)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: 18,
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 12,
+                    transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = `${tool.color}55`;
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                    e.currentTarget.style.boxShadow = `0 16px 36px rgba(0,0,0,0.5), 0 0 20px ${tool.color}15`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                >
+                  <div style={{ width: 38, height: 38, borderRadius: 10, background: `${tool.color}15`, border: `1px solid ${tool.color}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <tool.icon size={18} color={tool.color} />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: 16, fontWeight: 800, color: "var(--t1)", margin: "0 0 4px" }}>{tool.title}</h4>
+                    <p style={{ fontSize: 13, color: "var(--t3)", lineHeight: 1.5, margin: 0 }}>{tool.desc}</p>
+                  </div>
+                  <div style={{ marginTop: "auto", fontSize: 12, fontWeight: 700, color: tool.color, display: "flex", alignItems: "center", gap: 4 }}>
+                    Launch Tool <ChevronRight size={13} />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ══════════════════════════════════════════
           PLAY ALONG
@@ -996,7 +1385,170 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Removed Academy Row */}
+      {/* ══════════════════════════════════════════
+          CREATOR COMMUNITY & PRO MASTERCLASSES
+      ══════════════════════════════════════════ */}
+      <section className="section" style={{ background: "var(--obsidian)", borderTop: "1px solid var(--border)", padding: "100px 0" }}>
+        <div className="container">
+          <div style={{ textAlign: "center", maxWidth: 700, margin: "0 auto 56px" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 100, background: "rgba(245,166,35,0.1)", border: "1px solid rgba(245,166,35,0.3)", marginBottom: 16 }}>
+              <Users size={14} color="var(--amber)" />
+              <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--amber)" }}>
+                The Global Guitar Network
+              </span>
+            </div>
+            <h2 style={{ fontFamily: "var(--f-display)", fontWeight: 900, fontSize: "clamp(30px, 4.5vw, 54px)", letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 16 }}>
+              Connect. Learn. <span className="text-gradient">Take the Stage.</span>
+            </h2>
+            <p style={{ fontSize: 17, color: "var(--t3)", lineHeight: 1.7 }}>
+              Whether you are sharing your latest acoustic riff, learning masterclasses from virtuosos, or jamming with global artists — GeetHub is your creative home.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: 28 }}>
+            {/* Card 1: Creator Community Stage */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              style={{
+                position: "relative",
+                borderRadius: 24,
+                overflow: "hidden",
+                border: "1px solid rgba(245,166,35,0.25)",
+                background: "rgba(14,14,20,0.9)",
+                display: "flex",
+                flexDirection: "column",
+                boxShadow: "0 24px 60px rgba(0,0,0,0.6)",
+              }}
+            >
+              <div style={{ position: "relative", height: 260, overflow: "hidden" }}>
+                <img
+                  src="/assets/community_stage.jpg"
+                  alt="Live Concert Community Jam Stage"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(14,14,20,0.95) 0%, rgba(14,14,20,0.2) 60%, transparent 100%)" }} />
+                <div style={{ position: "absolute", top: 16, left: 16, background: "rgba(5,5,8,0.8)", backdropFilter: "blur(12px)", padding: "6px 14px", borderRadius: 20, border: "1px solid rgba(245,166,35,0.3)", display: "flex", alignItems: "center", gap: 6 }}>
+                  <Video size={13} color="var(--amber)" />
+                  <span style={{ fontSize: 11, fontWeight: 800, color: "var(--amber)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Creator Community</span>
+                </div>
+              </div>
+
+              <div style={{ padding: "28px 32px", flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
+                <div>
+                  <h3 style={{ fontFamily: "var(--f-display)", fontSize: 26, fontWeight: 900, color: "var(--t1)", letterSpacing: "-0.02em", marginBottom: 8 }}>
+                    Jam Stage & Video Feed
+                  </h3>
+                  <p style={{ fontSize: 15, color: "var(--t3)", lineHeight: 1.6 }}>
+                    Upload guitar performance videos, attach songs & tabs, like & comment on community posts, and chat live in real-time with fellow musicians worldwide.
+                  </p>
+                </div>
+
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "8px 0" }}>
+                  {[
+                    "🎥 Video Performances",
+                    "💬 Real-Time Live Chat",
+                    "🎸 Tab Attachments",
+                    "🔥 Like & Follow Artists",
+                  ].map((feat, i) => (
+                    <span key={i} style={{ fontSize: 12, fontWeight: 700, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: 8, color: "var(--t2)" }}>
+                      {feat}
+                    </span>
+                  ))}
+                </div>
+
+                <div style={{ marginTop: "auto", paddingTop: 12 }}>
+                  <Link
+                    href="/community"
+                    className="btn btn-primary"
+                    style={{ width: "100%", justifyContent: "center", padding: "14px 24px", borderRadius: 14, fontSize: 14.5, fontWeight: 800 }}
+                  >
+                    Enter Jam Stage <ArrowRight size={16} />
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Card 2: Pro Masterclasses & Academy */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              style={{
+                position: "relative",
+                borderRadius: 24,
+                overflow: "hidden",
+                border: "1px solid rgba(124,111,205,0.3)",
+                background: "rgba(14,14,20,0.9)",
+                display: "flex",
+                flexDirection: "column",
+                boxShadow: "0 24px 60px rgba(0,0,0,0.6)",
+              }}
+            >
+              <div style={{ position: "relative", height: 260, overflow: "hidden" }}>
+                <img
+                  src="/assets/masterclass_art.jpg"
+                  alt="Vintage Studio Masterclass Guitar"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(14,14,20,0.95) 0%, rgba(14,14,20,0.2) 60%, transparent 100%)" }} />
+                <div style={{ position: "absolute", top: 16, left: 16, background: "rgba(5,5,8,0.8)", backdropFilter: "blur(12px)", padding: "6px 14px", borderRadius: 20, border: "1px solid rgba(124,111,205,0.4)", display: "flex", alignItems: "center", gap: 6 }}>
+                  <Sparkles size={13} color="var(--purple)" />
+                  <span style={{ fontSize: 11, fontWeight: 800, color: "var(--purple)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Pro Masterclasses</span>
+                </div>
+              </div>
+
+              <div style={{ padding: "28px 32px", flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
+                <div>
+                  <h3 style={{ fontFamily: "var(--f-display)", fontSize: 26, fontWeight: 900, color: "var(--t1)", letterSpacing: "-0.02em", marginBottom: 8 }}>
+                    GeetHub Academy & Courses
+                  </h3>
+                  <p style={{ fontSize: 15, color: "var(--t3)", lineHeight: 1.6 }}>
+                    Comprehensive curricula from master educators. Learn Fingerstyle acoustic arrangements, Neo-Soul jazz voicings, and soloing techniques with synced video players.
+                  </p>
+                </div>
+
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "8px 0" }}>
+                  {[
+                    "📺 4K Video Instruction",
+                    "🎼 Synced Interactive Tab Player",
+                    "⚡ Backing Tracks & Drills",
+                    "🏆 Certificate on Completion",
+                  ].map((feat, i) => (
+                    <span key={i} style={{ fontSize: 12, fontWeight: 700, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "5px 12px", borderRadius: 8, color: "var(--t2)" }}>
+                      {feat}
+                    </span>
+                  ))}
+                </div>
+
+                <div style={{ marginTop: "auto", paddingTop: 12, display: "flex", gap: 12 }}>
+                  <Link
+                    href="/courses"
+                    className="btn btn-primary"
+                    style={{ flex: 1, justifyContent: "center", padding: "14px 20px", borderRadius: 14, fontSize: 14.5, fontWeight: 800, background: "linear-gradient(135deg, var(--purple), #6366f1)" }}
+                  >
+                    Explore Courses <ArrowRight size={16} />
+                  </Link>
+                  <Link
+                    href="/pro"
+                    className="btn btn-surface"
+                    style={{ padding: "14px 20px", borderRadius: 14, fontSize: 14.5, fontWeight: 800, border: "1px solid rgba(245,166,35,0.3)", color: "var(--amber)" }}
+                  >
+                    Pro Plan
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
 
       {/* ══════════════════════════════════════════
