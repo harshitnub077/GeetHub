@@ -140,14 +140,15 @@ export function normalizeChordSheet(raw: string): string {
   text = text.replace(/\[ch\](.*?)\[\/ch\]/gi, '[$1]');
   text = text.replace(/\[\/?tab\]/gi, '');
 
-  // 3. Normalize Jammai / ChordPro colons (e.g. [G:maj] -> [G], [A:min] -> [Am])
+  // 3. Normalize Jammai / ChordPro colons (e.g. [G:maj] -> [G], [A:min] -> [Am], [C:7] -> [C7])
   text = text.replace(
-    /\[([A-G][#b]?):(maj|min|m|7|maj7|min7|m7|sus2|sus4|dim|aug)([^\]]*)\]/gi,
-    (_, note, quality, rest) => {
-      let q = quality.toLowerCase();
-      if (q === 'maj') q = '';
-      else if (q === 'min') q = 'm';
-      return `[${note}${q}${rest || ''}]`;
+    /\[([A-G](?:b|#)*):([a-zA-Z0-9(),/]+)\]/g,
+    (_, note, quality) => {
+      let q = quality;
+      if (/^maj$/i.test(q)) q = '';
+      else if (/^min$/i.test(q)) q = 'm';
+      else if (/^min7$/i.test(q)) q = 'm7';
+      return `[${note}${q}]`;
     }
   );
 
