@@ -11,6 +11,7 @@ import {
 import { ChordRenderer, ChordDiagram } from "./ChordRenderer";
 import { AnimatePresence } from "framer-motion";
 import { extractChords } from "@/lib/chordFormatter";
+import SpotifyPlayer from "./SpotifyPlayer";
 
 interface Song { id:string; title:string; artist:string; genre:string; contributor_username?:string; chord_data:string; bpm?:number; music_key?:string; capo?:number; }
 
@@ -103,6 +104,8 @@ export function SongViewer({ song }:{ song:Song }) {
                     </button>
                   ))}
                 </div>
+                {/* Spotify Audio Integration */}
+                <SpotifyPlayer title={song.title} artist={song.artist} />
               </div>
             )}
 

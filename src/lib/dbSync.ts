@@ -34,6 +34,46 @@ function initSchema(db: any): void {
       CREATE INDEX IF NOT EXISTS idx_songs_difficulty ON songs(difficulty);
       CREATE INDEX IF NOT EXISTS idx_songs_artist ON songs(artist);
       CREATE INDEX IF NOT EXISTS idx_songs_created_at ON songs(created_at DESC);
+
+      CREATE TABLE IF NOT EXISTS community_posts (
+        id               TEXT PRIMARY KEY,
+        author_name      TEXT NOT NULL,
+        author_id        TEXT DEFAULT '',
+        author_avatar    TEXT DEFAULT '',
+        title            TEXT NOT NULL,
+        description      TEXT DEFAULT '',
+        video_url        TEXT NOT NULL,
+        video_type       TEXT DEFAULT 'embed',
+        song_tag         TEXT DEFAULT '',
+        likes_count      INTEGER DEFAULT 0,
+        comments_count   INTEGER DEFAULT 0,
+        created_at       TEXT DEFAULT (datetime('now'))
+      );
+
+      CREATE TABLE IF NOT EXISTS community_comments (
+        id               TEXT PRIMARY KEY,
+        post_id          TEXT NOT NULL,
+        author_name      TEXT NOT NULL,
+        author_avatar    TEXT DEFAULT '',
+        comment_text     TEXT NOT NULL,
+        created_at       TEXT DEFAULT (datetime('now'))
+      );
+
+      CREATE TABLE IF NOT EXISTS community_likes (
+        post_id          TEXT NOT NULL,
+        user_id          TEXT NOT NULL,
+        created_at       TEXT DEFAULT (datetime('now')),
+        PRIMARY KEY (post_id, user_id)
+      );
+
+      CREATE TABLE IF NOT EXISTS community_messages (
+        id               TEXT PRIMARY KEY,
+        channel          TEXT DEFAULT 'general',
+        sender_name      TEXT NOT NULL,
+        sender_avatar    TEXT DEFAULT '',
+        text             TEXT NOT NULL,
+        created_at       TEXT DEFAULT (datetime('now'))
+      );
     `);
 
     db.exec(`

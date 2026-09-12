@@ -3,17 +3,21 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, Menu, X, Zap, LogOut, User } from "lucide-react";
+import { Search, Menu, X, Zap, LogOut, User, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Logo from "@/components/Logo";
 import AuthModal from "@/components/AuthModal";
+import ProUpgradeModal from "@/components/ProUpgradeModal";
+import { useProStore } from "@/lib/proStore";
 
 const LINKS = [
   { href: "/",           label: "Home" },
   { href: "/explore",    label: "Explore" },
+  { href: "/community",  label: "Community" },
+  { href: "/tools",      label: "Guitar Tools" },
+  { href: "/courses",    label: "Courses" },
   { href: "/play-along", label: "Play Along" },
-  { href: "/contribute", label: "Contribute" },
 ];
 
 export default function Nav() {
@@ -130,6 +134,37 @@ export default function Nav() {
               onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "var(--t2)"; }}
             >
               <Search size={14} /> Search
+            </Link>
+
+            <Link
+              href="/pro"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "6px 12px",
+                borderRadius: 100,
+                background: "linear-gradient(135deg, rgba(245,166,35,0.22), rgba(255,138,0,0.15))",
+                border: "1px solid rgba(245,166,35,0.45)",
+                color: "var(--amber)",
+                fontSize: 12,
+                fontWeight: 900,
+                letterSpacing: "0.05em",
+                textDecoration: "none",
+                boxShadow: "0 0 14px rgba(245,166,35,0.15)",
+                transition: "all 0.2s",
+              }}
+              className="hide-mobile"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.04)";
+                e.currentTarget.style.boxShadow = "0 0 20px rgba(245,166,35,0.35)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 0 14px rgba(245,166,35,0.15)";
+              }}
+            >
+              <Sparkles size={12} /> PRO
             </Link>
             
             <div className="hide-mobile">
@@ -375,6 +410,8 @@ export default function Nav() {
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
       />
+
+      <ProUpgradeModal />
     </>
   );
 }
