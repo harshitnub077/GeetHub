@@ -48,14 +48,14 @@ export async function GET(request: NextRequest) {
       const genreQ    = `%${genre}%`;
       const levelQ    = level ? level : '%';
 
-      totalCount = (db.prepare(`
+      totalCount = ((await db.prepare(`
         SELECT count(*) as count FROM (
           SELECT 1 FROM songs_fts f JOIN songs s ON f.id = s.id
           WHERE f.songs_fts MATCH ? AND s.genre LIKE ? AND s.difficulty LIKE ?
         )
-      `).get(matchQuery, genreQ, levelQ) as any)?.count || 0;
+      `).get(matchQuery, genreQ, levelQ)) as any)?.count || 0;
 
-      songs = db.prepare(`
+      songs = await db.prepare(`
         SELECT s.id, s.title, s.artist, s.genre, s.album, s.source, s.difficulty, s.chord_data
         FROM songs_fts f JOIN songs s ON f.id = s.id
         WHERE f.songs_fts MATCH ? AND s.genre LIKE ? AND s.difficulty LIKE ?
@@ -66,8 +66,8 @@ export async function GET(request: NextRequest) {
     } else if (genre) {
       const genreQ = `%${genre}%`;
       const levelQ = level ? level : '%';
-      totalCount = (db.prepare('SELECT count(*) as count FROM songs WHERE genre LIKE ? AND difficulty LIKE ?').get(genreQ, levelQ) as any)?.count || 0;
-      songs = db.prepare('SELECT id, title, artist, genre, album, source, difficulty, chord_data FROM songs WHERE genre LIKE ? AND difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(genreQ, levelQ, limit, offset);
+      totalCount = ((await db.prepare('SELECT count(*) as count FROM songs WHERE genre LIKE ? AND difficulty LIKE ?').get(genreQ, levelQ)) as any)?.count || 0;
+      songs = await db.prepare('SELECT id, title, artist, genre, album, source, difficulty, chord_data FROM songs WHERE genre LIKE ? AND difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(genreQ, levelQ, limit, offset);
 
     } else if (artist && rawQ) {
       const safeQ      = rawQ.replace(/["^=:]/g, '');
@@ -76,14 +76,14 @@ export async function GET(request: NextRequest) {
       const artistQ    = `%${artist}%`;
       const levelQ     = level ? level : '%';
 
-      totalCount = (db.prepare(`
+      totalCount = ((await db.prepare(`
         SELECT count(*) as count FROM (
           SELECT 1 FROM songs_fts f JOIN songs s ON f.id = s.id
           WHERE f.songs_fts MATCH ? AND s.artist LIKE ? AND s.difficulty LIKE ?
         )
-      `).get(matchQuery, artistQ, levelQ) as any)?.count || 0;
+      `).get(matchQuery, artistQ, levelQ)) as any)?.count || 0;
 
-      songs = db.prepare(`
+      songs = await db.prepare(`
         SELECT s.id, s.title, s.artist, s.genre, s.album, s.source, s.difficulty, s.chord_data
         FROM songs_fts f JOIN songs s ON f.id = s.id
         WHERE f.songs_fts MATCH ? AND s.artist LIKE ? AND s.difficulty LIKE ?
@@ -94,8 +94,8 @@ export async function GET(request: NextRequest) {
     } else if (artist) {
       const artistQ = `%${artist}%`;
       const levelQ  = level ? level : '%';
-      totalCount = (db.prepare('SELECT count(*) as count FROM songs WHERE artist LIKE ? AND difficulty LIKE ?').get(artistQ, levelQ) as any)?.count || 0;
-      songs = db.prepare('SELECT id, title, artist, genre, album, source, difficulty, chord_data FROM songs WHERE artist LIKE ? AND difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(artistQ, levelQ, limit, offset);
+      totalCount = ((await db.prepare('SELECT count(*) as count FROM songs WHERE artist LIKE ? AND difficulty LIKE ?').get(artistQ, levelQ)) as any)?.count || 0;
+      songs = await db.prepare('SELECT id, title, artist, genre, album, source, difficulty, chord_data FROM songs WHERE artist LIKE ? AND difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(artistQ, levelQ, limit, offset);
 
     } else if (rawQ) {
       const safeQ      = rawQ.replace(/["^=:]/g, '');
@@ -103,13 +103,13 @@ export async function GET(request: NextRequest) {
       const matchQuery = words.length > 0 ? words.map(w => `"${w}"*`).join(' AND ') : 'a*';
       const levelQ     = level ? level : '%';
 
-      totalCount = (db.prepare(`
+      totalCount = ((await db.prepare(`
         SELECT count(*) as count FROM (
           SELECT 1 FROM songs_fts f JOIN songs s ON f.id = s.id WHERE f.songs_fts MATCH ? AND s.difficulty LIKE ?
         )
-      `).get(matchQuery, levelQ) as any)?.count || 0;
+      `).get(matchQuery, levelQ)) as any)?.count || 0;
 
-      songs = db.prepare(`
+      songs = await db.prepare(`
         SELECT s.id, s.title, s.artist, s.genre, s.album, s.source, s.difficulty, s.chord_data
         FROM songs_fts f JOIN songs s ON f.id = s.id
         WHERE f.songs_fts MATCH ? AND s.difficulty LIKE ?
@@ -119,14 +119,14 @@ export async function GET(request: NextRequest) {
 
       if (songs.length === 0) {
         const tok = `%${rawQ.split('').join('%')}%`;
-        totalCount = (db.prepare('SELECT count(*) as count FROM songs WHERE (title LIKE ? OR artist LIKE ?) AND difficulty LIKE ?').get(tok, tok, levelQ) as any)?.count || 0;
-        songs = db.prepare('SELECT id, title, artist, genre, album, source, difficulty, chord_data FROM songs WHERE (title LIKE ? OR artist LIKE ?) AND difficulty LIKE ? LIMIT ? OFFSET ?').all(tok, tok, levelQ, limit, offset);
+        totalCount = ((await db.prepare('SELECT count(*) as count FROM songs WHERE (title LIKE ? OR artist LIKE ?) AND difficulty LIKE ?').get(tok, tok, levelQ)) as any)?.count || 0;
+        songs = await db.prepare('SELECT id, title, artist, genre, album, source, difficulty, chord_data FROM songs WHERE (title LIKE ? OR artist LIKE ?) AND difficulty LIKE ? LIMIT ? OFFSET ?').all(tok, tok, levelQ, limit, offset);
       }
 
     } else {
       const levelQ = level ? level : '%';
-      totalCount = (db.prepare('SELECT count(*) as count FROM songs WHERE difficulty LIKE ?').get(levelQ) as any)?.count || 0;
-      songs = db.prepare('SELECT id, title, artist, genre, album, source, difficulty, chord_data FROM songs WHERE difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(levelQ, limit, offset);
+      totalCount = ((await db.prepare('SELECT count(*) as count FROM songs WHERE difficulty LIKE ?').get(levelQ)) as any)?.count || 0;
+      songs = await db.prepare('SELECT id, title, artist, genre, album, source, difficulty, chord_data FROM songs WHERE difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(levelQ, limit, offset);
     }
 
     return NextResponse.json({

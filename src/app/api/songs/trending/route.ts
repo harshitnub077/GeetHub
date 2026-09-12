@@ -40,9 +40,9 @@ export async function GET(request: NextRequest) {
 
   try {
     const placeholders = BOLLYWOOD_2026_PICKS.map(() => '?').join(',');
-    const rows = db.prepare(`
+    const rows = (await db.prepare(`
       SELECT id, title, artist, genre FROM songs WHERE id IN (${placeholders})
-    `).all(...BOLLYWOOD_2026_PICKS) as any[];
+    `).all(...BOLLYWOOD_2026_PICKS)) as any[];
 
     const seen = new Set<string>();
     const unique: any[] = [];
@@ -59,16 +59,16 @@ export async function GET(request: NextRequest) {
       let extras: any[];
       if (existingIds.length > 0) {
         const notIn = existingIds.map(() => '?').join(',');
-        extras = db.prepare(`
+        extras = (await db.prepare(`
           SELECT id, title, artist, genre FROM songs
           WHERE id NOT IN (${notIn})
           ORDER BY ROWID DESC LIMIT ?
-        `).all(...existingIds, limit - unique.length) as any[];
+        `).all(...existingIds, limit - unique.length)) as any[];
       } else {
-        extras = db.prepare(`
+        extras = (await db.prepare(`
           SELECT id, title, artist, genre FROM songs
           ORDER BY ROWID DESC LIMIT ?
-        `).all(limit - unique.length) as any[];
+        `).all(limit - unique.length)) as any[];
       }
       unique.push(...extras);
     }

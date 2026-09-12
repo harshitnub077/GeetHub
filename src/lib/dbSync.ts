@@ -76,6 +76,48 @@ function getDatabase(): any {
   if (_dbAttempted) return _dbInstance;
   _dbAttempted = true;
 
+  // 1. Turso Cloud Database for Serverless / Vercel Production
+  const tursoUrl = process.env.TURSO_DATABASE_URL;
+  const tursoAuthToken = process.env.TURSO_AUTH_TOKEN;
+
+  if (tursoUrl) {
+    try {
+      const { createClient } = _require('@libsql/client');
+      const client = createClient({
+        url: tursoUrl,
+        authToken: tursoAuthToken || undefined,
+      });
+
+      console.log('[GeetHub] Connected to Turso cloud database —', tursoUrl);
+
+      _dbInstance = {
+        isTurso: true,
+        client,
+        prepare: (sql: string) => ({
+          get: async (...args: any[]) => {
+            const res = await client.execute({ sql, args });
+            return res.rows[0] || null;
+          },
+          all: async (...args: any[]) => {
+            const res = await client.execute({ sql, args });
+            return res.rows;
+          },
+          run: async (...args: any[]) => {
+            return await client.execute({ sql, args });
+          }
+        }),
+        exec: async (sql: string) => {
+          return await client.executeMultiple(sql);
+        }
+      };
+
+      return _dbInstance;
+    } catch (err: any) {
+      console.warn('[GeetHub] Turso connection failed, falling back to local SQLite:', err?.message || err);
+    }
+  }
+
+  // 2. Local SQLite mode for development
   try {
     // node:sqlite is a Node.js 22.5+ built-in; excluded from bundling via
     // serverExternalPackages in next.config.ts.
@@ -89,7 +131,7 @@ function getDatabase(): any {
     db.exec('PRAGMA temp_store = MEMORY;');
     initSchema(db);
     _dbInstance = db;
-    console.log('[GeetHub] SQLite connected —', DB_PATH);
+    console.log('[GeetHub] Local SQLite connected —', DB_PATH);
   } catch (err: any) {
     console.warn('[GeetHub] SQLite unavailable — JSON-fallback mode.', err?.message ?? err);
     _dbInstance = null;

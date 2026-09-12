@@ -4,13 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "bash rebuild_db.sh && next build",
+    "build": "([ -f geethub_master.db ] || bash rebuild_db.sh || true) && next build",
     "start": "next start",
     "lint": "eslint",
-    "sync-fts": "node scripts/sync_fts_engine.js",
-    "setup-db": "node scripts/setup_fts.js"
+    "db:ingest-30k": "python3 scripts/ingest_30k_songs.py",
+    "db:optimize": "python3 scripts/optimize_and_clean_db.py",
+    "db:dump": "sqlite3 geethub_master.db .dump > geethub_dump.sql"
   },
   "dependencies": {
+    "@libsql/client": "^0.18.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",

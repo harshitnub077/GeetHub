@@ -46,3 +46,8 @@ next-env.d.ts
 !*.db.gz.part.*
 !rebuild_db.sh
 scripts/scraped_songs_final.json
+*.jsonl
+*.sql
+*.log
+.chrome_profile*
+scripts/.chrome_profile*

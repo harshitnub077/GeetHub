@@ -21,7 +21,7 @@ export async function GET(
   const db = getDb();
   if (db) {
     try {
-      const song = db.prepare('SELECT * FROM songs WHERE id = ?').get(id);
+      const song = await db.prepare('SELECT * FROM songs WHERE id = ?').get(id);
       if (song) return NextResponse.json(song);
     } catch (err) {
       console.error('API /api/songs/[id] DB error:', err);

@@ -26,7 +26,7 @@ export async function GET(
   }
 
   try {
-    const songs = db.prepare(
+    const songs = await db.prepare(
       'SELECT id, title, artist, genre FROM songs WHERE artist = ? LIMIT 6'
     ).all(decodedName);
     return NextResponse.json({ songs });

@@ -66,15 +66,15 @@ export async function GET(request: NextRequest) {
       if (artist) args.push(`%${artist}%`);
       args.push(levelVal);
 
-      const qCount = db.prepare(`
+      const qCount = (await db.prepare(`
         SELECT count(*) as count FROM (
           SELECT 1 FROM songs_fts f JOIN songs s ON f.id = s.id
           WHERE f.songs_fts MATCH ? ${genreClause} ${artistClause} ${levelClause}
         )
-      `).get(...args) as { count: number };
+      `).get(...args)) as { count: number };
       totalCount = qCount?.count || 0;
 
-      songs = db.prepare(`
+      songs = await db.prepare(`
         SELECT s.id, s.title, s.artist, s.genre, s.album, s.source, s.difficulty
         FROM songs_fts f JOIN songs s ON f.id = s.id
         WHERE f.songs_fts MATCH ? ${genreClause} ${artistClause} ${levelClause}
@@ -88,13 +88,13 @@ export async function GET(request: NextRequest) {
         if (genre)  fbArgs.push(`%${genre}%`);
         if (artist) fbArgs.push(`%${artist}%`);
         fbArgs.push(levelVal);
-        const fbCount = db.prepare(`
+        const fbCount = (await db.prepare(`
           SELECT count(*) as count FROM (
             SELECT 1 FROM songs WHERE (title LIKE ? OR artist LIKE ?) ${genreClause.replace('s.','')} ${artistClause.replace('s.','')} ${levelClause.replace('s.','')}
           )
-        `).get(...fbArgs) as { count: number };
+        `).get(...fbArgs)) as { count: number };
         totalCount = fbCount?.count || 0;
-        songs = db.prepare(`
+        songs = await db.prepare(`
           SELECT id, title, artist, genre, album, source, difficulty FROM songs
           WHERE (title LIKE ? OR artist LIKE ?) ${genreClause.replace('s.','')} ${artistClause.replace('s.','')} ${levelClause.replace('s.','')}
           LIMIT ? OFFSET ?
@@ -103,15 +103,15 @@ export async function GET(request: NextRequest) {
 
     } else if (genre) {
       const ga = `%${genre}%`;
-      totalCount = (db.prepare('SELECT count(*) as count FROM songs WHERE genre LIKE ? AND difficulty LIKE ?').get(ga, levelVal) as any)?.count || 0;
-      songs = db.prepare('SELECT id,title,artist,genre,album,source,difficulty FROM songs WHERE genre LIKE ? AND difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(ga, levelVal, limit, offset);
+      totalCount = ((await db.prepare('SELECT count(*) as count FROM songs WHERE genre LIKE ? AND difficulty LIKE ?').get(ga, levelVal)) as any)?.count || 0;
+      songs = await db.prepare('SELECT id,title,artist,genre,album,source,difficulty FROM songs WHERE genre LIKE ? AND difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(ga, levelVal, limit, offset);
     } else if (artist) {
       const aa = `%${artist}%`;
-      totalCount = (db.prepare('SELECT count(*) as count FROM songs WHERE artist LIKE ? AND difficulty LIKE ?').get(aa, levelVal) as any)?.count || 0;
-      songs = db.prepare('SELECT id,title,artist,genre,album,source,difficulty FROM songs WHERE artist LIKE ? AND difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(aa, levelVal, limit, offset);
+      totalCount = ((await db.prepare('SELECT count(*) as count FROM songs WHERE artist LIKE ? AND difficulty LIKE ?').get(aa, levelVal)) as any)?.count || 0;
+      songs = await db.prepare('SELECT id,title,artist,genre,album,source,difficulty FROM songs WHERE artist LIKE ? AND difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(aa, levelVal, limit, offset);
     } else {
-      totalCount = (db.prepare('SELECT count(*) as count FROM songs WHERE difficulty LIKE ?').get(levelVal) as any)?.count || 0;
-      songs = db.prepare('SELECT id,title,artist,genre,album,source,difficulty FROM songs WHERE difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(levelVal, limit, offset);
+      totalCount = ((await db.prepare('SELECT count(*) as count FROM songs WHERE difficulty LIKE ?').get(levelVal)) as any)?.count || 0;
+      songs = await db.prepare('SELECT id,title,artist,genre,album,source,difficulty FROM songs WHERE difficulty LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?').all(levelVal, limit, offset);
     }
 
     return NextResponse.json({
@@ -125,16 +125,21 @@ export async function GET(request: NextRequest) {
       (!q      || s.title?.toLowerCase().includes(q) || s.artist?.toLowerCase().includes(q)) &&
       (!genre  || s.genre?.toLowerCase().includes(genre.toLowerCase())) &&
       (!artist || s.artist?.toLowerCase().includes(artist.toLowerCase())) &&
-      (!level  || s.difficulty === level)
+      (!level  || s.difficulty?.toLowerCase() === level.toLowerCase())
     );
-    return jsonResponse(all, page, limit, offset);
+    const total = all.length;
+    return NextResponse.json({
+      songs: all.slice(offset, offset + limit),
+      pagination: { total, page, limit, pages: Math.ceil(total / limit) },
+      is_fallback: true,
+    });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, artist, genre, chord_data, difficulty } = body;
+    const { title, artist, genre, difficulty, chord_data } = body;
 
     if (!title?.trim() || !artist?.trim() || !chord_data?.trim()) {
       return NextResponse.json({ error: 'title, artist and chord_data are required' }, { status: 400 });
@@ -146,7 +151,7 @@ export async function POST(request: NextRequest) {
     }
 
     const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    db.prepare(`
+    await db.prepare(`
       INSERT INTO songs (id, title, artist, genre, difficulty, chord_data, source, contributor_username, created_at)
       VALUES (?, ?, ?, ?, ?, ?, 'community', 'community', datetime('now'))
     `).run(id, title.trim(), artist.trim(), genre?.trim() || 'Other', difficulty || 'Intermediate', chord_data.trim());

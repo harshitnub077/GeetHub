@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const suggestions = db.prepare(`
+    const suggestions = await db.prepare(`
       SELECT DISTINCT title, artist FROM songs
       WHERE title LIKE ? OR artist LIKE ?
       LIMIT 6

@@ -21,7 +21,7 @@ async function getSong(id: string): Promise<any | null> {
 
   if (db) {
     try {
-      song = db.prepare("SELECT * FROM songs WHERE id = ?").get(id);
+      song = await db.prepare("SELECT * FROM songs WHERE id = ?").get(id);
     } catch { /* fall through to JSON */ }
   }
   if (!song) {
