@@ -213,7 +213,7 @@ export default function Nav() {
                 </div>
               ) : (
                 <button
-                  onClick={() => signIn("google")}
+                  onClick={() => signIn()}
                   style={{
                     display: "flex", alignItems: "center", gap: 8,
                     padding: "9px 20px", borderRadius: 100,
@@ -314,6 +314,47 @@ export default function Nav() {
             </div>
 
             <div className="container" style={{ paddingBottom: 60, display: "flex", flexDirection: "column", gap: 12 }}>
+              {status === "authenticated" ? (
+                <button
+                  onClick={() => signOut()}
+                  style={{
+                    padding: "16px",
+                    background: "rgba(255,77,79,0.12)",
+                    border: "1px solid rgba(255,77,79,0.25)",
+                    borderRadius: 16,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    color: "#ff4d4f",
+                    fontWeight: 700,
+                    fontSize: 15,
+                    cursor: "pointer",
+                  }}
+                >
+                  <LogOut size={18} /> Sign Out ({session?.user?.name || "Musician"})
+                </button>
+              ) : (
+                <button
+                  onClick={() => signIn()}
+                  style={{
+                    padding: "16px",
+                    background: "rgba(255,255,255,0.08)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    borderRadius: 16,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: 15,
+                    cursor: "pointer",
+                  }}
+                >
+                  <User size={18} /> Sign In
+                </button>
+              )}
               <Link href="/explore" style={{ padding: "18px", background: "rgba(255,255,255,0.05)", borderRadius: 16, display: "flex", justifyContent: "center", gap: 8, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 16 }}>
                 <Search size={18} /> Search Songs
               </Link>
