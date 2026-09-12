@@ -668,42 +668,59 @@ export default function HomePage() {
           }}
         />
 
-        <div className="container" style={{ position: "relative", zIndex: 2, textAlign: "center", paddingTop: 48, paddingBottom: 60 }}>
+        <div className="container" style={{ position: "relative", zIndex: 2, textAlign: "center", paddingTop: 40, paddingBottom: 64 }}>
 
-          {/* Top pill badge */}
+          {/* Micro-Pill Announcement */}
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "8px 20px",
-              borderRadius: 100,
-              background: "rgba(245,166,35,0.08)",
-              border: "1px solid rgba(245,166,35,0.28)",
-              marginBottom: 24,
-              boxShadow: "0 0 30px rgba(245,166,35,0.12)",
-            }}
+            transition={{ duration: 0.5 }}
+            style={{ marginBottom: 20 }}
           >
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--amber)", boxShadow: "0 0 10px var(--amber)" }} />
-            <span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--amber)" }}>
-              ⚡ NEXT-GEN GUITAR INTELLIGENCE · 2026 EDITION
-            </span>
+            <Link
+              href="/tools"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "6px 16px",
+                borderRadius: 100,
+                background: "rgba(245, 166, 35, 0.08)",
+                border: "1px solid rgba(245, 166, 35, 0.25)",
+                color: "var(--amber)",
+                textDecoration: "none",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                boxShadow: "0 0 24px rgba(245, 166, 35, 0.1)",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(245, 166, 35, 0.14)";
+                e.currentTarget.style.borderColor = "rgba(245, 166, 35, 0.45)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(245, 166, 35, 0.08)";
+                e.currentTarget.style.borderColor = "rgba(245, 166, 35, 0.25)";
+              }}
+            >
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--amber)", boxShadow: "0 0 8px var(--amber)" }} />
+              <span>Introducing GeetHub 2.0 · Live Web Audio Engine & 174k Chords</span>
+              <ArrowRight size={13} style={{ opacity: 0.8 }} />
+            </Link>
           </motion.div>
 
-          {/* Headline — smaller, refined */}
+          {/* Headline */}
           <div
             ref={heroTitleRef}
             style={{
               fontFamily: "var(--f-display)",
-              fontWeight: 800,
-              fontSize: "clamp(34px, 5.5vw, 68px)",
-              lineHeight: 1.08,
-              letterSpacing: "-0.04em",
+              fontWeight: 900,
+              fontSize: "clamp(38px, 6vw, 76px)",
+              lineHeight: 1.06,
+              letterSpacing: "-0.045em",
               marginBottom: 20,
-              maxWidth: 780,
+              maxWidth: 860,
               marginInline: "auto",
             }}
           >
@@ -715,7 +732,7 @@ export default function HomePage() {
                     className="hero-word"
                     style={{
                       display: "inline-block",
-                      marginRight: "0.2em",
+                      marginRight: "0.22em",
                       color: li === 1 ? "var(--amber)" : "var(--t1)",
                       opacity: 0,
                     }}
@@ -727,102 +744,95 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Sub-text */}
+          {/* Sub-copy */}
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
             style={{
-              fontSize: "clamp(14px, 1.8vw, 17px)",
+              fontSize: "clamp(15px, 1.8vw, 18px)",
               color: "var(--t2)",
-              maxWidth: 480,
-              margin: "0 auto 36px",
-              lineHeight: 1.75,
+              maxWidth: 620,
+              margin: "0 auto 32px",
+              lineHeight: 1.7,
               fontWeight: 400,
             }}
           >
-            Growing collection of authentic songs. Real-time chord detection. Built for every guitarist.
+            The world’s most intuitive guitar platform. 174,000+ verified songs with interactive chord sheets, studio-grade virtual instruments, real-time pitch recognition, and pro masterclasses.
           </motion.p>
 
-          {/* Integrated Search Bar */}
+          {/* Command / Search Bar with refined aesthetics */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{
-              opacity: 1,
-              scale: focused ? 1.02 : 1,
-            }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.45 }}
             style={{
-              maxWidth: focused ? 720 : 680,
+              maxWidth: 640,
               width: "100%",
-              margin: "0 auto 48px",
+              margin: "0 auto 20px",
               position: "relative",
-              transition: "max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--amber)", marginBottom: 16, opacity: 0.8 }}>
-              Search for a song
-            </p>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                background: focused ? "rgba(10,10,15,0.7)" : "rgba(255,255,255,0.04)",
-                backdropFilter: focused ? "blur(32px) saturate(1.5)" : "blur(24px)",
-                WebkitBackdropFilter: focused ? "blur(32px) saturate(1.5)" : "blur(24px)",
-                border: `1px solid ${focused ? "var(--amber)" : "rgba(255,255,255,0.1)"}`,
-                borderRadius: 20,
-                padding: focused ? "8px 24px" : "6px 20px",
+                background: focused ? "rgba(10,10,16,0.92)" : "rgba(18,18,26,0.65)",
+                backdropFilter: "blur(28px) saturate(1.4)",
+                WebkitBackdropFilter: "blur(28px) saturate(1.4)",
+                border: `1px solid ${focused ? "var(--amber)" : "rgba(255,255,255,0.12)"}`,
+                borderRadius: 18,
+                padding: "6px 18px",
                 boxShadow: focused
-                  ? "0 0 0 4px rgba(245,166,35,0.15), 0 30px 80px rgba(0,0,0,0.8)"
-                  : "0 10px 40px rgba(0,0,0,0.3)",
-                transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                  ? "0 0 0 3px rgba(245,166,35,0.2), 0 24px 60px rgba(0,0,0,0.8)"
+                  : "0 12px 36px rgba(0,0,0,0.35)",
+                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
               {loading
-                ? <div style={{ width: 20, height: 20, borderRadius: "50%", border: "2px solid var(--amber)", borderTopColor: "transparent", animation: "spin 0.7s linear infinite", flexShrink: 0 }} />
-                : <Search size={20} style={{ color: focused ? "var(--amber)" : "var(--t3)", flexShrink: 0, transition: "color 0.2s" }} />
+                ? <div style={{ width: 18, height: 18, borderRadius: "50%", border: "2px solid var(--amber)", borderTopColor: "transparent", animation: "spin 0.7s linear infinite", flexShrink: 0 }} />
+                : <Search size={18} style={{ color: focused ? "var(--amber)" : "var(--t3)", flexShrink: 0, transition: "color 0.2s" }} />
               }
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setTimeout(() => setFocused(false), 200)}
-                placeholder="Search any song, artist, or chord…"
+                placeholder="Search 174,000+ songs, artists, or chords…"
                 style={{
                   flex: 1, background: "transparent", border: "none", outline: "none",
-                  padding: "16px 20px", fontSize: 16.5, color: "var(--t1)",
+                  padding: "14px 16px", fontSize: 15.5, color: "var(--t1)",
                   fontFamily: "var(--f-body)", fontWeight: 500,
                 }}
               />
               {!query && (
                 <kbd style={{
-                  fontSize: 10, color: "var(--t3)", background: "rgba(255,255,255,0.05)",
-                  padding: "4px 8px", borderRadius: 8, fontFamily: "var(--f-mono)", flexShrink: 0,
-                  border: "1px solid var(--border)",
+                  fontSize: 11, color: "var(--t3)", background: "rgba(255,255,255,0.06)",
+                  padding: "3px 8px", borderRadius: 6, fontFamily: "var(--f-mono)", flexShrink: 0,
+                  border: "1px solid rgba(255,255,255,0.1)",
                 }}>⌘K</kbd>
               )}
             </div>
 
-            {/* Hero Suggestions Dropdown */}
+            {/* Suggestions Dropdown */}
             <AnimatePresence>
               {(focused || showSug) && (
                 <motion.div
-                  initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                  initial={{ opacity: 0, y: 10, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 12, scale: 0.98 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
                   style={{
-                    position: "absolute", top: "calc(100% + 12px)", left: 0, right: 0,
-                    zIndex: 100, borderRadius: 20, overflow: "hidden",
-                    background: "rgba(10,10,15,0.92)", backdropFilter: "blur(32px)",
+                    position: "absolute", top: "calc(100% + 10px)", left: 0, right: 0,
+                    zIndex: 100, borderRadius: 18, overflow: "hidden",
+                    background: "rgba(10,10,16,0.96)", backdropFilter: "blur(32px)",
                     border: "1px solid rgba(245,166,35,0.25)",
-                    boxShadow: "0 40px 100px rgba(0,0,0,0.7)",
+                    boxShadow: "0 30px 80px rgba(0,0,0,0.8)",
+                    textAlign: "left",
                   }}
                 >
-                  {/* Results content remains same as previous search bar dropdown logic */}
                   {query.length >= 2 && suggestions.length > 0 && (
-                    <div style={{ padding: "16px 12px 6px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <div style={{ padding: "14px 10px 4px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                       <p style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", color: "var(--amber)", marginBottom: 8, paddingLeft: 12, letterSpacing: "0.12em" }}>
                         Quick Suggestions
                       </p>
@@ -830,20 +840,20 @@ export default function HomePage() {
                         <Link
                           key={i}
                           href={`/explore?q=${encodeURIComponent(s.title)}`}
-                          style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, textDecoration: "none", transition: "all 0.2s" }}
+                          style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 10, textDecoration: "none", transition: "all 0.15s" }}
                           onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
                           onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                         >
-                          <Zap size={14} style={{ color: "var(--amber)", flexShrink: 0 }} />
-                          <span style={{ fontWeight: 600, fontSize: 15, color: "var(--t1)" }}>{s.title}</span>
-                          <span style={{ fontSize: 13, color: "var(--t3)", marginLeft: "auto" }}>{s.artist}</span>
+                          <Zap size={13} style={{ color: "var(--amber)", flexShrink: 0 }} />
+                          <span style={{ fontWeight: 600, fontSize: 14.5, color: "var(--t1)" }}>{s.title}</span>
+                          <span style={{ fontSize: 12.5, color: "var(--t3)", marginLeft: "auto" }}>{s.artist}</span>
                         </Link>
                       ))}
                     </div>
                   )}
                   {results.length > 0 && (
-                    <div style={{ padding: "12px 12px" }}>
-                      <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--t3)", marginBottom: 10, paddingLeft: 12 }}>
+                    <div style={{ padding: "10px" }}>
+                      <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--t3)", marginBottom: 8, paddingLeft: 12 }}>
                         Top Matches
                       </p>
                       {results.map((song) => (
@@ -852,29 +862,29 @@ export default function HomePage() {
                           href={`/song/${song.id}`}
                           style={{
                             display: "flex", alignItems: "center", justifyContent: "space-between",
-                            padding: "12px 14px", borderRadius: 12, transition: "all 0.2s",
+                            padding: "10px 12px", borderRadius: 10, transition: "all 0.15s",
                             textDecoration: "none",
                           }}
                           onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
                           onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                         >
                           <span>
-                            <span style={{ fontWeight: 600, fontSize: 15, color: "var(--t1)" }}>{song.title}</span>
-                            <span style={{ fontSize: 13, color: "var(--t3)", marginLeft: 12 }}>{song.artist}</span>
+                            <span style={{ fontWeight: 600, fontSize: 14.5, color: "var(--t1)" }}>{song.title}</span>
+                            <span style={{ fontSize: 12.5, color: "var(--t3)", marginLeft: 10 }}>{song.artist}</span>
                           </span>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: "var(--amber)", background: "rgba(245,166,35,0.1)", padding: "4px 10px", borderRadius: 8 }}>View Tab</span>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: "var(--amber)", background: "rgba(245,166,35,0.1)", padding: "3px 8px", borderRadius: 6 }}>View Tab</span>
                         </Link>
                       ))}
-                      <div style={{ padding: "12px 14px", textAlign: "center", marginTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                        <Link href="/explore" style={{ fontSize: 13, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
+                      <div style={{ padding: "10px 12px", textAlign: "center", marginTop: 4, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                        <Link href="/explore" style={{ fontSize: 12.5, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
                           Browse all songs in library →
                         </Link>
                       </div>
                     </div>
                   )}
                   {!query && (
-                    <div style={{ padding: "16px 12px" }}>
-                      <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--t3)", marginBottom: 12, paddingLeft: 12 }}>
+                    <div style={{ padding: "14px 10px" }}>
+                      <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--t3)", marginBottom: 10, paddingLeft: 12 }}>
                         Popular Right Now
                       </p>
                       {["Wonderwall", "Tum Hi Ho", "Hotel California", "Nothing Else Matters"].map((term) => (
@@ -882,20 +892,20 @@ export default function HomePage() {
                           key={term}
                           onMouseDown={() => setQuery(term)}
                           style={{
-                            width: "100%", textAlign: "left", display: "flex", alignItems: "center", gap: 12,
-                            padding: "12px 14px", borderRadius: 12, background: "transparent",
-                            color: "var(--t2)", fontSize: 15, transition: "all 0.2s",
+                            width: "100%", textAlign: "left", display: "flex", alignItems: "center", gap: 10,
+                            padding: "10px 12px", borderRadius: 10, background: "transparent",
+                            color: "var(--t2)", fontSize: 14, transition: "all 0.15s",
                             cursor: "pointer", border: "none", fontFamily: "var(--f-body)",
                           }}
                           onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
                           onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                         >
-                          <Flame size={14} style={{ color: "var(--amber)", flexShrink: 0 }} />
+                          <Flame size={13} style={{ color: "var(--amber)", flexShrink: 0 }} />
                           {term}
                         </button>
                       ))}
-                      <div style={{ padding: "12px 14px", textAlign: "center", marginTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                        <Link href="/explore" style={{ fontSize: 13, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
+                      <div style={{ padding: "10px 12px", textAlign: "center", marginTop: 6, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                        <Link href="/explore" style={{ fontSize: 12.5, fontWeight: 700, color: "var(--amber)", textDecoration: "none" }}>
                           Browse all songs in library →
                         </Link>
                       </div>
@@ -906,159 +916,253 @@ export default function HomePage() {
             </AnimatePresence>
           </motion.div>
 
-          {/* ── HERO INTERACTIVE SHOWCASE ── */}
+          {/* Quick Trending Chips */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, flexWrap: "wrap", marginBottom: 32 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "var(--t3)" }}>Trending:</span>
+            {["Hotel California", "Tum Hi Ho", "Wonderwall", "Nothing Else Matters"].map((term) => (
+              <button
+                key={term}
+                onClick={() => setQuery(term)}
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: 100,
+                  padding: "4px 12px",
+                  fontSize: 12,
+                  color: "var(--t2)",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(245,166,35,0.1)";
+                  e.currentTarget.style.borderColor = "rgba(245,166,35,0.3)";
+                  e.currentTarget.style.color = "var(--amber)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                  e.currentTarget.style.color = "var(--t2)";
+                }}
+              >
+                {term}
+              </button>
+            ))}
+          </div>
+
+          {/* Primary Action Buttons */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, flexWrap: "wrap", marginBottom: 48 }}>
+            <Magnetic>
+              <Link
+                href="/explore"
+                className="btn btn-primary btn-lg"
+                style={{
+                  padding: "16px 36px",
+                  fontSize: 15.5,
+                  borderRadius: 14,
+                  fontWeight: 800,
+                  boxShadow: "0 10px 30px rgba(245,166,35,0.25)",
+                }}
+              >
+                Explore 174k+ Songs <ChevronRight size={17} />
+              </Link>
+            </Magnetic>
+            <Link
+              href="/tools"
+              className="btn btn-surface btn-lg"
+              style={{
+                padding: "16px 28px",
+                fontSize: 15.5,
+                borderRadius: 14,
+                fontWeight: 700,
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              Guitar Theory Lab
+            </Link>
+            <Link
+              href="/community"
+              className="btn btn-surface btn-lg"
+              style={{
+                padding: "16px 28px",
+                fontSize: 15.5,
+                borderRadius: 14,
+                fontWeight: 700,
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              Community Jam Stage
+            </Link>
+          </div>
+
+          {/* ── THE HERO AUDIO WORKSTATION CONSOLE ── */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 35 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.55 }}
             style={{
-              maxWidth: 1180,
-              margin: "16px auto 0",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-              gap: 24,
-              alignItems: "stretch",
+              maxWidth: 1080,
+              margin: "0 auto",
+              borderRadius: 24,
+              overflow: "hidden",
+              border: "1px solid rgba(245, 166, 35, 0.22)",
+              background: "linear-gradient(180deg, rgba(20,20,30,0.92) 0%, rgba(12,12,18,0.96) 100%)",
+              backdropFilter: "blur(32px)",
+              WebkitBackdropFilter: "blur(32px)",
+              boxShadow: "0 40px 100px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.1)",
               textAlign: "left",
             }}
           >
-            {/* Playable Virtual Guitar */}
-            <div style={{
-              background: "rgba(10,10,16,0.85)",
-              backdropFilter: "blur(30px)",
-              WebkitBackdropFilter: "blur(30px)",
-              border: "1px solid rgba(245,166,35,0.22)",
-              borderRadius: 24,
-              padding: "24px",
-              boxShadow: "0 30px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(245,166,35,0.15)",
-              display: "flex",
-              flexDirection: "column",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 10, background: "rgba(245,166,35,0.12)", border: "1px solid rgba(245,166,35,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Music2 size={18} color="var(--amber)" />
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--t1)", margin: 0 }}>Playable Virtual Guitar</h3>
-                    <p style={{ fontSize: 12, color: "var(--t3)", margin: 0 }}>Hover or click strings · Keys 1–6 · Real acoustic physics</p>
-                  </div>
-                </div>
-                <span style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--amber)", background: "rgba(245,166,35,0.1)", padding: "4px 10px", borderRadius: 8, border: "1px solid rgba(245,166,35,0.2)" }}>
-                  Web Audio 2.0
+            {/* DAW Console Titlebar */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "14px 20px",
+                borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                background: "rgba(10, 10, 15, 0.6)",
+              }}
+            >
+              {/* Window dots */}
+              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#ef4444", opacity: 0.8 }} />
+                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#eab308", opacity: 0.8 }} />
+                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#22c55e", opacity: 0.8 }} />
+                <span style={{ marginLeft: 10, fontSize: 12, fontWeight: 700, color: "var(--t3)", letterSpacing: "0.02em" }}>
+                  GeetHub Audio Workstation · Live Fretboard Matrix
                 </span>
               </div>
 
-              <VirtualGuitar />
+              {/* Status pill */}
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: "var(--teal)", background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.25)", padding: "3px 10px", borderRadius: 100 }}>
+                  ● Web Audio 2.0 Active
+                </span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "var(--t3)", fontFamily: "var(--f-mono)" }}>
+                  44.1 kHz Hi-Fi
+                </span>
+              </div>
             </div>
 
-            {/* Creative 3D Artwork Hero Card */}
-            <div style={{
-              background: "rgba(10,10,16,0.85)",
-              backdropFilter: "blur(30px)",
-              WebkitBackdropFilter: "blur(30px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 24,
-              overflow: "hidden",
-              boxShadow: "0 30px 80px rgba(0,0,0,0.7)",
-              display: "flex",
-              flexDirection: "column",
-              position: "relative",
-            }}>
-              <div style={{ position: "relative", height: 250, overflow: "hidden" }}>
-                <img
-                  src="/assets/hero_guitar.jpg"
-                  alt="GeetHub Next-Gen Holographic Guitar Artwork"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,10,16,0.95) 0%, rgba(10,10,16,0.25) 60%, transparent 100%)" }} />
+            {/* Main Instrument Deck */}
+            <div style={{ padding: "24px 28px" }}>
+              <VirtualGuitar embedded={true} />
+            </div>
 
-                {/* Floating pill badge */}
-                <div style={{
-                  position: "absolute",
-                  top: 16,
-                  left: 16,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "rgba(5,5,8,0.75)",
-                  backdropFilter: "blur(12px)",
-                  padding: "6px 14px",
-                  borderRadius: 20,
-                  border: "1px solid rgba(245,166,35,0.3)",
-                }}>
-                  <Sparkles size={12} color="var(--amber)" />
-                  <span style={{ fontSize: 11, fontWeight: 800, color: "#fff", letterSpacing: "0.05em" }}>Hyper-Acoustic Engine</span>
+            {/* Console Footer: Live Spectrum Monitor & Quick Theory Links */}
+            <div
+              style={{
+                borderTop: "1px solid rgba(255, 255, 255, 0.06)",
+                background: "rgba(8, 8, 12, 0.7)",
+                padding: "16px 28px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 16,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ width: 160, height: 32 }}>
+                  <SoundVisualizerCanvas active={true} barCount={20} />
                 </div>
-
-                <div style={{
-                  position: "absolute",
-                  bottom: 16,
-                  left: 20,
-                  right: 20,
-                  display: "flex",
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
-                }}>
-                  <div>
-                    <h4 style={{ fontSize: 20, fontWeight: 900, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>Dynamic Resonance</h4>
-                    <p style={{ fontSize: 12.5, color: "rgba(255,255,255,0.75)", margin: "4px 0 0" }}>Harmonic frequency spectrum synced to strumming</p>
-                  </div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 800, color: "var(--amber)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    Dynamic Resonance
+                  </span>
+                  <span style={{ fontSize: 12, color: "var(--t3)" }}>
+                    Harmonic frequencies synced to string plucks
+                  </span>
                 </div>
               </div>
 
-              {/* Sound visualizer + Quick Actions */}
-              <div style={{ padding: "20px 24px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 16 }}>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                    <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--t3)" }}>Spectrum Analyzer</span>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: "var(--teal)" }}>● 44.1 kHz Hi-Fi</span>
-                  </div>
-                  <SoundVisualizerCanvas active={true} barCount={28} />
-                </div>
-
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: "auto" }}>
-                  <Link
-                    href="/tools/chords"
-                    style={{
-                      padding: "10px 14px",
-                      borderRadius: 12,
-                      background: "rgba(245,166,35,0.1)",
-                      border: "1px solid rgba(245,166,35,0.25)",
-                      color: "var(--amber)",
-                      textDecoration: "none",
-                      fontSize: 12.5,
-                      fontWeight: 700,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                    }}
-                  >
-                    <BookOpen size={13} /> Chord Library →
-                  </Link>
-                  <Link
-                    href="/community"
-                    style={{
-                      padding: "10px 14px",
-                      borderRadius: 12,
-                      background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      color: "var(--t1)",
-                      textDecoration: "none",
-                      fontSize: 12.5,
-                      fontWeight: 700,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                    }}
-                  >
-                    <Users size={13} /> Artist Hub →
-                  </Link>
-                </div>
+              {/* Quick Jump Shortcuts */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 11.5, color: "var(--t3)", fontWeight: 600 }}>Explore Theory:</span>
+                <Link
+                  href="/tools/chords"
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "var(--t2)",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    padding: "5px 12px",
+                    borderRadius: 8,
+                    textDecoration: "none",
+                    transition: "all 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "var(--amber)"; e.currentTarget.style.borderColor = "var(--amber)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--t2)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                >
+                  Chord Dictionary
+                </Link>
+                <Link
+                  href="/tools/scales"
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "var(--t2)",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    padding: "5px 12px",
+                    borderRadius: 8,
+                    textDecoration: "none",
+                    transition: "all 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "var(--purple)"; e.currentTarget.style.borderColor = "var(--purple)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--t2)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                >
+                  Scale Explorer
+                </Link>
+                <Link
+                  href="/tools/circle-of-fifths"
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "var(--t2)",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    padding: "5px 12px",
+                    borderRadius: 8,
+                    textDecoration: "none",
+                    transition: "all 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "#f43f5e"; e.currentTarget.style.borderColor = "#f43f5e"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--t2)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                >
+                  Circle of 5ths
+                </Link>
               </div>
             </div>
           </motion.div>
+
+          {/* Social Proof Row */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.75, duration: 0.8 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 24,
+              marginTop: 36,
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              {[1, 2, 3, 4, 5].map((s) => (
+                <Star key={s} size={15} fill="var(--amber)" color="var(--amber)" />
+              ))}
+              <span style={{ fontSize: 13, fontWeight: 800, color: "var(--t1)", marginLeft: 6 }}>4.9/5</span>
+            </div>
+            <span style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
+            <span style={{ fontSize: 13, color: "var(--t3)", fontWeight: 500 }}>
+              Over <strong style={{ color: "var(--t1)" }}>50,000+</strong> guitarists & music educators practice on GeetHub
+            </span>
+          </motion.div>
+
         </div>
 
         {/* No stats here anymore */}

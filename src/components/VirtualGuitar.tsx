@@ -17,7 +17,7 @@ const CHORD_PRESETS: Record<string, { label: string; frets: number[] }> = {
 const STRING_NAMES = ["E (6th)", "A (5th)", "D (4th)", "G (3rd)", "B (2nd)", "E (1st)"];
 const BASE_FREQS = [82.41, 110.0, 146.83, 196.0, 246.94, 329.63];
 
-export default function VirtualGuitar() {
+export default function VirtualGuitar({ embedded = false }: { embedded?: boolean }) {
   const [activeChord, setActiveChord] = useState<string>("G");
   const [vibrating, setVibrating] = useState<Record<number, boolean>>({});
   const isDraggingRef = useRef(false);
@@ -59,11 +59,11 @@ export default function VirtualGuitar() {
     <div
       style={{
         position: "relative",
-        background: "linear-gradient(135deg, rgba(20, 20, 28, 0.95), rgba(12, 12, 16, 0.98))",
-        border: "1px solid rgba(245, 166, 35, 0.25)",
-        borderRadius: 24,
-        padding: "24px 28px",
-        boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(245, 166, 35, 0.08)",
+        background: embedded ? "transparent" : "linear-gradient(135deg, rgba(20, 20, 28, 0.95), rgba(12, 12, 16, 0.98))",
+        border: embedded ? "none" : "1px solid rgba(245, 166, 35, 0.25)",
+        borderRadius: embedded ? 0 : 24,
+        padding: embedded ? "0" : "24px 28px",
+        boxShadow: embedded ? "none" : "0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(245, 166, 35, 0.08)",
         overflow: "hidden",
       }}
     >
