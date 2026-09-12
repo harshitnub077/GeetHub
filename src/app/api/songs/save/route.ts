@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+import { normalizeChordSheet } from '@/lib/chordFormatter';
+
 export async function POST(request: NextRequest) {
   try {
     const song = await request.json();
@@ -26,7 +28,7 @@ export async function POST(request: NextRequest) {
       genre: song.genre || 'Unknown',
       album: song.album || 'Unknown',
       contributor_username: 'imported-from-ug',
-      chord_data: song.chord_data,
+      chord_data: normalizeChordSheet(song.chord_data),
     };
 
     // Check if song already exists with this ID
