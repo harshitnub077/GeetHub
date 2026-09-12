@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { ChordRenderer, ChordDiagram } from "./ChordRenderer";
 import { AnimatePresence } from "framer-motion";
+import { extractChords } from "@/lib/chordFormatter";
 
 interface Song { id:string; title:string; artist:string; genre:string; contributor_username?:string; chord_data:string; bpm?:number; music_key?:string; capo?:number; }
 
@@ -41,9 +42,7 @@ export function SongViewer({ song }:{ song:Song }) {
   useEffect(()=>{ if(scrolling) startScroll(); else stopScroll(); return stopScroll; }, [scrolling, startScroll, stopScroll]);
 
   /* Unique chords */
-  const chords = Array.from(new Set(
-    (song.chord_data.match(/[\[\(]([A-G][^\]\)]*)[\]\)]/g)||[]).map(m=>m.slice(1,-1).trim())
-  )).slice(0,14);
+  const chords = extractChords(song.chord_data).slice(0, 14);
 
   return (
     <div style={{ minHeight:"100vh", background:stageMode?"#050508":"var(--obsidian)", color:"var(--t1)", paddingTop:stageMode?20:60, transition:"all 0.4s ease" }}>

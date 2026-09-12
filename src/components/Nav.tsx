@@ -7,6 +7,7 @@ import { Search, Menu, X, Zap, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Logo from "@/components/Logo";
+import AuthModal from "@/components/AuthModal";
 
 const LINKS = [
   { href: "/",           label: "Home" },
@@ -21,6 +22,7 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showAuthModal, setShowAuthModal]     = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -213,7 +215,7 @@ export default function Nav() {
                 </div>
               ) : (
                 <button
-                  onClick={() => signIn()}
+                  onClick={() => setShowAuthModal(true)}
                   style={{
                     display: "flex", alignItems: "center", gap: 8,
                     padding: "9px 20px", borderRadius: 100,
@@ -336,7 +338,10 @@ export default function Nav() {
                 </button>
               ) : (
                 <button
-                  onClick={() => signIn()}
+                  onClick={() => {
+                    setOpen(false);
+                    setShowAuthModal(true);
+                  }}
                   style={{
                     padding: "16px",
                     background: "rgba(255,255,255,0.08)",
@@ -365,6 +370,11 @@ export default function Nav() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
     </>
   );
 }

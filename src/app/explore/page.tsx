@@ -8,6 +8,7 @@ import {
   Search, Loader2, Music, ChevronRight, X, Guitar,
   Headphones, Mic2, Music2, Zap, Flame,
 } from "lucide-react";
+import { extractChords } from "@/lib/chordFormatter";
 
 /* ── Genre images ── */
 const GENRE_IMAGES: Record<string, string> = {
@@ -130,7 +131,7 @@ function SongRow({ song, i }: { song: any; i: number }) {
             <span>{song.artist}</span>
             {song.genre && <span style={{ opacity: 0.65 }}>· {song.genre}</span>}
             {song.chord_data && (() => {
-              const chords = (Array.from(new Set(song.chord_data.match(/\[([^\]]+)\]/g)?.map((c: string) => c.slice(1, -1)) || [])) as string[]).slice(0, 4);
+              const chords = extractChords(song.chord_data).slice(0, 4);
               if (!chords.length) return null;
               return (
                 <span style={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto" }}>

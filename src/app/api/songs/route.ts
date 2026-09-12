@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/dbSync';
+import { generateChordData } from '@/lib/chordEngine';
+import { normalizeChordSheet } from '@/lib/chordFormatter';
 import fs from 'fs';
 import path from 'path';
 
@@ -154,7 +156,7 @@ export async function POST(request: NextRequest) {
     await db.prepare(`
       INSERT INTO songs (id, title, artist, genre, difficulty, chord_data, source, contributor_username, created_at)
       VALUES (?, ?, ?, ?, ?, ?, 'community', 'community', datetime('now'))
-    `).run(id, title.trim(), artist.trim(), genre?.trim() || 'Other', difficulty || 'Intermediate', chord_data.trim());
+    `).run(id, title.trim(), artist.trim(), genre?.trim() || 'Other', difficulty || 'Intermediate', normalizeChordSheet(chord_data.trim()));
 
     return NextResponse.json({ success: true, id }, { status: 201 });
   } catch (err: any) {

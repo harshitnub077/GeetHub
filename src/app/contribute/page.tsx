@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChordRenderer } from "@/components/ChordRenderer";
+import { normalizeChordSheet } from "@/lib/chordFormatter";
 import { Send, CheckCircle, FileCode2, Mic2, Zap, Info } from "lucide-react";
 import Link from "next/link";
 
@@ -38,7 +39,7 @@ export default function ContributePage() {
       const res = await fetch("/api/songs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, artist, genre, chord_data: content }),
+        body: JSON.stringify({ title, artist, genre, chord_data: normalizeChordSheet(content) }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -133,9 +134,21 @@ export default function ContributePage() {
             <div className="glass" style={{ padding: 28 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <h2 style={{ fontFamily: "var(--f-display)", fontWeight: 800, fontSize: 18 }}>Chord Data *</h2>
-                <button type="button" onClick={loadExample} className="btn btn-surface btn-sm" style={{ gap: 6 }}>
-                  <Zap size={13} /> Load Example
-                </button>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button
+                    type="button"
+                    onClick={() => setContent(normalizeChordSheet(content))}
+                    className="btn btn-surface btn-sm"
+                    style={{ gap: 6 }}
+                    disabled={!content.trim()}
+                    title="Convert into the unified standard GeetHub chord format"
+                  >
+                    <FileCode2 size={13} /> Format & Align
+                  </button>
+                  <button type="button" onClick={loadExample} className="btn btn-surface btn-sm" style={{ gap: 6 }}>
+                    <Zap size={13} /> Load Example
+                  </button>
+                </div>
               </div>
               <textarea
                 required value={content} onChange={e => setContent(e.target.value)}

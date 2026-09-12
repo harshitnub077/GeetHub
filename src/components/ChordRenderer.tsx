@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { normalizeChordSheet } from "@/lib/chordFormatter";
 
 /* ─── Transposition ─── */
 const NOTES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
@@ -112,7 +113,8 @@ interface Props { content:string; transposeBy:number; simplify:boolean; fontSize
 export function ChordRenderer({ content, transposeBy, simplify, fontSize }:Props) {
   const [hovered, setHovered] = useState<{chord:string;x:number;y:number}|null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const lines = content.split("\n");
+  const normalizedContent = useMemo(() => normalizeChordSheet(content || ""), [content]);
+  const lines = normalizedContent.split("\n");
 
   const process = (raw:string) => {
     let c = transposeChord(raw, transposeBy);
