@@ -1,11 +1,18 @@
 import path from 'path';
+import fs from 'fs';
 import { createRequire } from 'module';
-
-// Use a plain file-path string (NOT import.meta.url) so turbopack
-// doesn't encounter the "Unsupported external type Url" error.
-const _require = createRequire(path.join(process.cwd(), 'package.json'));
+import { createClient } from '@libsql/client/web';
 
 const DB_PATH = path.join(process.cwd(), 'geethub_master.db');
+
+// Fallback credentials for the live Turso database (174,112 verified songs)
+const FALLBACK_TURSO_URL = 'libsql://geethub-live-harshitkudhial.aws-ap-south-1.turso.io';
+const FALLBACK_TURSO_TOKEN = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODkyMTQzNDEsImlkIjoiMDFhMDk1N2EtMGIwMS03MzIwLWI5NDEtYmU1ODZlZWVhYTc5Iiwia2lkIjoib3k2YXFoaW5qVFBERko3M1ZWWk12ME8xbEpqcHliVGotLTNkVlBOVDQxcyIsInJpZCI6ImEyZDZkNTkzLTQyNDQtNGI3Zi1hZDRhLTRhYWRjMjQ5N2FiOSJ9.cIdEyW7qCTpUGjmM4S9yNY49as1mOBF4Lil-4ZVENEp_c2YvrCw-341Q6BxGXQJxDeo8YzzN1TxB1XEeXLd9DQ';
+
+function formatArgs(args: any[]): any[] {
+  if (args.length === 1 && Array.isArray(args[0])) return args[0];
+  return args.map((a) => (a === undefined ? null : a));
+}
 
 function initSchema(db: any): void {
   try {
@@ -58,7 +65,6 @@ function initSchema(db: any): void {
       END;
     `);
 
-    // Back-fill FTS for any existing rows not yet indexed
     db.exec(`
       INSERT OR IGNORE INTO songs_fts(rowid, id, title, artist)
       SELECT rowid, id, title, artist FROM songs
@@ -73,16 +79,15 @@ let _dbInstance: any = null;
 let _dbAttempted = false;
 
 function getDatabase(): any {
-  if (_dbAttempted) return _dbInstance;
+  if (_dbAttempted && _dbInstance) return _dbInstance;
   _dbAttempted = true;
 
   // 1. Turso Cloud Database for Serverless / Vercel Production
-  const tursoUrl = process.env.TURSO_DATABASE_URL;
-  const tursoAuthToken = process.env.TURSO_AUTH_TOKEN;
+  const tursoUrl = process.env.TURSO_DATABASE_URL || FALLBACK_TURSO_URL;
+  const tursoAuthToken = process.env.TURSO_AUTH_TOKEN || FALLBACK_TURSO_TOKEN;
 
   if (tursoUrl) {
     try {
-      const { createClient } = _require('@libsql/client');
       const client = createClient({
         url: tursoUrl,
         authToken: tursoAuthToken || undefined,
@@ -95,20 +100,20 @@ function getDatabase(): any {
         client,
         prepare: (sql: string) => ({
           get: async (...args: any[]) => {
-            const res = await client.execute({ sql, args });
+            const res = await client.execute({ sql, args: formatArgs(args) });
             return res.rows[0] || null;
           },
           all: async (...args: any[]) => {
-            const res = await client.execute({ sql, args });
+            const res = await client.execute({ sql, args: formatArgs(args) });
             return res.rows;
           },
           run: async (...args: any[]) => {
-            return await client.execute({ sql, args });
-          }
+            return await client.execute({ sql, args: formatArgs(args) });
+          },
         }),
         exec: async (sql: string) => {
           return await client.executeMultiple(sql);
-        }
+        },
       };
 
       return _dbInstance;
@@ -117,27 +122,29 @@ function getDatabase(): any {
     }
   }
 
-  // 2. Local SQLite mode for development
-  try {
-    // node:sqlite is a Node.js 22.5+ built-in; excluded from bundling via
-    // serverExternalPackages in next.config.ts.
-    const sqlite = _require('node:sqlite');
-    const db = new sqlite.DatabaseSync(DB_PATH);
-    db.exec('PRAGMA journal_mode = WAL;');
-    db.exec('PRAGMA busy_timeout = 5000;');
-    db.exec('PRAGMA synchronous = NORMAL;');
-    db.exec('PRAGMA foreign_keys = ON;');
-    db.exec('PRAGMA mmap_size = 3000000000;');
-    db.exec('PRAGMA temp_store = MEMORY;');
-    initSchema(db);
-    _dbInstance = db;
-    console.log('[GeetHub] Local SQLite connected —', DB_PATH);
-  } catch (err: any) {
-    console.warn('[GeetHub] SQLite unavailable — JSON-fallback mode.', err?.message ?? err);
-    _dbInstance = null;
+  // 2. Local SQLite mode for development when database file exists
+  if (fs.existsSync(DB_PATH)) {
+    try {
+      const _require = createRequire(path.join(process.cwd(), 'package.json'));
+      const sqlite = _require('node:sqlite');
+      const db = new sqlite.DatabaseSync(DB_PATH);
+      db.exec('PRAGMA journal_mode = WAL;');
+      db.exec('PRAGMA busy_timeout = 5000;');
+      db.exec('PRAGMA synchronous = NORMAL;');
+      db.exec('PRAGMA foreign_keys = ON;');
+      db.exec('PRAGMA mmap_size = 3000000000;');
+      db.exec('PRAGMA temp_store = MEMORY;');
+      initSchema(db);
+      _dbInstance = db;
+      console.log('[GeetHub] Local SQLite connected —', DB_PATH);
+      return _dbInstance;
+    } catch (err: any) {
+      console.warn('[GeetHub] SQLite unavailable — JSON-fallback mode.', err?.message ?? err);
+    }
   }
 
   return _dbInstance;
 }
 
 export const getDb = () => getDatabase();
+

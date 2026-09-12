@@ -29,6 +29,9 @@ export async function GET(request: NextRequest) {
     cwd,
     dbPath,
     exists,
+    isTurso: Boolean(db?.isTurso),
+    hasTursoUrlEnv: Boolean(process.env.TURSO_DATABASE_URL),
+    hasTursoTokenEnv: Boolean(process.env.TURSO_AUTH_TOKEN),
     songCount,
     error,
     nodeVersion: process.version
