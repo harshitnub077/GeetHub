@@ -250,11 +250,12 @@ export default function MoodJammer() {
               style={{
                 padding: "20px 14px",
                 borderRadius: 16,
-                background: isActive ? "linear-gradient(135deg, rgba(124, 111, 205, 0.3), rgba(20, 20, 28, 0.95))" : "rgba(255, 255, 255, 0.03)",
+                background: isActive ? "linear-gradient(135deg, rgba(124, 111, 205, 0.35), rgba(28, 24, 48, 0.95))" : "rgba(255, 255, 255, 0.03)",
                 border: `2px solid ${isActive ? "var(--purple)" : "rgba(255, 255, 255, 0.08)"}`,
+                boxShadow: isActive ? "0 0 24px rgba(124, 111, 205, 0.35), inset 0 0 12px rgba(124, 111, 205, 0.2)" : "none",
                 textAlign: "center",
-                transform: isActive ? "scale(1.04)" : "scale(1)",
-                transition: "all 0.15s ease",
+                transform: isActive ? "scale(1.05) translateY(-2px)" : "scale(1)",
+                transition: "all 0.18s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
               <span style={{ fontSize: 11, fontWeight: 800, color: isActive ? "var(--purple)" : "var(--t4)", textTransform: "uppercase" }}>
@@ -263,7 +264,10 @@ export default function MoodJammer() {
               <div style={{ fontFamily: "var(--f-mono)", fontSize: 28, fontWeight: 900, color: "#fff", margin: "4px 0" }}>
                 {chord}
               </div>
-              <span style={{ fontSize: 11, color: "var(--t3)" }}>Bar {idx + 1}</span>
+              <span style={{ fontSize: 11, color: isActive ? "var(--t1)" : "var(--t3)" }}>Bar {idx + 1}</span>
+              {isActive && (
+                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--purple)", margin: "6px auto 0", boxShadow: "0 0 8px var(--purple)" }} />
+              )}
             </div>
           );
         })}
