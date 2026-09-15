@@ -22,9 +22,31 @@ class GuitarAudioEngine {
       this.masterGain.connect(this.ctx.destination);
     }
     if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {
+        // Autoplay policy: will resume automatically upon first user click/touch
+      });
     }
     return this.ctx;
+  }
+
+  async resumeIfSuspended(): Promise<void> {
+    if (this.ctx && this.ctx.state === 'suspended') {
+      try {
+        await this.ctx.resume();
+      } catch {
+        // Ignored if user hasn't interacted yet
+      }
+    }
+  }
+
+  stopAll() {
+    if (this.masterGain && this.ctx) {
+      const now = this.ctx.currentTime;
+      this.masterGain.gain.cancelScheduledValues(now);
+      this.masterGain.gain.setValueAtTime(0, now);
+      // Restore volume quickly for subsequent notes
+      this.masterGain.gain.setValueAtTime(this.volume, now + 0.05);
+    }
   }
 
   setTone(newTone: GuitarTone) {
