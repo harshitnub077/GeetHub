@@ -93,20 +93,22 @@ export default function MoodJammer() {
   const [tempo, setTempo] = useState(selectedMood.tempo);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stepRef = useRef<number>(0);
 
-  const startJam = () => {
+  const startJam = (startFromStep: number = 0) => {
     setIsPlaying(true);
-    let step = 0;
-    setCurrentStep(0);
+    stepRef.current = startFromStep;
+    setCurrentStep(startFromStep);
 
-    const f = CHORD_FRETS[selectedMood.chords[0]] || [-1, 3, 2, 0, 1, 0];
+    const f = CHORD_FRETS[selectedMood.chords[startFromStep]] || [-1, 3, 2, 0, 1, 0];
     guitarAudio.strumVoicing(f);
 
+    if (timerRef.current) clearInterval(timerRef.current);
     const stepMs = (60 / tempo) * 2 * 1000;
     timerRef.current = setInterval(() => {
-      step = (step + 1) % selectedMood.chords.length;
-      setCurrentStep(step);
-      const chordName = selectedMood.chords[step];
+      stepRef.current = (stepRef.current + 1) % selectedMood.chords.length;
+      setCurrentStep(stepRef.current);
+      const chordName = selectedMood.chords[stepRef.current];
       const frets = CHORD_FRETS[chordName] || [-1, 3, 2, 0, 1, 0];
       guitarAudio.strumVoicing(frets);
     }, stepMs);
@@ -115,6 +117,7 @@ export default function MoodJammer() {
   const stopJam = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     setIsPlaying(false);
+    stepRef.current = 0;
     setCurrentStep(0);
   };
 
@@ -122,6 +125,21 @@ export default function MoodJammer() {
     stopJam();
     setTempo(selectedMood.tempo);
   }, [selectedMood]);
+
+  // Adjust interval seamlessly when tempo slider moves during playback
+  useEffect(() => {
+    if (isPlaying) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      const stepMs = (60 / tempo) * 2 * 1000;
+      timerRef.current = setInterval(() => {
+        stepRef.current = (stepRef.current + 1) % selectedMood.chords.length;
+        setCurrentStep(stepRef.current);
+        const chordName = selectedMood.chords[stepRef.current];
+        const frets = CHORD_FRETS[chordName] || [-1, 3, 2, 0, 1, 0];
+        guitarAudio.strumVoicing(frets);
+      }, stepMs);
+    }
+  }, [tempo]);
 
   useEffect(() => {
     return () => {
