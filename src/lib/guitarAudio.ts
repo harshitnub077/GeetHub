@@ -5,10 +5,13 @@
  * and pitch-perfect tuning reference tones.
  */
 
+export type GuitarTone = 'steel' | 'nylon' | 'warm';
+
 class GuitarAudioEngine {
   private ctx: AudioContext | null = null;
   private masterGain: GainNode | null = null;
   private volume: number = 0.85;
+  private tone: GuitarTone = 'steel';
 
   private getContext(): AudioContext {
     if (!this.ctx) {
@@ -22,6 +25,14 @@ class GuitarAudioEngine {
       this.ctx.resume();
     }
     return this.ctx;
+  }
+
+  setTone(newTone: GuitarTone) {
+    this.tone = newTone;
+  }
+
+  getTone(): GuitarTone {
+    return this.tone;
   }
 
   setMasterVolume(val: number) {
@@ -53,22 +64,33 @@ class GuitarAudioEngine {
     const ctx = this.getContext();
     const t = startTime || ctx.currentTime;
 
-    // Dual oscillator for rich harmonic acoustic body sound
+    // Harmonic oscillator configuration based on selected tone
     const osc1 = ctx.createOscillator();
     const osc2 = ctx.createOscillator();
     const gain = ctx.createGain();
     const filter = ctx.createBiquadFilter();
 
-    osc1.type = 'triangle';
+    if (this.tone === 'nylon') {
+      osc1.type = 'sine';
+      osc2.type = 'triangle';
+      filter.frequency.setValueAtTime(freq * 3.2, t);
+      filter.frequency.exponentialRampToValueAtTime(freq * 1.2, t + duration);
+    } else if (this.tone === 'warm') {
+      osc1.type = 'triangle';
+      osc2.type = 'sine';
+      filter.frequency.setValueAtTime(freq * 4.2, t);
+      filter.frequency.exponentialRampToValueAtTime(freq * 1.4, t + duration);
+    } else {
+      // Default 'steel' string crisp acoustic response
+      osc1.type = 'triangle';
+      osc2.type = 'sawtooth';
+      filter.frequency.setValueAtTime(freq * 5.2, t);
+      filter.frequency.exponentialRampToValueAtTime(freq * 1.5, t + duration);
+    }
+
     osc1.frequency.setValueAtTime(freq, t);
-
-    osc2.type = 'sawtooth';
     osc2.frequency.setValueAtTime(freq * 1.002, t); // subtle chorusing
-
-    // Dynamic lowpass filter to mimic acoustic body resonance
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(freq * 5, t);
-    filter.frequency.exponentialRampToValueAtTime(freq * 1.5, t + duration);
 
     // Amplitude envelope with sharp attack and natural acoustic string decay
     gain.gain.setValueAtTime(0.0001, t);
