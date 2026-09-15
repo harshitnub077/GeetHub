@@ -7,16 +7,32 @@
 
 class GuitarAudioEngine {
   private ctx: AudioContext | null = null;
+  private masterGain: GainNode | null = null;
+  private volume: number = 0.85;
 
   private getContext(): AudioContext {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       this.ctx = new AudioCtx();
+      this.masterGain = this.ctx.createGain();
+      this.masterGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
+      this.masterGain.connect(this.ctx.destination);
     }
     if (this.ctx.state === 'suspended') {
       this.ctx.resume();
     }
     return this.ctx;
+  }
+
+  setMasterVolume(val: number) {
+    this.volume = Math.max(0, Math.min(1, val));
+    if (this.masterGain && this.ctx) {
+      this.masterGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
+    }
+  }
+
+  getMasterVolume(): number {
+    return this.volume;
   }
 
   // Converts note name + octave (e.g. "E2", "A2", "D3", "G3", "B3", "E4") to Hz frequency
@@ -62,7 +78,7 @@ class GuitarAudioEngine {
     osc1.connect(filter);
     osc2.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(this.masterGain || ctx.destination);
 
     osc1.start(t);
     osc2.start(t);
@@ -123,7 +139,7 @@ class GuitarAudioEngine {
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
 
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(this.masterGain || ctx.destination);
 
     osc.start(t);
     osc.stop(t + 0.06);
