@@ -35,6 +35,21 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  // Keyboard shortcut: Cmd+K / Ctrl+K to navigate to search, Escape to close menus
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        window.location.href = "/explore";
+      } else if (e.key === "Escape") {
+        setOpen(false);
+        setShowProfileMenu(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setOpen(false); }, [pathname]);
 
@@ -134,6 +149,7 @@ export default function Nav() {
               onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "var(--t2)"; }}
             >
               <Search size={14} /> Search
+              <kbd style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "rgba(255,255,255,0.08)", color: "var(--t3)", fontFamily: "var(--f-mono)", marginLeft: 4 }}>⌘K</kbd>
             </Link>
 
             <Link
