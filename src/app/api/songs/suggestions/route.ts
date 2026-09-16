@@ -26,18 +26,24 @@ export async function GET(request: NextRequest) {
       .filter((s: any) =>
         s.title?.toLowerCase().startsWith(q) || s.artist?.toLowerCase().startsWith(q)
       )
-      .slice(0, 6)
-      .map((s: any) => ({ title: s.title, artist: s.artist }));
-    return NextResponse.json({ suggestions });
+      .slice(0, 8)
+      .map((s: any) => ({ id: s.id || s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'), title: s.title, artist: s.artist }));
+    return NextResponse.json(
+      { suggestions },
+      { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' } }
+    );
   }
 
   try {
     const suggestions = await db.prepare(`
-      SELECT DISTINCT title, artist FROM songs
+      SELECT id, title, artist FROM songs
       WHERE title LIKE ? OR artist LIKE ?
-      LIMIT 6
+      LIMIT 8
     `).all(`${q}%`, `${q}%`);
-    return NextResponse.json({ suggestions });
+    return NextResponse.json(
+      { suggestions },
+      { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' } }
+    );
   } catch (error) {
     console.error('Suggestions API Error:', error);
     return NextResponse.json({ suggestions: [] });
