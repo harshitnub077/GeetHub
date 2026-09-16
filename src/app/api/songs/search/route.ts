@@ -20,6 +20,14 @@ function buildFtsMatchQuery(rawQuery: string): string {
   return words.map(w => `"${w}"*`).join(' AND ');
 }
 
+interface SearchCacheEntry {
+  data: any;
+  timestamp: number;
+}
+const SEARCH_CACHE = new Map<string, SearchCacheEntry>();
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5-minute cache
+const MAX_CACHE_ENTRIES = 150;
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const rawQ   = searchParams.get('q')?.toLowerCase().trim() || '';
@@ -29,6 +37,14 @@ export async function GET(request: NextRequest) {
   const page   = Math.max(1, parseInt(searchParams.get('page') || '1'));
   const limit  = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '25')));
   const offset = (page - 1) * limit;
+
+  const cacheKey = `${rawQ}|${artist}|${genre}|${level}|${page}|${limit}`;
+  const cached = SEARCH_CACHE.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return NextResponse.json(cached.data, {
+      headers: { 'X-Cache': 'HIT', 'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=300' },
+    });
+  }
 
   const db = getDb();
 
@@ -194,9 +210,19 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
+    const payload = {
       songs: songs || [],
       pagination: { total: totalCount, page, limit, pages: Math.ceil(totalCount / limit) },
+    };
+
+    if (SEARCH_CACHE.size >= MAX_CACHE_ENTRIES) {
+      const firstKey = SEARCH_CACHE.keys().next().value;
+      if (firstKey) SEARCH_CACHE.delete(firstKey);
+    }
+    SEARCH_CACHE.set(cacheKey, { data: payload, timestamp: Date.now() });
+
+    return NextResponse.json(payload, {
+      headers: { 'X-Cache': 'MISS', 'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=300' },
     });
 
   } catch (error: any) {
