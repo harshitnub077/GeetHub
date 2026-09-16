@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, Menu, X, Zap, LogOut, User, Sparkles } from "lucide-react";
@@ -27,6 +27,20 @@ export default function Nav() {
   const [open, setOpen]         = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showAuthModal, setShowAuthModal]     = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Dismiss profile dropdown on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    };
+    if (showProfileMenu) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [showProfileMenu]);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -185,7 +199,7 @@ export default function Nav() {
             
             <div className="hide-mobile">
               {status === "authenticated" ? (
-                <div style={{ position: "relative" }}>
+                <div ref={profileMenuRef} style={{ position: "relative" }}>
                   <button
                     onClick={() => setShowProfileMenu(!showProfileMenu)}
                     style={{
@@ -224,10 +238,11 @@ export default function Nav() {
                           top: "calc(100% + 16px)",
                           right: 0,
                           width: 220,
-                          background: "var(--surface)",
+                          background: "rgba(18, 18, 24, 0.96)",
                           backdropFilter: "blur(24px) saturate(1.5)",
+                          WebkitBackdropFilter: "blur(24px) saturate(1.5)",
                           borderRadius: 16,
-                          border: "1px solid rgba(255,255,255,0.1)",
+                          border: "1px solid rgba(255,255,255,0.12)",
                           boxShadow: "0 20px 40px rgba(0,0,0,0.6)",
                           padding: 6,
                           zIndex: 1000,
