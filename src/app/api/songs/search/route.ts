@@ -12,6 +12,14 @@ function loadStaticSongs(): any[] {
   } catch { return []; }
 }
 
+function buildFtsMatchQuery(rawQuery: string): string {
+  // Strip FTS5 operators, syntax symbols, and sanitize unicode
+  const clean = rawQuery.replace(/[^\p{L}\p{N}\s]/gu, ' ').trim();
+  const words = clean.split(/\s+/).filter(w => w.length > 0);
+  if (words.length === 0) return 'a*';
+  return words.map(w => `"${w}"*`).join(' AND ');
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const rawQ   = searchParams.get('q')?.toLowerCase().trim() || '';
@@ -42,9 +50,7 @@ export async function GET(request: NextRequest) {
     let totalCount = 0;
 
     if (genre && rawQ) {
-      const safeQ      = rawQ.replace(/["^=:]/g, '');
-      const words      = safeQ.split(/\s+/).filter(w => w.length > 0);
-      const matchQuery = words.length > 0 ? words.map(w => `"${w}"*`).join(' AND ') : 'a*';
+      const matchQuery = buildFtsMatchQuery(rawQ);
       const genreQ    = `%${genre}%`;
 
       if (level) {
@@ -89,9 +95,7 @@ export async function GET(request: NextRequest) {
       }
 
     } else if (artist && rawQ) {
-      const safeQ      = rawQ.replace(/["^=:]/g, '');
-      const words      = safeQ.split(/\s+/).filter(w => w.length > 0);
-      const matchQuery = words.length > 0 ? words.map(w => `"${w}"*`).join(' AND ') : 'a*';
+      const matchQuery = buildFtsMatchQuery(rawQ);
       const artistQ    = `%${artist}%`;
 
       if (level) {
@@ -137,9 +141,7 @@ export async function GET(request: NextRequest) {
       }
 
     } else if (rawQ) {
-      const safeQ      = rawQ.replace(/["^=:]/g, '');
-      const words      = safeQ.split(/\s+/).filter(w => w.length > 0);
-      const matchQuery = words.length > 0 ? words.map(w => `"${w}"*`).join(' AND ') : 'a*';
+      const matchQuery = buildFtsMatchQuery(rawQ);
 
       if (level) {
         totalCount = ((await db.prepare(`
