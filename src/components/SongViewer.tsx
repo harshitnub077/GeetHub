@@ -36,6 +36,7 @@ export function SongViewer({ song }:{ song:Song }) {
   const [fontSize,  setFontSize]  = useState(18);
   const [bpm,       setBpm]       = useState(song.bpm || 90);
   const [scrolling, setScrolling] = useState(false);
+  const [scrollSpeed, setScrollSpeed] = useState(1);
   const [liked,     setLiked]     = useState(false);
   const [starHover, setStarHover] = useState(0);
   const [rating,    setRating]    = useState(0);
@@ -44,10 +45,14 @@ export function SongViewer({ song }:{ song:Song }) {
   const intervalRef = useRef<ReturnType<typeof setInterval>|null>(null);
   const summaryRef  = useRef<HTMLDivElement>(null);
 
-  /* Auto-scroll */
+  /* Auto-scroll with configurable speed multipliers */
   const startScroll = useCallback(()=>{
-    intervalRef.current = setInterval(()=>{ window.scrollBy({ top:bpm/60*0.9 }); }, 80);
-  }, [bpm]);
+    if(intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(()=>{
+      const step = (bpm / 60) * 0.9 * scrollSpeed;
+      window.scrollBy({ top: step, behavior: "auto" });
+    }, 60);
+  }, [bpm, scrollSpeed]);
   const stopScroll = useCallback(()=>{ if(intervalRef.current) clearInterval(intervalRef.current); }, []);
 
   useEffect(()=>{
@@ -149,6 +154,31 @@ export function SongViewer({ song }:{ song:Song }) {
               >
                 {scrolling?<><Pause size={14}/> Stop</>:<><Play size={14}/> Scroll</>}
               </button>
+
+              {/* Scroll Speed Presets */}
+              {scrolling && (
+                <div style={{ display:"inline-flex", alignItems:"center", gap:3, background:"rgba(255,255,255,0.04)", border:"1px solid var(--border)", borderRadius:8, padding:"2px 4px" }}>
+                  {[0.5, 1, 1.5, 2].map((spd) => (
+                    <button
+                      key={spd}
+                      onClick={() => setScrollSpeed(spd)}
+                      style={{
+                        padding: "3px 6px",
+                        borderRadius: 6,
+                        border: "none",
+                        background: scrollSpeed === spd ? "var(--amber)" : "transparent",
+                        color: scrollSpeed === spd ? "var(--obsidian)" : "var(--t2)",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      {spd}x
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Stage Mode Toggle */}
               {!stageMode && (
