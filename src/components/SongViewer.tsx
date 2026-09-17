@@ -151,12 +151,15 @@ export function SongViewer({ song }:{ song:Song }) {
 
             {/* Stage Mode specific header */}
             {stageMode && (
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:32, borderBottom:"1px solid var(--border)", paddingBottom:20 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24, borderBottom:"1px solid rgba(245,166,35,0.2)", paddingBottom:16 }}>
                 <div>
-                  <h1 style={{ fontSize:24, fontWeight:900, marginBottom:4 }}>{song.title}</h1>
-                  <p style={{ fontSize:14, color:"var(--t3)" }}>{song.artist} · Stage Mode active</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                    <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "var(--amber)", boxShadow: "0 0 10px var(--amber)" }} />
+                    <h1 style={{ fontSize:26, fontWeight:900, letterSpacing: "-0.02em", color: "#fff", margin: 0 }}>{song.title}</h1>
+                  </div>
+                  <p style={{ fontSize:14, color:"var(--t2)", margin: 0 }}>{song.artist} · <strong style={{ color: "var(--amber)" }}>{currentKey} Key</strong> · Stage Mode</p>
                 </div>
-                <button onClick={()=>setStageMode(false)} className="btn btn-surface btn-sm">Exit Stage</button>
+                <button onClick={()=>setStageMode(false)} className="btn btn-surface btn-sm" style={{ borderColor: "rgba(255,255,255,0.15)", color: "var(--t1)" }}>Exit Stage</button>
               </div>
             )}
 
