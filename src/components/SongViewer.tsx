@@ -232,7 +232,9 @@ export function SongViewer({ song }:{ song:Song }) {
             </div>
 
             {/* Chord Sheet */}
-            <ChordRenderer content={song.chord_data} transposeBy={transpose} simplify={simplify} fontSize={fontSize}/>
+            <div style={{ userSelect: scrolling ? "none" : "auto", WebkitUserSelect: scrolling ? "none" : "auto" }}>
+              <ChordRenderer content={song.chord_data} transposeBy={transpose} simplify={simplify} fontSize={fontSize}/>
+            </div>
           </div>
 
           {/* ─── RIGHT COLUMN ─── */}
