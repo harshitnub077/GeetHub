@@ -62,6 +62,25 @@ export function SongViewer({ song }:{ song:Song }) {
 
   useEffect(()=>{ if(scrolling) startScroll(); else stopScroll(); return stopScroll; }, [scrolling, startScroll, stopScroll]);
 
+  // Practice hotkeys: Space to toggle scroll, [ and ] to transpose
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeTag = (document.activeElement?.tagName || "").toLowerCase();
+      if (activeTag === "input" || activeTag === "textarea") return;
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        setScrolling((s) => !s);
+      } else if (e.key === "[") {
+        setTranspose((t) => t - 1);
+      } else if (e.key === "]") {
+        setTranspose((t) => t + 1);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   /* Unique chords */
   const chords = extractChords(song.chord_data).slice(0, 14);
   const currentKey = getTransposedKey(song.music_key || "C", transpose);
