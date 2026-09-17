@@ -15,6 +15,21 @@ import SpotifyPlayer from "./SpotifyPlayer";
 
 interface Song { id:string; title:string; artist:string; genre:string; contributor_username?:string; chord_data:string; bpm?:number; music_key?:string; capo?:number; }
 
+const CHROMATIC_NOTES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const KEY_FLAT_MAP: Record<string,string> = { Db:"C#",Eb:"D#",Gb:"F#",Ab:"G#",Bb:"A#" };
+
+function getTransposedKey(rootKey: string, steps: number): string {
+  if (!rootKey || steps === 0) return rootKey || "C";
+  let clean = rootKey.trim();
+  const isMinor = clean.toLowerCase().endsWith('m') && !clean.toLowerCase().endsWith('maj');
+  if (isMinor) clean = clean.slice(0, -1);
+  let idx = CHROMATIC_NOTES.indexOf(clean);
+  if (idx === -1) idx = CHROMATIC_NOTES.indexOf(KEY_FLAT_MAP[clean] ?? clean);
+  if (idx === -1) return rootKey;
+  const newNote = CHROMATIC_NOTES[(idx + steps + 120) % 12];
+  return isMinor ? `${newNote}m` : newNote;
+}
+
 export function SongViewer({ song }:{ song:Song }) {
   const [transpose, setTranspose] = useState(0);
   const [simplify,  setSimplify]  = useState(false);
@@ -44,6 +59,7 @@ export function SongViewer({ song }:{ song:Song }) {
 
   /* Unique chords */
   const chords = extractChords(song.chord_data).slice(0, 14);
+  const currentKey = getTransposedKey(song.music_key || "C", transpose);
 
   return (
     <div style={{ minHeight:"100vh", background:stageMode?"#050508":"var(--obsidian)", color:"var(--t1)", paddingTop:stageMode?20:60, transition:"all 0.4s ease" }}>
@@ -82,7 +98,7 @@ export function SongViewer({ song }:{ song:Song }) {
                 {/* Badges */}
                 <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:18 }}>
                   <span className="badge badge-intermediate">Guitar</span>
-                  <span className="badge badge-beginner">{song.music_key || "C"} Key</span>
+                  <span className="badge badge-beginner">{currentKey} Key{transpose !== 0 ? ` (${transpose > 0 ? `+${transpose}` : transpose})` : ''}</span>
                   {(song.capo !== undefined && song.capo > 0) && <span className="badge badge-expert">Capo {song.capo}</span>}
                   {song.genre && <span className="badge" style={{ background:"rgba(255,255,255,0.05)", color:"var(--t2)", border:"1px solid var(--border)" }}>{song.genre}</span>}
                   <span className="badge" style={{ background:"rgba(255,255,255,0.05)", color:"var(--t2)", border:"1px solid var(--border)" }}>{bpm} BPM</span>
