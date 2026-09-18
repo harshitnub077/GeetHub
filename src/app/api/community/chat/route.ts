@@ -4,18 +4,27 @@ import { getDb } from '@/lib/dbSync';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const channel = searchParams.get('channel') || 'general';
+    const channel = (searchParams.get('channel') || 'general').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 32) || 'general';
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '50')));
+    const before = searchParams.get('before')?.trim();
 
     const db = getDb();
     if (!db) {
       return NextResponse.json({ messages: [] });
     }
 
-    const messages = await db
-      .prepare('SELECT * FROM community_messages WHERE channel = ? ORDER BY created_at ASC LIMIT 100')
-      .all(channel);
+    let messages;
+    if (before) {
+      messages = await db
+        .prepare('SELECT * FROM community_messages WHERE channel = ? AND created_at < ? ORDER BY created_at ASC LIMIT ?')
+        .all(channel, before, limit);
+    } else {
+      messages = await db
+        .prepare('SELECT * FROM community_messages WHERE channel = ? ORDER BY created_at ASC LIMIT ?')
+        .all(channel, limit);
+    }
 
-    return NextResponse.json({ messages: messages || [] });
+    return NextResponse.json({ messages: messages || [], channel, count: messages?.length || 0 });
   } catch (error: any) {
     console.error('Chat GET error:', error);
     return NextResponse.json({ error: 'Failed to fetch chat messages' }, { status: 500 });
