@@ -95,6 +95,20 @@ function getEmbedVideoUrl(url: string): string {
   return url;
 }
 
+function formatRelativeTime(dateStr: string): string {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr.endsWith("Z") ? dateStr : `${dateStr}Z`);
+    const diffSec = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (diffSec < 60) return "just now";
+    if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`;
+    if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`;
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  } catch {
+    return dateStr.slice(11, 16) || dateStr;
+  }
+}
+
 export default function CommunityPage() {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState<"videos" | "artists" | "chat">("videos");
@@ -573,22 +587,32 @@ export default function CommunityPage() {
             <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
               {/* Messages Scroll Area */}
               <div style={{ flex: 1, padding: 24, overflowY: "auto", display: "flex", flexDirection: "column", gap: 16 }}>
-                {messages.map((m) => (
-                  <div key={m.id} style={{ display: "flex", gap: 12 }}>
-                    <img
-                      src={m.sender_avatar}
-                      alt={m.sender_name}
-                      style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
-                    />
-                    <div>
-                      <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 3 }}>
-                        <span style={{ fontSize: 13, fontWeight: 800, color: "#fff" }}>{m.sender_name}</span>
-                        <span style={{ fontSize: 11, color: "var(--t4)" }}>{m.created_at.slice(11, 16)}</span>
-                      </div>
-                      <p style={{ fontSize: 13.5, color: "var(--t2)", margin: 0, lineHeight: 1.4 }}>{m.text}</p>
-                    </div>
+                {messages.length === 0 ? (
+                  <div style={{ margin: "auto", textAlign: "center", padding: "40px 20px" }}>
+                    <div style={{ fontSize: 36, marginBottom: 12 }}>🎸</div>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>No messages in #{chatChannel} yet</p>
+                    <p style={{ fontSize: 13, color: "var(--t3)", maxWidth: 320, margin: "0 auto", lineHeight: 1.5 }}>
+                      Be the first musician to share a chord progression, tab request, or jam thought!
+                    </p>
                   </div>
-                ))}
+                ) : (
+                  messages.map((m) => (
+                    <div key={m.id} style={{ display: "flex", gap: 12 }}>
+                      <img
+                        src={m.sender_avatar}
+                        alt={m.sender_name}
+                        style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
+                      />
+                      <div>
+                        <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 3 }}>
+                          <span style={{ fontSize: 13, fontWeight: 800, color: "#fff" }}>{m.sender_name}</span>
+                          <span style={{ fontSize: 11, color: "var(--t4)" }}>{formatRelativeTime(m.created_at)}</span>
+                        </div>
+                        <p style={{ fontSize: 13.5, color: "var(--t2)", margin: 0, lineHeight: 1.4 }}>{m.text}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
 
               {/* Chat Input Bar */}
