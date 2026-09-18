@@ -30,13 +30,17 @@ export async function POST(request: NextRequest) {
     }
 
     const { channel, sender_name, sender_avatar, text } = await request.json();
-    if (!text?.trim()) {
+    const cleanText = text?.trim();
+    if (!cleanText) {
       return NextResponse.json({ error: 'Message text is required' }, { status: 400 });
+    }
+    if (cleanText.length > 1000) {
+      return NextResponse.json({ error: 'Message exceeds maximum length of 1000 characters' }, { status: 400 });
     }
 
     const id = `msg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-    const ch = channel || 'general';
-    const name = sender_name?.trim() || 'Musician';
+    const ch = (channel || 'general').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 32) || 'general';
+    const name = (sender_name?.trim() || 'Musician').slice(0, 50);
     const avatar = sender_avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80';
 
     await db
@@ -44,7 +48,7 @@ export async function POST(request: NextRequest) {
         `INSERT INTO community_messages (id, channel, sender_name, sender_avatar, text, created_at)
          VALUES (?, ?, ?, ?, ?, datetime('now'))`
       )
-      .run(id, ch, name, avatar, text.trim());
+      .run(id, ch, name, avatar, cleanText);
 
     const created = await db.prepare('SELECT * FROM community_messages WHERE id = ?').get(id);
     return NextResponse.json({ success: true, message: created });
