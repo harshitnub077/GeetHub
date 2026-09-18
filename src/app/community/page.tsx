@@ -640,21 +640,35 @@ export default function CommunityPage() {
                     color: "#fff",
                     fontSize: 14,
                     outline: "none",
+                    transition: "border-color 0.2s, box-shadow 0.2s",
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "var(--amber)";
+                    e.currentTarget.style.boxShadow = "0 0 16px rgba(245, 166, 35, 0.15)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    e.currentTarget.style.boxShadow = "none";
                   }}
                 />
                 <button
                   type="submit"
+                  disabled={!chatInput.trim()}
                   style={{
-                    padding: "0 20px",
+                    padding: "0 22px",
                     borderRadius: 12,
-                    background: "var(--amber)",
-                    color: "#000",
+                    background: chatInput.trim() ? "var(--amber)" : "rgba(245, 166, 35, 0.3)",
+                    color: chatInput.trim() ? "#000" : "rgba(0, 0, 0, 0.6)",
                     border: "none",
                     fontWeight: 800,
-                    cursor: "pointer",
+                    cursor: chatInput.trim() ? "pointer" : "not-allowed",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    transition: "all 0.2s ease",
                   }}
                 >
-                  <Send size={16} />
+                  <Send size={15} />
                 </button>
               </form>
             </div>
