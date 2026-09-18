@@ -8,9 +8,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Database unavailable' }, { status: 503 });
     }
 
-    const { postId, userId } = await request.json();
-    if (!postId || !userId) {
-      return NextResponse.json({ error: 'postId and userId are required' }, { status: 400 });
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+
+    const { postId, userId } = body || {};
+    if (!postId || typeof postId !== 'string' || !userId || typeof userId !== 'string') {
+      return NextResponse.json({ error: 'postId and userId are required strings' }, { status: 400 });
+    }
+
+    // Verify post exists
+    const post = await db.prepare('SELECT id FROM community_posts WHERE id = ?').get(postId);
+    if (!post) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
     // Check if already liked
