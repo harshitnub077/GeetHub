@@ -51,6 +51,8 @@ export default function MetronomePage() {
     }
   };
 
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const startMetronome = () => {
     setIsPlaying(true);
     let beat = 0;
@@ -58,14 +60,25 @@ export default function MetronomePage() {
     guitarAudio.playClick(true); // beat 1 accent
 
     const intervalMs = (60 / bpm) * 1000;
-    timerRef.current = setInterval(() => {
+    let expected = performance.now() + intervalMs;
+
+    const tick = () => {
+      const now = performance.now();
+      const drift = now - expected;
       beat = (beat + 1) % timeSig.beats;
       setCurrentBeat(beat);
       guitarAudio.playClick(beat === 0);
-    }, intervalMs);
+
+      expected += intervalMs;
+      const nextDelay = Math.max(0, intervalMs - drift);
+      timeoutRef.current = setTimeout(tick, nextDelay);
+    };
+
+    timeoutRef.current = setTimeout(tick, intervalMs);
   };
 
   const stopMetronome = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (timerRef.current) clearInterval(timerRef.current);
     setIsPlaying(false);
     setCurrentBeat(0);
@@ -77,6 +90,7 @@ export default function MetronomePage() {
       startMetronome();
     }
     return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [bpm, timeSig]);
