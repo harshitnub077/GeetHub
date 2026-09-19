@@ -87,7 +87,18 @@ export default function GuitarTunerPage() {
     const buffer = new Float32Array(analyserRef.current.fftSize);
     analyserRef.current.getFloatTimeDomainData(buffer);
 
-    // Basic auto-correlation pitch detection
+    // RMS noise gate to reject ambient background hum & room noise
+    let sumSquares = 0;
+    for (let i = 0; i < buffer.length; i++) {
+      sumSquares += buffer[i] * buffer[i];
+    }
+    const rms = Math.sqrt(sumSquares / buffer.length);
+    if (rms < 0.012) {
+      rafIdRef.current = requestAnimationFrame(detectPitchLoop);
+      return;
+    }
+
+    // Auto-correlation pitch detection
     const sampleRate = audioCtxRef.current.sampleRate;
     let maxCorr = 0;
     let bestPeriod = -1;
