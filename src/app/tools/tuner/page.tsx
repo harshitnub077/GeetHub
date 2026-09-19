@@ -239,32 +239,49 @@ export default function GuitarTunerPage() {
               {micActive ? "Microphone Listening" : "Select String or Enable Mic"}
             </div>
 
-            <div style={{ fontFamily: "var(--f-mono)", fontSize: 56, fontWeight: 900, color: detectedPitch && Math.abs(detectedPitch.cents) <= 5 ? "#4cd137" : "var(--amber)" }}>
+            <div style={{ fontFamily: "var(--f-mono)", fontSize: 56, fontWeight: 900, color: detectedPitch ? (Math.abs(detectedPitch.cents) <= 3 ? "#4cd137" : Math.abs(detectedPitch.cents) <= 15 ? "var(--amber)" : "#ff4d4f") : (activeString !== null ? "var(--amber)" : "#fff"), transition: "color 0.15s ease" }}>
               {detectedPitch ? detectedPitch.note : activeString !== null ? selectedTuning.notes[activeString] : "A"}
             </div>
 
-            <div style={{ fontSize: 14, color: "var(--t3)", marginBottom: 16 }}>
+            <div style={{ fontSize: 14, color: "var(--t3)", marginBottom: 10 }}>
               {detectedPitch ? `${detectedPitch.freq} Hz (${detectedPitch.cents > 0 ? `+${detectedPitch.cents}` : detectedPitch.cents} cents)` : "Reference 440 Hz standard"}
             </div>
 
-            {/* Gauge bar */}
-            <div style={{ position: "relative", height: 10, background: "rgba(255, 255, 255, 0.08)", borderRadius: 10, overflow: "hidden" }}>
-              <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "rgba(255, 255, 255, 0.3)" }} />
+            {detectedPitch && Math.abs(detectedPitch.cents) <= 3 && (
+              <div style={{ marginBottom: 14 }}>
+                <span style={{ display: "inline-block", padding: "3px 12px", borderRadius: 100, background: "rgba(76, 209, 55, 0.18)", color: "#4cd137", border: "1px solid rgba(76, 209, 55, 0.4)", fontSize: 11, fontWeight: 900, letterSpacing: "0.06em" }}>
+                  ✓ IN TUNE
+                </span>
+              </div>
+            )}
+
+            {/* Gauge bar with cent ticks */}
+            <div style={{ position: "relative", height: 12, background: "rgba(255, 255, 255, 0.08)", borderRadius: 10, overflow: "hidden", marginTop: 12 }}>
+              <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 3, background: "#4cd137", opacity: 0.8 }} />
               {detectedPitch && (
                 <div
                   style={{
                     position: "absolute",
-                    left: `${Math.min(95, Math.max(5, 50 + detectedPitch.cents))}%`,
+                    left: `${Math.min(96, Math.max(4, 50 + detectedPitch.cents))}%`,
                     top: 0,
                     bottom: 0,
-                    width: 12,
-                    borderRadius: 6,
-                    background: Math.abs(detectedPitch.cents) <= 5 ? "#4cd137" : "#ff4d4f",
+                    width: 14,
+                    borderRadius: 7,
+                    background: Math.abs(detectedPitch.cents) <= 3 ? "#4cd137" : Math.abs(detectedPitch.cents) <= 15 ? "var(--amber)" : "#ff4d4f",
+                    boxShadow: `0 0 12px ${Math.abs(detectedPitch.cents) <= 3 ? "#4cd137" : Math.abs(detectedPitch.cents) <= 15 ? "var(--amber)" : "#ff4d4f"}`,
                     transform: "translateX(-50%)",
-                    transition: "all 0.08s ease",
+                    transition: "all 0.08s ease-out",
                   }}
                 />
               )}
+            </div>
+            {/* Cents Legend */}
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "var(--t4)", fontFamily: "var(--f-mono)", marginTop: 6 }}>
+              <span>-50¢</span>
+              <span>-25¢</span>
+              <span style={{ color: "#4cd137", fontWeight: 700 }}>0¢</span>
+              <span>+25¢</span>
+              <span>+50¢</span>
             </div>
           </div>
 
