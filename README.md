@@ -32,4 +32,3 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 | Icons      | Lucide React                      |
 | Search     | BM25 Full-Text (FTS5)             |
 
-# Geethub - Professional Chord Platform
