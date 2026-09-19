@@ -75,9 +75,23 @@ export default function GuitarTunerPage() {
   };
 
   const stopMic = () => {
-    if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-    if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
-    if (audioCtxRef.current) audioCtxRef.current.close();
+    if (rafIdRef.current) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => {
+        try { t.stop(); } catch {}
+      });
+      streamRef.current = null;
+    }
+    if (audioCtxRef.current) {
+      if (audioCtxRef.current.state !== 'closed') {
+        audioCtxRef.current.close().catch(() => {});
+      }
+      audioCtxRef.current = null;
+    }
+    analyserRef.current = null;
     setMicActive(false);
     setDetectedPitch(null);
   };
