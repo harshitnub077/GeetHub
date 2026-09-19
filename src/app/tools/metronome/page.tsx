@@ -12,6 +12,17 @@ const TIME_SIGNATURES = [
   { label: "6/8", beats: 6 },
 ];
 
+function getTempoMarking(bpm: number): { name: string; desc: string } {
+  if (bpm < 50) return { name: "Grave", desc: "Very slow & solemn" };
+  if (bpm < 66) return { name: "Largo", desc: "Broad & stately" };
+  if (bpm < 76) return { name: "Adagio", desc: "Slow & expressive" };
+  if (bpm < 108) return { name: "Andante", desc: "Walking pace" };
+  if (bpm < 120) return { name: "Moderato", desc: "Moderate tempo" };
+  if (bpm < 156) return { name: "Allegro", desc: "Fast & bright" };
+  if (bpm < 176) return { name: "Vivace", desc: "Lively & quick" };
+  return { name: "Presto", desc: "Extremely fast" };
+}
+
 export default function MetronomePage() {
   const [bpm, setBpm] = useState(120);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -147,12 +158,40 @@ export default function MetronomePage() {
           </div>
 
           {/* Large BPM Display */}
-          <div style={{ fontFamily: "var(--f-mono)", fontSize: 80, fontWeight: 900, color: "#fff", lineHeight: 1, marginBottom: 12 }}>
+          <div style={{ fontFamily: "var(--f-mono)", fontSize: 80, fontWeight: 900, color: "#fff", lineHeight: 1, marginBottom: 8 }}>
             {bpm}
           </div>
-          <span style={{ fontSize: 13, fontWeight: 800, color: "var(--t3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <div style={{ marginBottom: 12 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 14px", borderRadius: 100, background: "rgba(0, 210, 255, 0.1)", border: "1px solid rgba(0, 210, 255, 0.3)", color: "#00d2ff", fontSize: 13, fontWeight: 800 }}>
+              {getTempoMarking(bpm).name} · <span style={{ fontWeight: 500, color: "rgba(255,255,255,0.7)" }}>{getTempoMarking(bpm).desc}</span>
+            </span>
+          </div>
+          <span style={{ fontSize: 12, fontWeight: 800, color: "var(--t3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
             Beats Per Minute
           </span>
+
+          {/* Quick Tempo Presets */}
+          <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
+            {[60, 80, 100, 120, 140, 168].map((presetBpm) => (
+              <button
+                key={presetBpm}
+                onClick={() => setBpm(presetBpm)}
+                style={{
+                  padding: "4px 12px",
+                  borderRadius: 20,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  background: bpm === presetBpm ? "rgba(0, 210, 255, 0.2)" : "rgba(255, 255, 255, 0.04)",
+                  border: `1px solid ${bpm === presetBpm ? "#00d2ff" : "rgba(255, 255, 255, 0.08)"}`,
+                  color: bpm === presetBpm ? "#00d2ff" : "var(--t2)",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                {presetBpm}
+              </button>
+            ))}
+          </div>
 
           {/* Increment / Decrement & Slider */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, margin: "32px 0" }}>
